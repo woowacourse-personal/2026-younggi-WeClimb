@@ -1,0 +1,77 @@
+<!-- @dsCard group="Screens" -->
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2 · 홈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070d;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px;font-family:'Barlow',system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+.phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
+.cnd{font-family:'Barlow Condensed',sans-serif}
+.body{flex:1;overflow-y:auto;padding:8px 20px 20px}
+.hi{font-size:15px;color:#94A3B8;font-weight:600}
+.name{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;margin-top:2px}
+.sect{font-size:12px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:22px 4px 10px}
+.grass{display:flex;gap:7px;justify-content:space-between}
+.g{flex:1;aspect-ratio:1;border-radius:7px;background:#1E2634;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:10px;color:#475569;font-weight:700}
+.g.on{background:#EA580C;color:#fff}
+.g.mid{background:rgba(234,88,12,.4);color:#fff}
+.start{height:60px;border-radius:18px;background:#EA580C;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:18px;margin-top:22px;box-shadow:0 12px 30px rgba(234,88,12,.3)}
+.start svg{width:24px;height:24px}
+.gyms{display:flex;gap:10px;margin-top:12px}
+.gymchip{flex:1;background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.pin{width:8px;height:8px;border-radius:50%;background:#EA580C;flex:none}
+.gymchip .t{font-weight:600;font-size:14px}
+.gymchip .s{font-size:11px;color:#64748B}
+.rep{background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:20px;overflow:hidden;margin-top:10px}
+.rep .img{height:150px;background:linear-gradient(160deg,#334155,#0f172a);position:relative;display:flex;align-items:flex-end;padding:16px}
+.rep .ov{position:relative;z-index:2}
+.rep .big{font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:700;line-height:.9}
+.rep .meta{font-size:12px;color:#cbd5e1;font-weight:600}
+.rep .foot{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-size:12px;color:#94A3B8}
+.mini{display:flex;gap:4px}
+.mini i{width:16px;height:8px;border-radius:3px;display:block}
+.tab{height:66px;flex:none;display:flex;border-top:1px solid rgba(255,255,255,.1);background:rgba(20,26,38,.95);padding-bottom:8px}
+.tab a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:#64748B;font-weight:700}
+.tab a.on{color:#fff}
+.tab svg{width:22px;height:22px}
+</style></head>
+<body><div class="phone">
+  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+  <div class="body">
+    <div class="hi">오늘도 붙어볼까요,</div>
+    <div class="name">기영 님</div>
+
+    <div class="sect">이번 주</div>
+    <div class="grass">
+      <div class="g">월</div><div class="g on">화</div><div class="g">수</div>
+      <div class="g mid">목</div><div class="g on">금</div><div class="g">토</div><div class="g">일</div>
+    </div>
+
+    <div class="start">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg>
+      세션 시작
+    </div>
+
+    <div class="sect">바로 시작</div>
+    <div class="gyms">
+      <div class="gymchip"><span class="pin"></span><div><div class="t">닻 클라이밍</div><div class="s">최근 방문</div></div></div>
+      <div class="gymchip"><span class="pin" style="background:#60A5FA"></span><div><div class="t">더클라임 양재</div><div class="s">3일 전</div></div></div>
+    </div>
+
+    <div class="sect">최근 세션</div>
+    <div class="rep">
+      <div class="img"><div class="ov"><div class="big cnd">14</div><div class="meta">닻 클라이밍 · 7월 13일</div></div></div>
+      <div class="foot"><span>1시간 24분 · 최고 <b style="color:#60A5FA">파랑</b></span>
+        <span class="mini"><i style="background:#FACC15"></i><i style="background:#22C55E"></i><i style="background:#60A5FA"></i></span>
+      </div>
+    </div>
+  </div>
+  <div class="tab">
+    <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
+    <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg>기록</a>
+  </div>
+</div></body></html>

@@ -1,0 +1,8 @@
+/* We-Climb 공통 토큰 (참고용 — 각 화면 HTML은 자체 인라인 CSS로 자립) */
+:root{
+  --bg:#0B0F1A; --surface:#141A26; --surface-2:#1E2634;
+  --on:#FFFFFF; --muted:#94A3B8; --outline:rgba(255,255,255,.10);
+  --brand:#EA580C; --success:#059669; --danger:#DC2626;
+  --h-white:#F1F5F9; --h-yellow:#FACC15; --h-green:#22C55E;
+  --h-blue:#60A5FA; --h-red:#F87171; --h-purple:#A78BFA;
+}

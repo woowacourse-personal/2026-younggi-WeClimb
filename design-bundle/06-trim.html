@@ -1,0 +1,55 @@
+<!-- @dsCard group="Screens" -->
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>6 · 트리밍</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070d;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px;font-family:'Barlow',system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+.phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
+.cnd{font-family:'Barlow Condensed',sans-serif}
+.hd{display:flex;align-items:center;gap:14px;padding:6px 20px 10px}
+.hd .sq{width:16px;height:16px;border-radius:5px;background:#60A5FA}
+.hd h1{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700}
+.hd .r{margin-left:auto;font-size:13px;color:#94A3B8;font-weight:600}
+.prev{margin:6px 20px 0;border-radius:20px;height:400px;background:linear-gradient(180deg,#2a2320,#0e1219);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.08)}
+.prev .fig{width:60px;height:120px;background:rgba(255,255,255,.14);border-radius:30px}
+.play{position:absolute;bottom:14px;left:14px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+.play svg{width:18px;height:18px}
+.time{position:absolute;bottom:22px;right:16px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:#fff}
+.tl{margin:20px 20px 0}
+.tlbar{height:56px;border-radius:12px;background:#1E2634;position:relative;display:flex;align-items:center;overflow:hidden}
+.frames{position:absolute;inset:0;display:flex}
+.frames i{flex:1;border-right:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,#3a3330,#161a20)}
+.sel{position:absolute;top:0;bottom:0;left:22%;right:14%;border:3px solid #EA580C;border-radius:10px;background:rgba(234,88,12,.12)}
+.handle{position:absolute;top:50%;transform:translateY(-50%);width:14px;height:34px;background:#EA580C;border-radius:5px}
+.handle.l{left:-8px}.handle.r{right:-8px}
+.tllab{display:flex;justify-content:space-between;color:#64748B;font-size:12px;font-family:'Barlow Condensed',sans-serif;margin-top:8px}
+.foot{margin-top:auto;padding:16px 20px 26px;display:flex;gap:12px}
+.b{flex:1;height:54px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;border:none}
+.later{background:transparent;color:#94A3B8;border:1px solid rgba(255,255,255,.15)}
+.save{background:#EA580C;color:#fff}
+</style></head>
+<body><div class="phone">
+  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+  <div class="hd"><span class="sq"></span><h1>앞뒤 자르기</h1><span class="r">파랑 · 4트 완등</span></div>
+  <div class="prev">
+    <div class="fig"></div>
+    <div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></div>
+    <div class="time">0:06 / 0:19</div>
+  </div>
+  <div class="tl">
+    <div class="tlbar">
+      <div class="frames"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="sel"><div class="handle l"></div><div class="handle r"></div></div>
+    </div>
+    <div class="tllab"><span>0:00</span><span style="color:#EA580C">선택 0:04 – 0:13</span><span>0:19</span></div>
+  </div>
+  <div class="foot">
+    <button class="b later">나중에 할래요</button>
+    <button class="b save">저장</button>
+  </div>
+</div></body></html>

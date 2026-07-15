@@ -1,0 +1,88 @@
+<!-- @dsCard group="Screens" -->
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>9 · 기록 탭</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070d;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px;font-family:'Barlow',system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+.phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
+.cnd{font-family:'Barlow Condensed',sans-serif}
+.body{flex:1;overflow-y:auto;padding:4px 20px 20px}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;margin:4px 4px 14px}
+.statrow{display:flex;gap:10px;margin-bottom:6px}
+.sc{flex:1;background:#141A26;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px}
+.sc .v{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;line-height:1}
+.sc .k{font-size:11px;color:#94A3B8;font-weight:600;margin-top:3px}
+.lbl{font-size:12px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:20px 4px 10px}
+.dist{background:#141A26;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px}
+.drow{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.drow:last-child{margin-bottom:0}
+.drow .sq{width:14px;height:14px;border-radius:4px;flex:none}
+.drow .nm{width:36px;font-size:13px;font-weight:600}
+.track{flex:1;height:8px;border-radius:4px;background:#1E2634;overflow:hidden}
+.track i{display:block;height:100%;border-radius:4px}
+.drow .n{width:26px;text-align:right;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:#cbd5e1}
+/* month grass */
+.cal{display:grid;grid-template-columns:repeat(14,1fr);gap:5px;background:#141A26;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px}
+.cal i{aspect-ratio:1;border-radius:4px;background:#1E2634}
+.cal i.a{background:rgba(234,88,12,.45)}.cal i.b{background:#EA580C}
+/* session cards */
+.scard{display:flex;gap:12px;align-items:center;background:#141A26;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px;margin-bottom:10px}
+.scard .th{width:58px;height:58px;border-radius:12px;background:linear-gradient(160deg,#334155,#0f172a);flex:none;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px}
+.scard .th.gone{background:#1E2634;color:#475569;font-size:10px;font-weight:600;text-align:center;line-height:1.2;padding:6px;font-family:Barlow}
+.scard .t{font-weight:600;font-size:15px}
+.scard .s{font-size:12px;color:#64748B;margin-top:2px}
+.scard .mini{display:flex;gap:3px;margin-top:6px}
+.scard .mini i{width:14px;height:6px;border-radius:2px}
+.tab{height:66px;flex:none;display:flex;border-top:1px solid rgba(255,255,255,.1);background:rgba(20,26,38,.95);padding-bottom:8px}
+.tab a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:#64748B;font-weight:700}
+.tab a.on{color:#fff}
+.tab svg{width:22px;height:22px}
+</style></head>
+<body><div class="phone">
+  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+  <div class="body">
+    <h1>내 기록</h1>
+    <div class="statrow">
+      <div class="sc"><div class="v">87</div><div class="k">총 완등</div></div>
+      <div class="sc"><div class="v">12</div><div class="k">세션</div></div>
+      <div class="sc"><div class="v cnd">파랑</div><div class="k">최고 난이도</div></div>
+    </div>
+
+    <div class="lbl">이번 달</div>
+    <div class="cal">
+      <i></i><i class="a"></i><i></i><i class="b"></i><i></i><i></i><i class="a"></i>
+      <i class="b"></i><i></i><i></i><i class="a"></i><i class="b"></i><i></i><i></i>
+      <i class="a"></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i><i></i>
+      <i></i><i class="a"></i><i class="b"></i><i></i><i></i><i></i><i></i>
+    </div>
+
+    <div class="lbl">색깔별 완등</div>
+    <div class="dist">
+      <div class="drow"><span class="sq" style="background:#FACC15"></span><span class="nm">노랑</span><span class="track"><i style="width:70%;background:#FACC15"></i></span><span class="n">28</span></div>
+      <div class="drow"><span class="sq" style="background:#22C55E"></span><span class="nm">초록</span><span class="track"><i style="width:85%;background:#22C55E"></i></span><span class="n">34</span></div>
+      <div class="drow"><span class="sq" style="background:#60A5FA"></span><span class="nm">파랑</span><span class="track"><i style="width:45%;background:#60A5FA"></i></span><span class="n">18</span></div>
+      <div class="drow"><span class="sq" style="background:#F87171"></span><span class="nm">빨강</span><span class="track"><i style="width:18%;background:#F87171"></i></span><span class="n">7</span></div>
+    </div>
+
+    <div class="lbl">세션</div>
+    <div class="scard">
+      <div class="th">14</div>
+      <div style="flex:1"><div class="t">닻 클라이밍</div><div class="s">7월 15일 · 1시간 24분</div>
+        <div class="mini"><i style="background:#FACC15"></i><i style="background:#22C55E"></i><i style="background:#60A5FA"></i><i style="background:#F87171"></i></div></div>
+    </div>
+    <div class="scard">
+      <div class="th gone">영상 삭제됨<br>기록은 남음</div>
+      <div style="flex:1"><div class="t">더클라임 양재</div><div class="s">7월 12일 · 58분</div>
+        <div class="mini"><i style="background:#22C55E"></i><i style="background:#60A5FA"></i></div></div>
+    </div>
+  </div>
+  <div class="tab">
+    <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
+    <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg>기록</a>
+  </div>
+</div></body></html>
