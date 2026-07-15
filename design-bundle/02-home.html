@@ -4,32 +4,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>2 · 홈</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#05070d;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px;font-family:'Barlow',system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
 .phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
 .cnd{font-family:'Barlow Condensed',sans-serif}
-.body{flex:1;overflow-y:auto;padding:8px 20px 20px}
+.body{flex:1;overflow-y:auto;padding:6px 20px 20px}
 .hi{font-size:15px;color:#94A3B8;font-weight:600}
-.name{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;margin-top:2px}
-.sect{font-size:12px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:22px 4px 10px}
-.grass{display:flex;gap:7px;justify-content:space-between}
-.g{flex:1;aspect-ratio:1;border-radius:7px;background:#1E2634;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:10px;color:#475569;font-weight:700}
-.g.on{background:#EA580C;color:#fff}
-.g.mid{background:rgba(234,88,12,.4);color:#fff}
-.start{height:60px;border-radius:18px;background:#EA580C;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:18px;margin-top:22px;box-shadow:0 12px 30px rgba(234,88,12,.3)}
+.name{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;margin-top:1px}
+/* skill snapshot */
+.snap{background:linear-gradient(160deg,#20140b,#141a26);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:18px;margin-top:14px}
+.srow{display:flex;align-items:center;gap:18px}
+.ring{width:96px;height:96px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;position:relative;
+  background:conic-gradient(#EA580C 0 78%,rgba(255,255,255,.08) 78% 100%)}
+.ring::before{content:"";position:absolute;inset:7px;border-radius:50%;background:#141a26}
+.ring .in{position:relative;z-index:2;text-align:center}
+.ring .lv{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;line-height:.9}
+.ring .lb{font-size:10px;color:#94A3B8;font-weight:700;letter-spacing:.5px}
+.sinfo .t{font-size:13px;color:#94A3B8;font-weight:600}
+.sinfo .big{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;margin:2px 0 4px}
+.sinfo .p{font-size:12px;color:#F59E0B;font-weight:600}
+/* growth curve */
+.curve{margin-top:16px}
+.clab{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.clab .t{font-size:12px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.clab .v{font-size:12px;color:#94A3B8;font-weight:600}
+.chart{height:88px;border-radius:12px;background:#0f1420;position:relative;overflow:hidden;display:flex;align-items:flex-end;gap:3px;padding:8px}
+.chart .bar{flex:1;border-radius:3px 3px 0 0;display:flex;flex-direction:column-reverse}
+.chart .bar i{display:block;width:100%}
+.legend{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
+.lg{display:flex;align-items:center;gap:5px;font-size:11px;color:#94A3B8;font-weight:600}
+.lg .d{width:9px;height:9px;border-radius:2px}
+.mon{font-size:12px;color:#64748B;font-weight:600;margin-top:10px;text-align:center}
+/* start */
+.start{height:60px;border-radius:18px;background:#EA580C;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:18px;margin-top:18px;box-shadow:0 12px 30px rgba(234,88,12,.3)}
 .start svg{width:24px;height:24px}
-.gyms{display:flex;gap:10px;margin-top:12px}
-.gymchip{flex:1;background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px}
-.pin{width:8px;height:8px;border-radius:50%;background:#EA580C;flex:none}
-.gymchip .t{font-weight:600;font-size:14px}
-.gymchip .s{font-size:11px;color:#64748B}
-.rep{background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:20px;overflow:hidden;margin-top:10px}
-.rep .img{height:150px;background:linear-gradient(160deg,#334155,#0f172a);position:relative;display:flex;align-items:flex-end;padding:16px}
-.rep .ov{position:relative;z-index:2}
-.rep .big{font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:700;line-height:.9}
+.sect{font-size:12px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:22px 4px 10px}
+.rep{background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:20px;overflow:hidden}
+.rep .img{height:130px;background:linear-gradient(160deg,#334155,#0f172a);display:flex;align-items:flex-end;padding:16px}
+.rep .big{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:700;line-height:.9}
 .rep .meta{font-size:12px;color:#cbd5e1;font-weight:600}
 .rep .foot{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-size:12px;color:#94A3B8}
 .mini{display:flex;gap:4px}
@@ -45,27 +60,44 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
     <div class="hi">오늘도 붙어볼까요,</div>
     <div class="name">기영 님</div>
 
-    <div class="sect">이번 주</div>
-    <div class="grass">
-      <div class="g">월</div><div class="g on">화</div><div class="g">수</div>
-      <div class="g mid">목</div><div class="g on">금</div><div class="g">토</div><div class="g">일</div>
+    <div class="snap">
+      <div class="srow">
+        <div class="ring"><div class="in"><div class="lv">4</div><div class="lb">LEVEL</div></div></div>
+        <div class="sinfo">
+          <div class="t">지금 너의 실력</div>
+          <div class="big">Lv.4 클라이머</div>
+          <div class="p">Lv.5까지 78% · 조금만 더</div>
+        </div>
+      </div>
+      <div class="curve">
+        <div class="clab"><span class="t">누적 완등</span><span class="v">총 87</span></div>
+        <div class="chart">
+          <div class="bar"><i style="height:8px;background:#FDE68A"></i></div>
+          <div class="bar"><i style="height:14px;background:#FDE68A"></i><i style="height:6px;background:#FBBF24"></i></div>
+          <div class="bar"><i style="height:18px;background:#FDE68A"></i><i style="height:10px;background:#FBBF24"></i></div>
+          <div class="bar"><i style="height:22px;background:#FDE68A"></i><i style="height:14px;background:#FBBF24"></i><i style="height:6px;background:#F59E0B"></i></div>
+          <div class="bar"><i style="height:26px;background:#FDE68A"></i><i style="height:18px;background:#FBBF24"></i><i style="height:12px;background:#F59E0B"></i></div>
+          <div class="bar"><i style="height:30px;background:#FDE68A"></i><i style="height:22px;background:#FBBF24"></i><i style="height:16px;background:#F59E0B"></i><i style="height:8px;background:#EA580C"></i></div>
+        </div>
+        <div class="legend">
+          <span class="lg"><span class="d" style="background:#FDE68A"></span>Lv.1~2</span>
+          <span class="lg"><span class="d" style="background:#FBBF24"></span>Lv.3</span>
+          <span class="lg"><span class="d" style="background:#F59E0B"></span>Lv.4</span>
+          <span class="lg"><span class="d" style="background:#EA580C"></span>Lv.5</span>
+        </div>
+        <div class="mon">이번 달 4회 방문 · 최고 Lv.5 갱신 🔥</div>
+      </div>
     </div>
 
     <div class="start">
       <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg>
-      세션 시작
+      클라이밍 시작
     </div>
 
-    <div class="sect">바로 시작</div>
-    <div class="gyms">
-      <div class="gymchip"><span class="pin"></span><div><div class="t">닻 클라이밍</div><div class="s">최근 방문</div></div></div>
-      <div class="gymchip"><span class="pin" style="background:#60A5FA"></span><div><div class="t">더클라임 양재</div><div class="s">3일 전</div></div></div>
-    </div>
-
-    <div class="sect">최근 세션</div>
+    <div class="sect">최근 클라이밍</div>
     <div class="rep">
-      <div class="img"><div class="ov"><div class="big cnd">14</div><div class="meta">닻 클라이밍 · 7월 13일</div></div></div>
-      <div class="foot"><span>1시간 24분 · 최고 <b style="color:#60A5FA">파랑</b></span>
+      <div class="img"><div><div class="big cnd">14</div><div class="meta">닻 클라이밍 · 7월 13일</div></div></div>
+      <div class="foot"><span>1시간 24분 · 최고 Lv.5</span>
         <span class="mini"><i style="background:#FACC15"></i><i style="background:#22C55E"></i><i style="background:#60A5FA"></i></span>
       </div>
     </div>

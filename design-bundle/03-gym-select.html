@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>3 · 암장 선택</title>
+<title>3 · 암장 선택 (+ 실력 안내)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -11,21 +11,36 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
 .phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
 .cnd{font-family:'Barlow Condensed',sans-serif}
-.hd{display:flex;align-items:center;gap:14px;padding:6px 20px 14px}
+.hd{display:flex;align-items:center;gap:14px;padding:6px 20px 12px}
 .back{width:34px;height:34px;display:flex;align-items:center;justify-content:center}
 .back svg{width:22px;height:22px}
 .hd h1{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700}
 .body{flex:1;overflow-y:auto;padding:0 20px}
 .search{display:flex;align-items:center;gap:10px;background:#1E2634;border-radius:14px;padding:13px 16px;color:#94A3B8;font-size:15px;font-weight:500}
 .search svg{width:18px;height:18px;flex:none}
-.sect{font-size:12px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:22px 4px 10px}
-.item{display:flex;align-items:center;gap:14px;padding:15px 4px;border-bottom:1px solid rgba(255,255,255,.06)}
-.ic{width:42px;height:42px;border-radius:12px;background:#1E2634;display:flex;align-items:center;justify-content:center;flex:none}
+.sect{font-size:12px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:20px 4px 10px}
+/* selected gym with advisory */
+.pick{border:1px solid rgba(234,88,12,.5);background:linear-gradient(160deg,#20140b,#141a26);border-radius:16px;padding:14px;margin-bottom:6px}
+.pick .top{display:flex;align-items:center;gap:12px}
+.ic{width:40px;height:40px;border-radius:11px;background:rgba(234,88,12,.15);display:flex;align-items:center;justify-content:center;flex:none}
 .ic svg{width:20px;height:20px}
-.item .t{font-weight:600;font-size:16px}
-.item .s{font-size:13px;color:#64748B;margin-top:1px}
-.item .tag{margin-left:auto;font-size:11px;color:#EA580C;font-weight:700;background:rgba(234,88,12,.12);padding:4px 8px;border-radius:8px}
-.add{display:flex;align-items:center;gap:10px;margin-top:18px;padding:15px 4px;color:#EA580C;font-weight:700;font-size:15px}
+.pick .t{font-weight:700;font-size:16px}
+.pick .s{font-size:12px;color:#94A3B8}
+.pick .chk{margin-left:auto;color:#EA580C}
+.pick .chk svg{width:22px;height:22px}
+.adv{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)}
+.adv .ttl{font-size:11px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.advrow{display:flex;gap:8px}
+.acard{flex:1;background:rgba(0,0,0,.25);border-radius:11px;padding:9px 11px}
+.acard .k{font-size:11px;color:#94A3B8;font-weight:600}
+.acard .val{display:flex;align-items:center;gap:6px;margin-top:5px;font-weight:700;font-size:14px}
+.acard .sq{width:15px;height:15px;border-radius:5px}
+.item{display:flex;align-items:center;gap:14px;padding:14px 4px;border-bottom:1px solid rgba(255,255,255,.06)}
+.item .ic2{width:40px;height:40px;border-radius:11px;background:#1E2634;display:flex;align-items:center;justify-content:center;flex:none}
+.item .ic2 svg{width:19px;height:19px}
+.item .t{font-weight:600;font-size:15px}
+.item .s{font-size:12px;color:#64748B;margin-top:1px}
+.add{display:flex;align-items:center;gap:10px;margin-top:16px;padding:14px 4px;color:#EA580C;font-weight:700;font-size:15px}
 .add svg{width:20px;height:20px}
 </style></head>
 <body><div class="phone">
@@ -40,25 +55,30 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
       암장 이름 검색
     </div>
 
-    <div class="sect">최근 방문</div>
-    <div class="item">
-      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-      <div><div class="t">닻 클라이밍</div><div class="s">서울 성동구 · 2.4km</div></div>
-      <span class="tag">최근</span>
-    </div>
-    <div class="item">
-      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-      <div><div class="t">더클라임 양재점</div><div class="s">서울 서초구 · 6.1km</div></div>
+    <div class="sect">선택됨</div>
+    <div class="pick">
+      <div class="top">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+        <div><div class="t">닻 클라이밍</div><div class="s">서울 성동구 · 2.4km</div></div>
+        <div class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/></svg></div>
+      </div>
+      <div class="adv">
+        <div class="ttl">너의 기록으로 보면, 여기선</div>
+        <div class="advrow">
+          <div class="acard"><div class="k">평균 완등</div><div class="val"><span class="sq" style="background:#22C55E"></span>초록 <span style="color:#94A3B8;font-weight:600">~파랑</span></div></div>
+          <div class="acard"><div class="k">도전해볼 만</div><div class="val"><span class="sq" style="background:#F87171"></span>빨강 <span style="color:#F59E0B;font-weight:600">Lv.5</span></div></div>
+        </div>
+      </div>
     </div>
 
-    <div class="sect">주변 암장</div>
+    <div class="sect">다른 암장</div>
     <div class="item">
-      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-      <div><div class="t">손상원클라이밍 판교</div><div class="s">경기 성남시 · 12km</div></div>
+      <div class="ic2"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+      <div><div class="t">더클라임 양재점</div><div class="s">서울 서초구 · 6.1km</div></div>
     </div>
     <div class="item">
-      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-      <div><div class="t">더클라임 강남점</div><div class="s">서울 강남구 · 8.3km</div></div>
+      <div class="ic2"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+      <div><div class="t">손상원클라이밍 판교</div><div class="s">경기 성남시 · 12km</div></div>
     </div>
 
     <div class="add">
