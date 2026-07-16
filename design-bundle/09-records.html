@@ -23,7 +23,9 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;marg
 .chart{height:96px;display:flex;align-items:flex-end;gap:4px}
 .chart .bar{flex:1;display:flex;flex-direction:column-reverse}
 .chart .bar i{display:block;width:100%;border-radius:2px 2px 0 0}
-.xlab{display:flex;justify-content:space-between;color:#64748B;font-size:11px;font-family:'Barlow Condensed',sans-serif;margin-top:8px}
+.xlab{display:flex;gap:4px;color:#64748B;font-size:11px;font-family:'Barlow Condensed',sans-serif;margin-top:8px}
+.xlab span{flex:1;text-align:center}
+.viewall{color:#94A3B8;font-size:12px;font-weight:700;text-transform:none;letter-spacing:0}
 .legend{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
 .lg{display:flex;align-items:center;gap:5px;font-size:11px;color:#94A3B8;font-weight:600}
 .lg .d{width:9px;height:9px;border-radius:2px}
@@ -56,11 +58,11 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;marg
     <h1>내 기록</h1>
     <div class="statrow">
       <div class="sc"><div class="v">87</div><div class="k">총 완등</div></div>
-      <div class="sc"><div class="v">12</div><div class="k">방문</div></div>
+      <div class="sc"><div class="v">12</div><div class="k">총 방문</div></div>
       <div class="sc"><div class="v">4회</div><div class="k">이번 달</div></div>
     </div>
 
-    <div class="lbl">지난 6개월 완등</div>
+    <div class="lbl" style="display:flex;justify-content:space-between;align-items:center">지난 6개월 완등 <span class="viewall">전체 보기 ›</span></div>
     <div class="curve">
       <div class="chart">
         <div class="bar"><i style="height:8px;background:#EF4444"></i><i style="height:4px;background:#FB923C"></i></div>
@@ -70,7 +72,7 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;marg
         <div class="bar"><i style="height:24px;background:#EF4444"></i><i style="height:15px;background:#FB923C"></i><i style="height:12px;background:#FACC15"></i><i style="height:8px;background:#22C55E"></i></div>
         <div class="bar"><i style="height:28px;background:#EF4444"></i><i style="height:18px;background:#FB923C"></i><i style="height:14px;background:#FACC15"></i><i style="height:11px;background:#22C55E"></i><i style="height:6px;background:#3B82F6"></i></div>
       </div>
-      <div class="xlab"><span>2월</span><span>4월</span><span>7월</span></div>
+      <div class="xlab"><span>2월</span><span>3월</span><span>4월</span><span>5월</span><span>6월</span><span>7월</span></div>
     </div>
 
     <div class="lbl">등급별 완등</div>

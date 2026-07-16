@@ -46,31 +46,28 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;marg
             <stop offset="1" stop-color="#1E293B"/>
           </linearGradient>
           <clipPath id="wall">
-            <path d="M52 466 L52 250 C52 210 66 150 92 96 C104 70 108 54 104 44 L150 60 C150 78 140 118 120 168 C110 200 110 226 110 250 L110 466 Z"/>
+            <polygon points="40,22 150,22 40,448"/>
           </clipPath>
         </defs>
-        <!-- dim full wall -->
         <g clip-path="url(#wall)">
           <rect x="0" y="0" width="176" height="470" fill="url(#grad)" opacity="0.16"/>
-          <!-- climbed fill up to handle y=232 (~50%) -->
-          <rect x="0" y="232" width="176" height="238" fill="url(#grad)"/>
-          <!-- holds -->
-          <circle cx="72" cy="430" r="6" fill="rgba(255,255,255,.18)"/>
-          <circle cx="94" cy="392" r="5" fill="rgba(255,255,255,.16)"/>
-          <circle cx="66" cy="352" r="6" fill="rgba(255,255,255,.18)"/>
-          <circle cx="90" cy="300" r="5" fill="rgba(255,255,255,.16)"/>
-          <circle cx="72" cy="262" r="6" fill="rgba(255,255,255,.18)"/>
-          <circle cx="86" cy="212" r="5" fill="rgba(0,0,0,.2)"/>
-          <circle cx="104" cy="168" r="6" fill="rgba(0,0,0,.2)"/>
-          <circle cx="98" cy="120" r="5" fill="rgba(0,0,0,.22)"/>
-          <circle cx="104" cy="78" r="5" fill="rgba(0,0,0,.22)"/>
+          <!-- climbed fill from bottom apex up to handle y=235 (~50%) -->
+          <rect x="0" y="235" width="176" height="235" fill="url(#grad)"/>
+          <!-- holds along the overhanging face -->
+          <circle cx="46" cy="410" r="6" fill="rgba(255,255,255,.2)"/>
+          <circle cx="58" cy="350" r="5" fill="rgba(255,255,255,.18)"/>
+          <circle cx="70" cy="290" r="6" fill="rgba(255,255,255,.2)"/>
+          <circle cx="82" cy="235" r="5" fill="rgba(0,0,0,.18)"/>
+          <circle cx="96" cy="175" r="6" fill="rgba(0,0,0,.2)"/>
+          <circle cx="110" cy="115" r="5" fill="rgba(0,0,0,.2)"/>
+          <circle cx="122" cy="66" r="5" fill="rgba(0,0,0,.22)"/>
         </g>
-        <path d="M52 466 L52 250 C52 210 66 150 92 96 C104 70 108 54 104 44 L150 60 C150 78 140 118 120 168 C110 200 110 226 110 250 L110 466 Z" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.5"/>
-        <!-- handle -->
+        <polygon points="40,22 150,22 40,448" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5"/>
+        <!-- handle at the climbed height -->
         <g>
-          <rect x="44" y="228" width="74" height="8" rx="4" fill="#fff"/>
-          <rect x="70" y="222" width="22" height="20" rx="6" fill="#fff"/>
-          <rect x="76" y="228" width="2" height="8" rx="1" fill="#94A3B8"/><rect x="80" y="228" width="2" height="8" rx="1" fill="#94A3B8"/><rect x="84" y="228" width="2" height="8" rx="1" fill="#94A3B8"/>
+          <rect x="34" y="231" width="70" height="8" rx="4" fill="#fff"/>
+          <rect x="52" y="225" width="22" height="20" rx="6" fill="#fff"/>
+          <rect x="58" y="231" width="2" height="8" rx="1" fill="#94A3B8"/><rect x="62" y="231" width="2" height="8" rx="1" fill="#94A3B8"/><rect x="66" y="231" width="2" height="8" rx="1" fill="#94A3B8"/>
         </g>
       </svg>
     </div>

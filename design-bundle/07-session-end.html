@@ -33,19 +33,13 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
 .q .cut{margin-left:auto;font-size:13px;font-weight:700;padding:9px 14px;border-radius:11px;background:#EA580C;color:#fff}
 .hint{font-size:11px;color:#64748B;margin:2px 4px 0}
 /* failure default-delete + rescue */
-.fail{background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.22);border-radius:14px;padding:14px}
-.fail .h{display:flex;align-items:center;gap:10px}
-.fail .h svg{width:20px;height:20px;flex:none}
-.fail .h .t{font-weight:700;font-size:14px}
-.fail .h .s{font-size:12px;color:#94A3B8}
-.thumbs{display:flex;gap:8px;margin-top:12px;overflow-x:auto}
-.ft{width:56px;height:56px;border-radius:10px;flex:none;background:linear-gradient(160deg,#2a2320,#12151b);position:relative;opacity:.42}
-.ft.keep{opacity:1;box-shadow:0 0 0 2px #22C55E}
-.ft .mark{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:7px;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:2}
-.ft.keep .mark{background:#22C55E}
-.ft .mark svg{width:12px;height:12px}
-.failnote{font-size:11px;color:#94A3B8;margin-top:10px}
-.failnote b{color:#22C55E}
+.fail{background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.22);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px}
+.fail .ic{width:38px;height:38px;border-radius:11px;background:rgba(220,38,38,.14);display:flex;align-items:center;justify-content:center;flex:none}
+.fail .ic svg{width:19px;height:19px}
+.fail .t{font-weight:700;font-size:14px}
+.fail .s{font-size:12px;color:#94A3B8;margin-top:2px}
+.viewall{margin-left:auto;flex:none;display:flex;align-items:center;gap:3px;font-size:13px;font-weight:700;color:#cbd5e1;background:#1E2634;padding:9px 13px;border-radius:11px}
+.viewall svg{width:14px;height:14px}
 .foot{flex:none;padding:14px 20px 26px;border-top:1px solid rgba(255,255,255,.08)}
 .next{height:56px;border-radius:16px;background:#EA580C;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:17px}
 </style></head>
@@ -79,18 +73,9 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
 
     <div class="lbl"><span>실패 영상</span><span>47개</span></div>
     <div class="fail">
-      <div class="h">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg>
-        <div><div class="t">실패 영상은 모두 삭제돼요</div><div class="s">남길 것만 북마크하세요 · 썸네일 탭하면 재생</div></div>
-      </div>
-      <div class="thumbs">
-        <div class="ft"><span class="pl"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.85)"><path d="M7 4l13 8-13 8z"/></svg></span><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4z"/></svg></span></div>
-        <div class="ft keep"><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span><span class="mark"><svg viewBox="0 0 24 24" fill="#fff" stroke="#fff" stroke-width="1"><path d="M6 4h12v16l-6-4-6 4z"/></svg></span></div>
-        <div class="ft"><span class="pl"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.85)"><path d="M7 4l13 8-13 8z"/></svg></span><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4z"/></svg></span></div>
-        <div class="ft"><span class="pl"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.85)"><path d="M7 4l13 8-13 8z"/></svg></span><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4z"/></svg></span></div>
-        <div class="ft"><span class="pl"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.85)"><path d="M7 4l13 8-13 8z"/></svg></span><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4z"/></svg></span></div>
-      </div>
-      <div class="failnote">북마크한 <b>1개만 보관</b> · 나머지 46개 삭제</div>
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg></div>
+      <div><div class="t">실패 영상 47개 · 모두 삭제 예정</div><div class="s">남길 게 있으면 전체 보기에서 체크 해제</div></div>
+      <span class="viewall">전체 보기<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span>
     </div>
   </div>
   <div class="foot">

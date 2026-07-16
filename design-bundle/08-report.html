@@ -26,9 +26,10 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
 .hero{position:relative;z-index:2;text-align:left}
 .heronum{font-family:'Barlow Condensed',sans-serif;font-size:110px;font-weight:800;line-height:.82;letter-spacing:-1px}
 .herolab{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:600;color:#EA580C;margin-top:-4px}
-.stats{position:relative;z-index:2;display:flex;gap:20px;margin-top:16px}
-.stat .v{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;line-height:1}
-.stat .k{font-size:11px;color:#94A3B8;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.stats{position:relative;z-index:2;display:flex;gap:12px;margin-top:16px}
+.stat{flex:1;background:rgba(0,0,0,.22);border-radius:14px;padding:12px 14px}
+.stat .v{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:700;line-height:1}
+.stat .k{font-size:11px;color:#94A3B8;font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-top:5px}
 .dist{position:relative;z-index:2;margin-top:18px}
 .distbar{display:flex;height:12px;border-radius:6px;overflow:hidden;gap:2px}
 .distbar i{display:block}
@@ -62,8 +63,8 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
         <div class="herolab">완등</div>
       </div>
       <div class="stats">
-        <div class="stat"><div class="v" style="display:flex;align-items:center;gap:7px"><span style="width:16px;height:16px;border-radius:5px;background:#EF4444;display:inline-block"></span>빨강</div><div class="k">최고 난이도</div></div>
-        <div class="stat"><div class="v">1:24</div><div class="k">운동 시간</div></div>
+        <div class="stat"><div class="v" style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:22px;border-radius:6px;background:#EF4444;display:inline-block"></span>빨강</div><div class="k">최고 난이도</div></div>
+        <div class="stat"><div class="v">1<span style="font-size:17px;color:#94A3B8">시간</span> 24<span style="font-size:17px;color:#94A3B8">분</span></div><div class="k">운동 시간</div></div>
       </div>
       <div style="position:relative;z-index:2;margin-top:22px">
         <div style="display:flex;align-items:flex-end;gap:10px;height:104px">
