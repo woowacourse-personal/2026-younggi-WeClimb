@@ -37,8 +37,9 @@
 
 ## 범위와 성공 기준
 
-- **플랫폼**: 모바일 앱 — KMP/Compose Multiplatform (Android 먼저) ·
-  백엔드 Spring Boot · **개인, 풀타임, MVP 2주**
+- **플랫폼**: 모바일 앱 — Kotlin + KMP 뼈대(Android 먼저, iOS는 구조만 준비) ·
+  백엔드 **Supabase(MVP) → Spring Boot 이관 확정** · **개인, 풀타임, MVP 2주**
+  (상세: [03-tech-decisions.md](03-tech-decisions.md))
 - **절대 안 빼는 것**: 촬영→리포트→인스타 원플로우 + 아카이빙·통계 /
   **이번에 안 하는 것**: 앱에서 남의 콘텐츠 보기
 - **성공 기준**: 크루 5명이 2회 이상 이 앱으로만 찍고 리포트를 올림
