@@ -29,9 +29,10 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;marg
 .lg .d{width:9px;height:9px;border-radius:2px}
 /* grade distribution */
 .dist{background:#141A26;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px}
-.drow{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.drow{display:flex;align-items:center;gap:9px;margin-bottom:11px}
 .drow:last-child{margin-bottom:0}
-.drow .nm{width:42px;font-size:13px;font-weight:600;font-family:'Barlow Condensed',sans-serif}
+.drow .sqm{width:14px;height:14px;border-radius:4px;flex:none}
+.drow .nm{width:76px;font-size:13px;font-weight:600}
 .track{flex:1;height:9px;border-radius:5px;background:#1E2634;overflow:hidden}
 .track i{display:block;height:100%;border-radius:5px}
 .drow .n{width:26px;text-align:right;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:#cbd5e1}
@@ -62,29 +63,30 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;marg
     <div class="lbl">누적 성장</div>
     <div class="curve">
       <div class="chart">
-        <div class="bar"><i style="height:10px;background:#FDE68A"></i></div>
-        <div class="bar"><i style="height:16px;background:#FDE68A"></i><i style="height:6px;background:#FBBF24"></i></div>
-        <div class="bar"><i style="height:20px;background:#FDE68A"></i><i style="height:10px;background:#FBBF24"></i></div>
-        <div class="bar"><i style="height:24px;background:#FDE68A"></i><i style="height:14px;background:#FBBF24"></i><i style="height:6px;background:#F59E0B"></i></div>
-        <div class="bar"><i style="height:28px;background:#FDE68A"></i><i style="height:18px;background:#FBBF24"></i><i style="height:11px;background:#F59E0B"></i></div>
-        <div class="bar"><i style="height:32px;background:#FDE68A"></i><i style="height:22px;background:#FBBF24"></i><i style="height:15px;background:#F59E0B"></i><i style="height:6px;background:#EA580C"></i></div>
+        <div class="bar"><i style="height:8px;background:#EF4444"></i><i style="height:4px;background:#F97316"></i></div>
+        <div class="bar"><i style="height:12px;background:#EF4444"></i><i style="height:7px;background:#F97316"></i><i style="height:4px;background:#FACC15"></i></div>
+        <div class="bar"><i style="height:16px;background:#EF4444"></i><i style="height:9px;background:#F97316"></i><i style="height:7px;background:#FACC15"></i></div>
+        <div class="bar"><i style="height:20px;background:#EF4444"></i><i style="height:12px;background:#F97316"></i><i style="height:9px;background:#FACC15"></i><i style="height:5px;background:#22C55E"></i></div>
+        <div class="bar"><i style="height:24px;background:#EF4444"></i><i style="height:15px;background:#F97316"></i><i style="height:12px;background:#FACC15"></i><i style="height:8px;background:#22C55E"></i></div>
+        <div class="bar"><i style="height:28px;background:#EF4444"></i><i style="height:18px;background:#F97316"></i><i style="height:14px;background:#FACC15"></i><i style="height:11px;background:#22C55E"></i><i style="height:6px;background:#3B82F6"></i></div>
       </div>
       <div class="xlab"><span>2월</span><span>4월</span><span>7월</span></div>
       <div class="legend">
-        <span class="lg"><span class="d" style="background:#FDE68A"></span>Lv.1~2</span>
-        <span class="lg"><span class="d" style="background:#FBBF24"></span>Lv.3</span>
-        <span class="lg"><span class="d" style="background:#F59E0B"></span>Lv.4</span>
-        <span class="lg"><span class="d" style="background:#EA580C"></span>Lv.5</span>
+        <span class="lg"><span class="d" style="background:#EF4444"></span>빨1</span>
+        <span class="lg"><span class="d" style="background:#F97316"></span>주2</span>
+        <span class="lg"><span class="d" style="background:#FACC15"></span>노3</span>
+        <span class="lg"><span class="d" style="background:#22C55E"></span>초4</span>
+        <span class="lg"><span class="d" style="background:#3B82F6"></span>파5</span>
       </div>
     </div>
 
     <div class="lbl">등급별 완등</div>
     <div class="dist">
-      <div class="drow"><span class="nm">Lv.2</span><span class="track"><i style="width:70%;background:#FCD34D"></i></span><span class="n">28</span></div>
-      <div class="drow"><span class="nm">Lv.3</span><span class="track"><i style="width:85%;background:#FBBF24"></i></span><span class="n">34</span></div>
-      <div class="drow"><span class="nm">Lv.4</span><span class="track"><i style="width:45%;background:#F59E0B"></i></span><span class="n">18</span></div>
-      <div class="drow"><span class="nm">Lv.5</span><span class="track"><i style="width:18%;background:#EA580C"></i></span><span class="n">7</span></div>
-      <div class="hintline">암장 색을 등급으로 환산해 합산 · 세션 상세에선 실제 색으로 표시</div>
+      <div class="drow"><span class="sqm" style="background:#F97316"></span><span class="nm">Lv.2 주황</span><span class="track"><i style="width:70%;background:#F97316"></i></span><span class="n">28</span></div>
+      <div class="drow"><span class="sqm" style="background:#FACC15"></span><span class="nm">Lv.3 노랑</span><span class="track"><i style="width:85%;background:#FACC15"></i></span><span class="n">34</span></div>
+      <div class="drow"><span class="sqm" style="background:#22C55E"></span><span class="nm">Lv.4 초록</span><span class="track"><i style="width:45%;background:#22C55E"></i></span><span class="n">18</span></div>
+      <div class="drow"><span class="sqm" style="background:#3B82F6"></span><span class="nm">Lv.5 파랑</span><span class="track"><i style="width:18%;background:#3B82F6"></i></span><span class="n">7</span></div>
+      <div class="hintline">암장 색을 앱 레벨로 환산해 합산 · 세션 상세에선 실제 색으로 표시</div>
     </div>
 
     <div class="lbl">세션</div>

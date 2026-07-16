@@ -14,38 +14,44 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
 .steps{display:flex;gap:6px;padding:4px 24px 0}
 .steps i{height:4px;flex:1;border-radius:2px;background:#1E2634}
 .steps i.on{background:#EA580C}
-.body{flex:1;padding:22px 24px 0;overflow-y:auto}
-.logo{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#94A3B8;letter-spacing:.5px}
+.body{flex:1;padding:18px 24px 0;overflow-y:auto}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:#94A3B8;letter-spacing:.5px}
 .logo b{color:#EA580C}
-h1{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;margin:14px 0 6px;line-height:1.1}
-.desc{color:#94A3B8;font-size:14px;line-height:1.5;margin-bottom:22px}
-.opts{display:flex;flex-direction:column;gap:10px}
-.opt{display:flex;align-items:center;gap:14px;background:#141A26;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px}
-.opt.sel{border-color:#EA580C;background:linear-gradient(160deg,#20140b,#141a26)}
-.sq{width:30px;height:30px;border-radius:9px;flex:none}
-.opt .t{font-weight:700;font-size:16px}
-.opt .s{font-size:12px;color:#64748B;margin-top:1px}
-.opt .lv{margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:#94A3B8}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;margin:10px 0 4px;line-height:1.1}
+.desc{color:#94A3B8;font-size:13px;line-height:1.5;margin-bottom:14px}
+.scale{display:flex;flex-direction:column;gap:5px}
+.opt{display:flex;align-items:center;gap:12px;background:#141A26;border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:9px 12px;min-height:44px}
+.opt.sel{border-color:#EA580C;background:linear-gradient(120deg,#20140b,#141a26)}
+.sq{width:24px;height:24px;border-radius:7px;flex:none}
+.opt .t{font-weight:700;font-size:14px}
+.opt .lv{margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#64748B}
 .opt.sel .lv{color:#EA580C}
-.skip{text-align:center;color:#64748B;font-size:13px;font-weight:600;margin-top:16px}
-.foot{padding:14px 24px 40px}
-.btn{height:56px;border-radius:16px;background:#EA580C;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:17px;border:none;width:100%}
+.tag{margin-left:auto;font-size:10px;color:#64748B;font-weight:700}
+.foot{padding:12px 24px 34px}
+.skip{text-align:center;color:#64748B;font-size:13px;font-weight:600;margin-bottom:12px}
+.btn{height:54px;border-radius:16px;background:#EA580C;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:16px;border:none;width:100%}
 </style></head>
 <body><div class="phone">
   <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
   <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i></div>
   <div class="body">
     <div class="logo">✦ WE-<b>CLIMB</b> · 시작하기</div>
-    <h1>지금 어느 정도<br>푸세요?</h1>
-    <div class="desc">대략만 골라주세요. 기록이 쌓이면 자동으로 더 정확하게 맞춰드려요.</div>
-    <div class="opts">
-      <div class="opt"><span class="sq" style="background:#F1F5F9"></span><div><div class="t">이제 막 시작했어요</div><div class="s">쉬운 색 위주</div></div><span class="lv">Lv.1~2</span></div>
-      <div class="opt sel"><span class="sq" style="background:#22C55E"></span><div><div class="t">중간 색을 풀어요</div><div class="s">초록~파랑 완등</div></div><span class="lv">Lv.3~4</span></div>
-      <div class="opt"><span class="sq" style="background:#F87171"></span><div><div class="t">어려운 색에 도전해요</div><div class="s">빨강 이상</div></div><span class="lv">Lv.5+</span></div>
+    <h1>평소 어느 정도 푸세요?</h1>
+    <div class="desc">평균적으로 완등하는 난이도를 골라주세요. 기록이 쌓이면 자동으로 맞춰드려요.</div>
+    <div class="scale">
+      <div class="opt"><span class="sq" style="background:#0B1220;border:1.5px solid #475569"></span><div class="t">검정</div><span class="lv">Lv.9 · 어려움</span></div>
+      <div class="opt"><span class="sq" style="background:#92400E"></span><div class="t">갈색</div><span class="lv">Lv.8</span></div>
+      <div class="opt"><span class="sq" style="background:#9333EA"></span><div class="t">보라</div><span class="lv">Lv.7</span></div>
+      <div class="opt"><span class="sq" style="background:#4338CA"></span><div class="t">남색</div><span class="lv">Lv.6</span></div>
+      <div class="opt sel"><span class="sq" style="background:#3B82F6"></span><div class="t">파랑</div><span class="lv">Lv.5</span></div>
+      <div class="opt"><span class="sq" style="background:#22C55E"></span><div class="t">초록</div><span class="lv">Lv.4</span></div>
+      <div class="opt"><span class="sq" style="background:#FACC15"></span><div class="t">노랑</div><span class="lv">Lv.3</span></div>
+      <div class="opt"><span class="sq" style="background:#F97316"></span><div class="t">주황</div><span class="lv">Lv.2</span></div>
+      <div class="opt"><span class="sq" style="background:#EF4444"></span><div class="t">빨강</div><span class="lv">Lv.1 · 쉬움</span></div>
     </div>
-    <div class="skip">잘 모르겠어요 — 건너뛰기</div>
   </div>
   <div class="foot">
+    <div class="skip">잘 모르겠어요 — 건너뛰기</div>
     <button class="btn">시작하기</button>
   </div>
 </div></body></html>

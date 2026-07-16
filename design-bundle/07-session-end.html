@@ -26,6 +26,8 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
 .q{display:flex;align-items:center;gap:12px;background:#141A26;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;margin-bottom:10px}
 .thumb{width:52px;height:52px;border-radius:10px;background:linear-gradient(160deg,#3a3330,#161a20);flex:none;position:relative}
 .thumb .sq{position:absolute;top:5px;left:5px;width:12px;height:12px;border-radius:4px}
+.thumb .pl,.ft .pl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.thumb .pl svg,.ft .pl svg{width:16px;height:16px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
 .q .t{font-weight:600;font-size:14px}
 .q .s{font-size:12px;color:#64748B}
 .q .cut{margin-left:auto;font-size:13px;font-weight:700;padding:9px 14px;border-radius:11px;background:#EA580C;color:#fff}
@@ -66,16 +68,16 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
 
     <div class="lbl"><span>미뤄둔 트리밍</span><span style="color:#EA580C">2개</span></div>
     <div class="q">
-      <div class="thumb"><span class="sq" style="background:#60A5FA"></span></div>
-      <div><div class="t">파랑 · Lv.4</div><div class="s">0:19 · 4트 완등</div></div>
+      <div class="thumb"><span class="sq" style="background:#3B82F6"></span><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div>
+      <div><div class="t">파랑 · Lv.5</div><div class="s">0:19 · 4트 완등 · 재생</div></div>
       <span class="cut">자르기</span>
     </div>
     <div class="q">
-      <div class="thumb"><span class="sq" style="background:#F87171"></span></div>
-      <div><div class="t">빨강 · Lv.5</div><div class="s">0:24 · 첫 완등</div></div>
+      <div class="thumb"><span class="sq" style="background:#22C55E"></span><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div>
+      <div><div class="t">초록 · Lv.4</div><div class="s">0:24 · 첫 완등 · 재생</div></div>
       <span class="cut">자르기</span>
     </div>
-    <div class="hint">자르지 않으면 원본 그대로 저장돼요.</div>
+    <div class="hint">썸네일을 탭하면 재생 · 자르지 않으면 원본 그대로 저장돼요.</div>
 
     <div class="lbl"><span>실패 영상</span><span>47개</span></div>
     <div class="fail">
@@ -84,13 +86,13 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
         <div><div class="t">기본적으로 모두 삭제해요</div><div class="s">남기고 싶은 것만 탭해서 골라요</div></div>
       </div>
       <div class="thumbs">
-        <div class="ft del"><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
-        <div class="ft keep"><span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></div>
-        <div class="ft del"><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
-        <div class="ft del"><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
-        <div class="ft del"><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+        <div class="ft del"><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+        <div class="ft keep"><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span><span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></div>
+        <div class="ft del"><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+        <div class="ft del"><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+        <div class="ft del"><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
       </div>
-      <div class="failnote">46개 삭제 · <b>1개 보관</b></div>
+      <div class="failnote">탭해서 확인 · 46개 삭제 · <b>1개 보관</b></div>
     </div>
   </div>
   <div class="foot">
