@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>1 · 온보딩 (자기평가)</title>
+<title>1 · 온보딩 (벽 게이지)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -14,20 +14,27 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
 .steps{display:flex;gap:6px;padding:4px 24px 0}
 .steps i{height:4px;flex:1;border-radius:2px;background:#1E2634}
 .steps i.on{background:#EA580C}
-.body{flex:1;padding:18px 24px 0;overflow-y:auto}
-.logo{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:#94A3B8;letter-spacing:.5px}
+.body{flex:1;padding:18px 24px 0;display:flex;flex-direction:column;align-items:center}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:#94A3B8;letter-spacing:.5px;align-self:flex-start}
 .logo b{color:#EA580C}
-h1{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;margin:10px 0 4px;line-height:1.1}
-.desc{color:#94A3B8;font-size:13px;line-height:1.5;margin-bottom:14px}
-.scale{display:flex;flex-direction:column;gap:5px}
-.opt{display:flex;align-items:center;gap:12px;background:#141A26;border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:9px 12px;min-height:44px}
-.opt.sel{border-color:#EA580C;background:linear-gradient(120deg,#20140b,#141a26)}
-.sq{width:24px;height:24px;border-radius:7px;flex:none}
-.opt .t{font-weight:700;font-size:14px}
-.opt .lv{margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#64748B}
-.opt.sel .lv{color:#EA580C}
-.tag{margin-left:auto;font-size:10px;color:#64748B;font-weight:700}
-.foot{padding:12px 24px 34px}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;margin:10px 0 4px;line-height:1.1;align-self:flex-start}
+.desc{color:#94A3B8;font-size:13px;line-height:1.5;margin-bottom:14px;align-self:flex-start}
+/* climbing-wall gauge */
+.gaugewrap{display:flex;align-items:stretch;gap:14px;margin-top:6px}
+.side{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:4px 0;color:#64748B;font-size:12px;font-weight:700}
+.side .hard{color:#cbd5e1}
+.wall{position:relative;width:132px;height:452px;border-radius:22px;overflow:hidden;background:#0e1420;border:1px solid rgba(255,255,255,.1)}
+.base{position:absolute;inset:0;background:linear-gradient(to top,#EF4444,#F97316,#FACC15,#22C55E,#3B82F6,#4338CA,#9333EA,#92400E,#0B1220);opacity:.13}
+.holds{position:absolute;inset:0}
+.holds i{position:absolute;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.14);box-shadow:inset 0 -2px 3px rgba(0,0,0,.3)}
+.fill{position:absolute;left:0;right:0;bottom:0;height:54%;overflow:hidden}
+.fill .g{position:absolute;left:0;right:0;bottom:0;height:452px;background:linear-gradient(to top,#EF4444,#F97316,#FACC15,#22C55E,#3B82F6,#4338CA,#9333EA,#92400E,#0B1220)}
+.handle{position:absolute;left:-7px;right:-7px;bottom:54%;transform:translateY(50%);height:30px;display:flex;align-items:center;justify-content:center}
+.handle .bar{width:100%;height:6px;border-radius:4px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.5)}
+.handle .grip{position:absolute;width:34px;height:22px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;gap:2px}
+.handle .grip span{width:2px;height:9px;border-radius:2px;background:#94A3B8}
+.hint{color:#64748B;font-size:12px;font-weight:600;margin-top:14px;text-align:center}
+.foot{padding:10px 24px 34px}
 .skip{text-align:center;color:#64748B;font-size:13px;font-weight:600;margin-bottom:12px}
 .btn{height:54px;border-radius:16px;background:#EA580C;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:16px;border:none;width:100%}
 </style></head>
@@ -36,19 +43,25 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;marg
   <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i></div>
   <div class="body">
     <div class="logo">✦ WE-<b>CLIMB</b> · 시작하기</div>
-    <h1>평소 어느 정도 푸세요?</h1>
-    <div class="desc">평균적으로 완등하는 난이도를 골라주세요. 기록이 쌓이면 자동으로 맞춰드려요.</div>
-    <div class="scale">
-      <div class="opt"><span class="sq" style="background:#0B1220;border:1.5px solid #475569"></span><div class="t">검정</div><span class="lv">Lv.9 · 어려움</span></div>
-      <div class="opt"><span class="sq" style="background:#92400E"></span><div class="t">갈색</div><span class="lv">Lv.8</span></div>
-      <div class="opt"><span class="sq" style="background:#9333EA"></span><div class="t">보라</div><span class="lv">Lv.7</span></div>
-      <div class="opt"><span class="sq" style="background:#4338CA"></span><div class="t">남색</div><span class="lv">Lv.6</span></div>
-      <div class="opt sel"><span class="sq" style="background:#3B82F6"></span><div class="t">파랑</div><span class="lv">Lv.5</span></div>
-      <div class="opt"><span class="sq" style="background:#22C55E"></span><div class="t">초록</div><span class="lv">Lv.4</span></div>
-      <div class="opt"><span class="sq" style="background:#FACC15"></span><div class="t">노랑</div><span class="lv">Lv.3</span></div>
-      <div class="opt"><span class="sq" style="background:#F97316"></span><div class="t">주황</div><span class="lv">Lv.2</span></div>
-      <div class="opt"><span class="sq" style="background:#EF4444"></span><div class="t">빨강</div><span class="lv">Lv.1 · 쉬움</span></div>
+    <h1>평소 어디까지 푸세요?</h1>
+    <div class="desc">벽을 위아래로 드래그해서 평소 완등하는 높이에 맞춰주세요.</div>
+    <div class="gaugewrap">
+      <div class="side"><span class="hard">어려움</span><span>쉬움</span></div>
+      <div class="wall">
+        <div class="base"></div>
+        <div class="holds">
+          <i style="left:22px;top:40px"></i><i style="left:88px;top:70px"></i>
+          <i style="left:52px;top:120px"></i><i style="left:20px;top:170px"></i>
+          <i style="left:96px;top:150px"></i><i style="left:60px;top:210px"></i>
+          <i style="left:30px;top:250px"></i><i style="left:92px;top:270px"></i>
+          <i style="left:54px;top:320px"></i><i style="left:24px;top:360px"></i>
+          <i style="left:94px;top:380px"></i><i style="left:60px;top:420px"></i>
+        </div>
+        <div class="fill"><div class="g"></div></div>
+        <div class="handle"><div class="bar"></div><div class="grip"><span></span><span></span><span></span></div></div>
+      </div>
     </div>
+    <div class="hint">기록이 쌓이면 자동으로 더 정확해져요</div>
   </div>
   <div class="foot">
     <div class="skip">잘 모르겠어요 — 건너뛰기</div>
