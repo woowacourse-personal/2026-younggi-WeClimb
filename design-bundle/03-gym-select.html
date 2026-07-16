@@ -38,7 +38,7 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
 .cmp{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)}
 .cmphd{font-size:11px;color:#64748B;font-weight:700;letter-spacing:.2px;margin-bottom:10px;padding:0 2px}
 .specline{display:flex;align-items:center;gap:9px;margin-bottom:6px}
-.rl{width:66px;flex:none;text-align:right;font-size:11px;font-weight:700;color:#94A3B8}
+.rl{width:74px;flex:none;text-align:left;font-size:11px;font-weight:700;color:#94A3B8}
 .specrow{flex:1;display:grid;grid-template-columns:repeat(9,1fr);gap:3px}
 .specrow.app .cell{height:12px;border-radius:3px;opacity:.28}
 .specrow.app .cell.cov{opacity:1}
@@ -79,34 +79,36 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
       <div class="adv">
         <div class="ttl">기록으로 보면, 여기선</div>
         <div class="advrow">
-          <div class="acard"><div class="k">평균 완등</div><div class="val"><span class="sq" style="background:#22C55E"></span>초록 <span style="color:#94A3B8;font-weight:600">~파랑</span></div></div>
-          <div class="acard"><div class="k">도전해볼 만</div><div class="val"><span class="sq" style="background:#EF4444"></span>빨강 <span style="color:#22C55E;font-weight:600">Lv.7</span></div></div>
+          <div class="acard"><div class="k">평균 완등</div><div class="val"><span class="sq" style="background:#46AE72"></span>초록 <span style="color:#94A3B8;font-weight:600">~파랑</span></div></div>
+          <div class="acard"><div class="k">도전해볼 만한 레벨</div><div class="val"><span class="sq" style="background:#E45D5D"></span>빨강 <span style="color:#46AE72;font-weight:600">Lv.7</span></div></div>
         </div>
       </div>
       <div class="cmp">
-        <div class="cmphd">난이도 비교 <span style="color:#475569;font-weight:600">· 쉬움 → 어려움</span></div>
+        <div class="specline"><span class="rl"></span>
+          <div style="flex:1;display:flex;justify-content:space-between;font-size:10px;color:#64748B;font-weight:700;padding:0 2px 5px"><span>쉬움</span><span>어려움</span></div>
+        </div>
         <div class="specline"><span class="rl">앱 기준</span>
           <div class="specrow app">
-            <div class="cell cov" style="background:#EF4444"></div>
-            <div class="cell" style="background:#FB923C"></div>
-            <div class="cell cov" style="background:#FACC15"></div>
-            <div class="cell cov" style="background:#22C55E"></div>
-            <div class="cell cov" style="background:#3B82F6"></div>
-            <div class="cell" style="background:#6366F1"></div>
-            <div class="cell cov" style="background:#A855F7"></div>
-            <div class="cell" style="background:#B57C4A"></div>
+            <div class="cell cov" style="background:#E45D5D"></div>
+            <div class="cell" style="background:#E68A4C"></div>
+            <div class="cell cov" style="background:#DDBB44"></div>
+            <div class="cell cov" style="background:#46AE72"></div>
+            <div class="cell cov" style="background:#5A8FDB"></div>
+            <div class="cell" style="background:#7C7FDB"></div>
+            <div class="cell cov" style="background:#A877D2"></div>
+            <div class="cell" style="background:#AC7B52"></div>
             <div class="cell" style="background:#1E293B;border:1px solid #64748B"></div>
           </div>
         </div>
         <div class="specline"><span class="rl">닻 클라이밍</span>
           <div class="specrow gym">
-            <div class="cell"><span class="chip" style="background:#F1F5F9"></span></div>
+            <div class="cell"><span class="chip" style="background:#E2E8F0"></span></div>
             <div class="cell"></div>
-            <div class="cell"><span class="chip" style="background:#FACC15"></span></div>
-            <div class="cell"><span class="chip" style="background:#22C55E"></span></div>
-            <div class="cell"><span class="chip" style="background:#3B82F6"></span></div>
+            <div class="cell"><span class="chip" style="background:#DDBB44"></span></div>
+            <div class="cell"><span class="chip" style="background:#46AE72"></span></div>
+            <div class="cell"><span class="chip" style="background:#5A8FDB"></span></div>
             <div class="cell"></div>
-            <div class="cell"><span class="chip" style="background:#EF4444"></span></div>
+            <div class="cell"><span class="chip" style="background:#E45D5D"></span></div>
             <div class="cell"></div>
             <div class="cell"></div>
           </div>

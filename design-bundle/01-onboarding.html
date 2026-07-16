@@ -39,35 +39,34 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;marg
       <svg width="176" height="470" viewBox="0 0 176 470">
         <defs>
           <linearGradient id="grad" x1="0" y1="470" x2="0" y2="0" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#EF4444"/><stop offset="0.12" stop-color="#FB923C"/>
-            <stop offset="0.25" stop-color="#FACC15"/><stop offset="0.38" stop-color="#22C55E"/>
-            <stop offset="0.52" stop-color="#3B82F6"/><stop offset="0.66" stop-color="#6366F1"/>
-            <stop offset="0.80" stop-color="#A855F7"/><stop offset="0.90" stop-color="#B57C4A"/>
+            <stop offset="0" stop-color="#E45D5D"/><stop offset="0.12" stop-color="#E68A4C"/>
+            <stop offset="0.25" stop-color="#DDBB44"/><stop offset="0.38" stop-color="#46AE72"/>
+            <stop offset="0.52" stop-color="#5A8FDB"/><stop offset="0.66" stop-color="#7C7FDB"/>
+            <stop offset="0.80" stop-color="#A877D2"/><stop offset="0.90" stop-color="#AC7B52"/>
             <stop offset="1" stop-color="#1E293B"/>
           </linearGradient>
           <clipPath id="wall">
-            <polygon points="40,22 150,22 40,448"/>
+            <path d="M40 22 L150 22 C108 70 70 150 56 430 Q48 448 40 438 Z"/>
           </clipPath>
         </defs>
         <g clip-path="url(#wall)">
           <rect x="0" y="0" width="176" height="470" fill="url(#grad)" opacity="0.16"/>
-          <!-- climbed fill from bottom apex up to handle y=235 (~50%) -->
+          <!-- climbed fill from rounded base up to handle y=235 -->
           <rect x="0" y="235" width="176" height="235" fill="url(#grad)"/>
-          <!-- holds along the overhanging face -->
-          <circle cx="46" cy="410" r="6" fill="rgba(255,255,255,.2)"/>
-          <circle cx="58" cy="350" r="5" fill="rgba(255,255,255,.18)"/>
-          <circle cx="70" cy="290" r="6" fill="rgba(255,255,255,.2)"/>
-          <circle cx="82" cy="235" r="5" fill="rgba(0,0,0,.18)"/>
-          <circle cx="96" cy="175" r="6" fill="rgba(0,0,0,.2)"/>
-          <circle cx="110" cy="115" r="5" fill="rgba(0,0,0,.2)"/>
-          <circle cx="122" cy="66" r="5" fill="rgba(0,0,0,.22)"/>
+          <!-- holds along the increasingly-leaning face -->
+          <circle cx="116" cy="60" r="5" fill="rgba(0,0,0,.22)"/>
+          <circle cx="88" cy="124" r="6" fill="rgba(0,0,0,.2)"/>
+          <circle cx="70" cy="206" r="5" fill="rgba(0,0,0,.18)"/>
+          <circle cx="58" cy="300" r="6" fill="rgba(255,255,255,.2)"/>
+          <circle cx="52" cy="366" r="5" fill="rgba(255,255,255,.18)"/>
+          <circle cx="49" cy="410" r="5" fill="rgba(255,255,255,.2)"/>
         </g>
-        <polygon points="40,22 150,22 40,448" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5"/>
+        <path d="M40 22 L150 22 C108 70 70 150 56 430 Q48 448 40 438 Z" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5"/>
         <!-- handle at the climbed height -->
         <g>
-          <rect x="34" y="231" width="70" height="8" rx="4" fill="#fff"/>
-          <rect x="52" y="225" width="22" height="20" rx="6" fill="#fff"/>
-          <rect x="58" y="231" width="2" height="8" rx="1" fill="#94A3B8"/><rect x="62" y="231" width="2" height="8" rx="1" fill="#94A3B8"/><rect x="66" y="231" width="2" height="8" rx="1" fill="#94A3B8"/>
+          <rect x="34" y="231" width="46" height="8" rx="4" fill="#fff"/>
+          <rect x="45" y="225" width="22" height="20" rx="6" fill="#fff"/>
+          <rect x="51" y="231" width="2" height="8" rx="1" fill="#94A3B8"/><rect x="55" y="231" width="2" height="8" rx="1" fill="#94A3B8"/><rect x="59" y="231" width="2" height="8" rx="1" fill="#94A3B8"/>
         </g>
       </svg>
     </div>
