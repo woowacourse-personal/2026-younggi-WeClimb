@@ -38,14 +38,12 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
 .fail .h svg{width:20px;height:20px;flex:none}
 .fail .h .t{font-weight:700;font-size:14px}
 .fail .h .s{font-size:12px;color:#94A3B8}
-.thumbs{display:flex;gap:7px;margin-top:12px;overflow-x:auto}
-.ft{width:52px;height:52px;border-radius:10px;flex:none;background:linear-gradient(160deg,#2a2320,#12151b);position:relative;border:2px solid transparent}
-.ft.del::after{content:"";position:absolute;inset:0;background:rgba(220,38,38,.35);border-radius:8px}
-.ft.del .x{position:absolute;top:3px;right:3px;width:15px;height:15px;border-radius:50%;background:#DC2626;display:flex;align-items:center;justify-content:center;z-index:2}
-.ft.del .x svg{width:9px;height:9px}
-.ft.keep{border-color:#22C55E}
-.ft.keep .k{position:absolute;top:3px;right:3px;width:15px;height:15px;border-radius:50%;background:#22C55E;display:flex;align-items:center;justify-content:center}
-.ft.keep .k svg{width:9px;height:9px}
+.thumbs{display:flex;gap:8px;margin-top:12px;overflow-x:auto}
+.ft{width:56px;height:56px;border-radius:10px;flex:none;background:linear-gradient(160deg,#2a2320,#12151b);position:relative;opacity:.42}
+.ft.keep{opacity:1;box-shadow:0 0 0 2px #22C55E}
+.ft .mark{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:7px;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:2}
+.ft.keep .mark{background:#22C55E}
+.ft .mark svg{width:12px;height:12px}
 .failnote{font-size:11px;color:#94A3B8;margin-top:10px}
 .failnote b{color:#22C55E}
 .foot{flex:none;padding:14px 20px 26px;border-top:1px solid rgba(255,255,255,.08)}
@@ -83,16 +81,16 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
     <div class="fail">
       <div class="h">
         <svg viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg>
-        <div><div class="t">기본적으로 모두 삭제해요</div><div class="s">남기고 싶은 것만 탭해서 골라요</div></div>
+        <div><div class="t">실패 영상은 모두 삭제돼요</div><div class="s">남길 것만 북마크하세요 · 썸네일 탭하면 재생</div></div>
       </div>
       <div class="thumbs">
-        <div class="ft del"><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
-        <div class="ft keep"><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span><span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></div>
-        <div class="ft del"><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
-        <div class="ft del"><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
-        <div class="ft del"><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+        <div class="ft"><span class="pl"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.85)"><path d="M7 4l13 8-13 8z"/></svg></span><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4z"/></svg></span></div>
+        <div class="ft keep"><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span><span class="mark"><svg viewBox="0 0 24 24" fill="#fff" stroke="#fff" stroke-width="1"><path d="M6 4h12v16l-6-4-6 4z"/></svg></span></div>
+        <div class="ft"><span class="pl"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.85)"><path d="M7 4l13 8-13 8z"/></svg></span><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4z"/></svg></span></div>
+        <div class="ft"><span class="pl"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.85)"><path d="M7 4l13 8-13 8z"/></svg></span><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4z"/></svg></span></div>
+        <div class="ft"><span class="pl"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.85)"><path d="M7 4l13 8-13 8z"/></svg></span><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4z"/></svg></span></div>
       </div>
-      <div class="failnote">탭해서 확인 · 46개 삭제 · <b>1개 보관</b></div>
+      <div class="failnote">북마크한 <b>1개만 보관</b> · 나머지 46개 삭제</div>
     </div>
   </div>
   <div class="foot">
