@@ -1,0 +1,746 @@
+<style>
+
+*{box-sizing:border-box;margin:0;padding:0}
+#app{min-height:100vh;background:#05070d;color:#fff;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased}
+.screen{display:none}
+.screen.active{display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:20px}
+[data-nav]{cursor:pointer}
+#jump{position:fixed;right:14px;bottom:14px;z-index:999;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+#jump .toggle{background:#EA580C;color:#fff;border:none;border-radius:999px;padding:10px 16px;font-weight:700;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.5);cursor:pointer}
+#jump .panel{display:none;background:#141A26;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:8px;grid-template-columns:1fr 1fr;gap:6px;box-shadow:0 12px 40px rgba(0,0,0,.6)}
+#jump.open .panel{display:grid}
+#jump .panel button{background:#1E2634;color:#cbd5e1;border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:8px 10px;font-size:12px;font-weight:600;text-align:left;cursor:pointer;white-space:nowrap}
+#jump .panel button:hover{background:#2a3446;color:#fff}
+
+/* ===== 01-onboarding ===== */
+#scr1 .phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+#scr1 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
+#scr1 .cnd{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif}
+#scr1 .steps{display:flex;gap:6px;padding:4px 24px 0}
+#scr1 .steps i{height:4px;flex:1;border-radius:2px;background:#1E2634}
+#scr1 .steps i.on{background:#EA580C}
+#scr1 .body{flex:1;padding:18px 24px 0;display:flex;flex-direction:column;align-items:center}
+#scr1 .logo{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:15px;font-weight:700;color:#94A3B8;letter-spacing:.5px;align-self:flex-start}
+#scr1 .logo b{color:#EA580C}
+#scr1 h1{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:26px;font-weight:700;margin:10px 0 4px;line-height:1.1;align-self:flex-start}
+#scr1 .desc{color:#94A3B8;font-size:13px;line-height:1.5;margin-bottom:10px;align-self:flex-start}
+#scr1 .gaugewrap{display:flex;align-items:stretch;gap:12px;margin-top:2px}
+#scr1 .side{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:6px 0;color:#64748B;font-size:12px;font-weight:700}
+#scr1 .side .hard{color:#cbd5e1}
+#scr1 .hint{color:#64748B;font-size:12px;font-weight:600;margin-top:12px;text-align:center}
+#scr1 .foot{padding:8px 24px 34px}
+#scr1 .skip{text-align:center;color:#64748B;font-size:13px;font-weight:600;margin-bottom:12px}
+#scr1 .btn{height:54px;border-radius:16px;background:#EA580C;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:16px;border:none;width:100%}
+/* ===== 02-home ===== */
+#scr2 .phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+#scr2 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
+#scr2 .cnd{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif}
+#scr2 .body{flex:1;overflow-y:auto;padding:6px 20px 20px}
+#scr2 .hi{font-size:15px;color:#94A3B8;font-weight:600}
+#scr2 .name{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:28px;font-weight:700;margin-top:1px}
+#scr2 .snap{background:linear-gradient(160deg,#0f1830,#141a26);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:18px;margin-top:14px}
+#scr2 .srow{display:flex;align-items:center;gap:18px}
+#scr2 .ring{width:96px;height:96px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;position:relative;
+  background:conic-gradient(#5A8FDB 0 78%,rgba(255,255,255,.08) 78% 100%)}
+#scr2 .ring::before{content:"";position:absolute;inset:7px;border-radius:50%;background:#141a26}
+#scr2 .ring .in{position:relative;z-index:2;text-align:center}
+#scr2 .ring .lv{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:34px;font-weight:800;line-height:.9;color:#5A8FDB}
+#scr2 .ring .lb{font-size:10px;color:#94A3B8;font-weight:700;letter-spacing:.5px}
+#scr2 .sinfo .t{font-size:13px;color:#94A3B8;font-weight:600}
+#scr2 .sinfo .big{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:22px;font-weight:700;margin:2px 0 4px;display:flex;align-items:center;gap:8px}
+#scr2 .sinfo .big .sq{width:16px;height:16px;border-radius:5px;background:#5A8FDB}
+#scr2 .sinfo .p{font-size:12px;color:#46AE72;font-weight:600}
+#scr2 .curve{margin-top:16px}
+#scr2 .clab{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+#scr2 .clab .t{font-size:12px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+#scr2 .clab .v{font-size:12px;color:#94A3B8;font-weight:600}
+#scr2 .chart{height:84px;border-radius:12px;background:#0f1420;position:relative;overflow:hidden;display:flex;align-items:flex-end;gap:3px;padding:8px}
+#scr2 .chart .bar{flex:1;border-radius:3px 3px 0 0;display:flex;flex-direction:column-reverse}
+#scr2 .chart .bar i{display:block;width:100%}
+#scr2 .legend{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+#scr2 .lg{display:flex;align-items:center;gap:5px;font-size:11px;color:#94A3B8;font-weight:600}
+#scr2 .lg .d{width:9px;height:9px;border-radius:2px}
+#scr2 .mon{font-size:12px;color:#64748B;font-weight:600;margin-top:10px;text-align:center}
+#scr2 .start{height:60px;border-radius:18px;background:#EA580C;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:18px;margin-top:18px;box-shadow:0 12px 30px rgba(234,88,12,.3)}
+#scr2 .start svg{width:24px;height:24px}
+#scr2 .sect{font-size:12px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:22px 4px 10px}
+#scr2 .rep{background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:20px;overflow:hidden}
+#scr2 .rep .img{height:130px;background:linear-gradient(160deg,#334155,#0f172a);display:flex;align-items:flex-end;padding:16px}
+#scr2 .rep .big{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:40px;font-weight:700;line-height:.9}
+#scr2 .rep .meta{font-size:12px;color:#cbd5e1;font-weight:600}
+#scr2 .rep .foot{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-size:12px;color:#94A3B8}
+#scr2 .mini{display:flex;gap:4px}
+#scr2 .mini i{width:16px;height:8px;border-radius:3px;display:block}
+#scr2 .tab{height:66px;flex:none;display:flex;border-top:1px solid rgba(255,255,255,.1);background:rgba(20,26,38,.95);padding-bottom:8px}
+#scr2 .tab a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:#64748B;font-weight:700}
+#scr2 .tab a.on{color:#fff}
+#scr2 .tab svg{width:22px;height:22px}
+/* ===== 03-gym-select ===== */
+#scr3 .phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+#scr3 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
+#scr3 .cnd{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif}
+#scr3 .hd{display:flex;align-items:center;gap:14px;padding:6px 20px 10px}
+#scr3 .back{width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+#scr3 .back svg{width:22px;height:22px}
+#scr3 .hd h1{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:22px;font-weight:700}
+#scr3 .body{flex:1;overflow-y:auto;padding:0 20px}
+#scr3 .search{display:flex;align-items:center;gap:10px;background:#1E2634;border-radius:14px;padding:12px 16px;color:#94A3B8;font-size:14px;font-weight:500}
+#scr3 .search svg{width:17px;height:17px;flex:none}
+#scr3 .sect{font-size:11px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:16px 4px 8px}
+#scr3 .pick{border:1px solid rgba(234,88,12,.5);background:linear-gradient(160deg,#20140b,#141a26);border-radius:16px;padding:14px}
+#scr3 .pick .top{display:flex;align-items:center;gap:12px}
+#scr3 .ic{width:38px;height:38px;border-radius:11px;background:rgba(234,88,12,.15);display:flex;align-items:center;justify-content:center;flex:none}
+#scr3 .ic svg{width:19px;height:19px}
+#scr3 .pick .t{font-weight:700;font-size:16px}
+#scr3 .pick .s{font-size:12px;color:#94A3B8}
+#scr3 .pick .chk{margin-left:auto;color:#EA580C}
+#scr3 .pick .chk svg{width:22px;height:22px}
+#scr3 .adv{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)}
+#scr3 .ttl{font-size:11px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+#scr3 .advrow{display:flex;gap:8px}
+#scr3 .acard{flex:1;background:rgba(0,0,0,.25);border-radius:11px;padding:9px 11px}
+#scr3 .acard .k{font-size:11px;color:#94A3B8;font-weight:600}
+#scr3 .acard .val{display:flex;align-items:center;gap:6px;margin-top:5px;font-weight:700;font-size:13px}
+#scr3 .acard .sq{width:14px;height:14px;border-radius:4px}
+#scr3 .cmp{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)}
+#scr3 .cmphd{font-size:11px;color:#64748B;font-weight:700;letter-spacing:.2px;margin-bottom:10px;padding:0 2px}
+#scr3 .specline{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+#scr3 .rl{width:74px;flex:none;text-align:left;font-size:11px;font-weight:700;color:#94A3B8}
+#scr3 .specrow{flex:1;display:grid;grid-template-columns:repeat(9,1fr);gap:3px}
+#scr3 .specrow.app .cell{height:12px;border-radius:3px;opacity:.28}
+#scr3 .specrow.app .cell.cov{opacity:1}
+#scr3 .specrow.gym .cell{height:24px;border-radius:6px;background:#161d2b;display:flex;align-items:center;justify-content:center}
+#scr3 .specrow.gym .cell .chip{width:16px;height:16px;border-radius:5px}
+#scr3 .lvnums{flex:1;display:grid;grid-template-columns:repeat(9,1fr);gap:3px}
+#scr3 .lvnums span{text-align:center;font-size:9px;color:#475569;font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-weight:600}
+#scr3 .item{display:flex;align-items:center;gap:14px;padding:13px 4px;border-bottom:1px solid rgba(255,255,255,.06)}
+#scr3 .item .ic2{width:38px;height:38px;border-radius:11px;background:#1E2634;display:flex;align-items:center;justify-content:center;flex:none}
+#scr3 .item .ic2 svg{width:18px;height:18px}
+#scr3 .item .t{font-weight:600;font-size:15px}
+#scr3 .item .s{font-size:12px;color:#64748B;margin-top:1px}
+#scr3 .add{display:flex;align-items:center;gap:10px;margin:12px 0;padding:12px 4px;color:#EA580C;font-weight:700;font-size:14px}
+#scr3 .add svg{width:19px;height:19px}
+#scr3 .foot{flex:none;padding:12px 20px 24px;border-top:1px solid rgba(255,255,255,.08)}
+#scr3 .go{height:56px;border-radius:16px;background:#EA580C;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:17px}
+#scr3 .go svg{width:22px;height:22px}
+/* ===== 04-session-board ===== */
+#scr4 .phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+#scr4 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
+#scr4 .cnd{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif}
+#scr4 .top{text-align:center;padding:8px 0 2px}
+#scr4 .gym{font-size:14px;color:#94A3B8;font-weight:600}
+#scr4 .timer{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:42px;font-weight:700;letter-spacing:2px;line-height:1}
+#scr4 .rec{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#EA580C;font-weight:700;margin-top:1px}
+#scr4 .rec .d{width:7px;height:7px;border-radius:50%;background:#EA580C}
+#scr4 .body{flex:1;padding:8px 20px 0;display:flex;flex-direction:column;overflow-y:auto}
+#scr4 .hd{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 12px}
+#scr4 .hd .l{font-size:13px;color:#cbd5e1;font-weight:600}
+#scr4 .hd .r{font-size:11px;color:#64748B;font-weight:700}
+#scr4 .blvl{display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,#1c2434,#141a26);border:1px solid rgba(255,255,255,.11);border-radius:16px;padding:13px 16px;margin-bottom:13px;box-shadow:0 4px 0 rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.07)}
+#scr4 .sw{width:30px;height:30px;border-radius:9px;flex:none;box-shadow:0 0 0 1px rgba(0,0,0,.25) inset,0 1px 2px rgba(0,0,0,.3)}
+#scr4 .track{flex:1;height:22px;border-radius:8px;background:#0d111a;position:relative;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}
+#scr4 .fill{position:absolute;left:0;top:0;bottom:0}
+#scr4 .over{position:absolute;left:0;top:0;bottom:0}
+#scr4 .cnt{width:32px;text-align:right;font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:22px;font-weight:700}
+#scr4 .cam{height:60px;border-radius:18px;background:#EA580C;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:17px;margin:6px 0 0;box-shadow:0 12px 30px rgba(234,88,12,.32)}
+#scr4 .cam svg{width:24px;height:24px}
+#scr4 .foot{flex:none;padding:12px 20px 22px;display:flex;align-items:center;gap:12px;border-top:1px solid rgba(255,255,255,.08)}
+#scr4 .sum{flex:1;font-size:13px;color:#94A3B8;font-weight:600}
+#scr4 .sum b{color:#fff;font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:18px}
+#scr4 .end{padding:12px 18px;border-radius:14px;background:#1E2634;font-weight:700;font-size:14px;position:relative}
+#scr4 .badge{position:absolute;top:-8px;right:-6px;background:#EA580C;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+/* ===== 05-capture ===== */
+#scr5 .phone{width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06);
+  background:linear-gradient(180deg,#2a2320 0%,#161a20 45%,#0e1219 100%)}
+#scr5 .wall{position:absolute;inset:0;opacity:.5;background:
+  radial-gradient(circle at 30% 30%,#E45D5D 0 14px,transparent 15px),
+  radial-gradient(circle at 62% 22%,#5A8FDB 0 12px,transparent 13px),
+  radial-gradient(circle at 44% 52%,#DDBB44 0 13px,transparent 14px),
+  radial-gradient(circle at 72% 62%,#E45D5D 0 12px,transparent 13px),
+  radial-gradient(circle at 30% 74%,#46AE72 0 13px,transparent 14px),
+  radial-gradient(circle at 58% 82%,#5A8FDB 0 12px,transparent 13px)}
+#scr5 .sb{position:relative;z-index:3;height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#fff}
+#scr5 .cnd{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif}
+#scr5 .hdr{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:6px 20px}
+#scr5 .selc{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:7px 14px;font-weight:700;font-size:14px}
+#scr5 .selc .sq{width:16px;height:16px;border-radius:5px;background:#5A8FDB}
+#scr5 .rec{display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.45);border-radius:20px;padding:7px 12px;font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-weight:700;font-size:15px}
+#scr5 .rec .d{width:9px;height:9px;border-radius:50%;background:#E45D5D;box-shadow:0 0 0 0 rgba(239,68,68,.6)}
+#scr5 .mid{flex:1}
+#scr5 .result{position:relative;z-index:3;padding:0 18px 30px}
+#scr5 .q{text-align:center;font-weight:700;font-size:18px;margin-bottom:16px;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+#scr5 .btns{display:flex;gap:12px}
+#scr5 .big{flex:1;height:96px;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:20px;border:none}
+#scr5 .ok{background:#059669;color:#fff}
+#scr5 .no{background:#DC2626;color:#fff}
+#scr5 .big svg{width:30px;height:30px}
+#scr5 .big small{font-weight:600;font-size:12px;opacity:.85}
+#scr5 .shutter{position:relative;z-index:3;display:flex;justify-content:center;padding-bottom:28px}
+#scr5 .sh{width:74px;height:74px;border-radius:50%;border:5px solid rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center}
+#scr5 .sh i{width:30px;height:30px;border-radius:8px;background:#E45D5D;display:block}
+#scr5 .hint{position:relative;z-index:3;text-align:center;color:rgba(255,255,255,.7);font-size:12px;padding-bottom:6px}
+/* ===== 06-trim ===== */
+#scr6 .phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+#scr6 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
+#scr6 .cnd{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif}
+#scr6 .hd{display:flex;align-items:center;gap:14px;padding:6px 20px 10px}
+#scr6 .hd .sq{width:16px;height:16px;border-radius:5px;background:#5A8FDB}
+#scr6 .hd h1{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:22px;font-weight:700}
+#scr6 .hd .r{margin-left:auto;font-size:13px;color:#94A3B8;font-weight:600}
+#scr6 .prev{margin:6px 20px 0;border-radius:20px;height:400px;background:linear-gradient(180deg,#2a2320,#0e1219);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.08)}
+#scr6 .prev .fig{width:60px;height:120px;background:rgba(255,255,255,.14);border-radius:30px}
+#scr6 .play{position:absolute;bottom:14px;left:14px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+#scr6 .play svg{width:18px;height:18px}
+#scr6 .time{position:absolute;bottom:22px;right:16px;font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-weight:700;font-size:15px;color:#fff}
+#scr6 .tl{margin:20px 20px 0}
+#scr6 .tlbar{height:56px;border-radius:12px;background:#1E2634;position:relative;display:flex;align-items:center;overflow:hidden}
+#scr6 .frames{position:absolute;inset:0;display:flex}
+#scr6 .frames i{flex:1;border-right:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,#3a3330,#161a20)}
+#scr6 .sel{position:absolute;top:0;bottom:0;left:22%;right:14%;border:3px solid #EA580C;border-radius:10px;background:rgba(234,88,12,.12)}
+#scr6 .handle{position:absolute;top:50%;transform:translateY(-50%);width:14px;height:34px;background:#EA580C;border-radius:5px}
+#scr6 .handle.l{left:-8px}
+#scr6 .handle.r{right:-8px}
+#scr6 .tllab{display:flex;justify-content:space-between;color:#64748B;font-size:12px;font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;margin-top:8px}
+#scr6 .foot{margin-top:auto;padding:16px 20px 26px;display:flex;gap:12px}
+#scr6 .b{flex:1;height:54px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;border:none}
+#scr6 .later{background:transparent;color:#94A3B8;border:1px solid rgba(255,255,255,.15)}
+#scr6 .save{background:#EA580C;color:#fff}
+/* ===== 07-session-end ===== */
+#scr7 .phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+#scr7 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
+#scr7 .cnd{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif}
+#scr7 .steps{display:flex;gap:6px;padding:8px 20px 4px}
+#scr7 .steps i{height:4px;flex:1;border-radius:2px;background:#1E2634}
+#scr7 .steps i.on{background:#EA580C}
+#scr7 .body{flex:1;overflow-y:auto;padding:10px 20px}
+#scr7 .title{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:26px;font-weight:700;margin:6px 0 2px}
+#scr7 .desc{color:#94A3B8;font-size:14px;margin-bottom:16px}
+#scr7 .snap{height:150px;border-radius:18px;background:linear-gradient(160deg,#3a3330,#161a20);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.1)}
+#scr7 .snap .cta{display:flex;flex-direction:column;align-items:center;gap:8px;color:#fff;font-weight:700;font-size:15px}
+#scr7 .snap .cta svg{width:30px;height:30px}
+#scr7 .req{position:absolute;top:10px;right:12px;font-size:10px;font-weight:700;color:#fff;background:#EA580C;padding:3px 8px;border-radius:8px}
+#scr7 .lbl{font-size:12px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:22px 4px 10px;display:flex;justify-content:space-between}
+#scr7 .q{display:flex;align-items:center;gap:12px;background:#141A26;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;margin-bottom:10px}
+#scr7 .thumb{width:52px;height:52px;border-radius:10px;background:linear-gradient(160deg,#3a3330,#161a20);flex:none;position:relative}
+#scr7 .thumb .sq{position:absolute;top:5px;left:5px;width:12px;height:12px;border-radius:4px}
+#scr7 .thumb .pl, #scr7 .ft .pl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#scr7 .thumb .pl svg, #scr7 .ft .pl svg{width:16px;height:16px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+#scr7 .q .t{font-weight:600;font-size:14px}
+#scr7 .q .s{font-size:12px;color:#64748B}
+#scr7 .q .cut{margin-left:auto;font-size:13px;font-weight:700;padding:9px 14px;border-radius:11px;background:#EA580C;color:#fff}
+#scr7 .hint{font-size:11px;color:#64748B;margin:2px 4px 0}
+#scr7 .fail{background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.22);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px}
+#scr7 .fail .ic{width:38px;height:38px;border-radius:11px;background:rgba(220,38,38,.14);display:flex;align-items:center;justify-content:center;flex:none}
+#scr7 .fail .ic svg{width:19px;height:19px}
+#scr7 .fail .t{font-weight:700;font-size:14px}
+#scr7 .fail .s{font-size:12px;color:#94A3B8;margin-top:2px}
+#scr7 .viewall{margin-left:auto;flex:none;display:flex;align-items:center;gap:3px;font-size:13px;font-weight:700;color:#cbd5e1;background:#1E2634;padding:9px 13px;border-radius:11px}
+#scr7 .viewall svg{width:14px;height:14px}
+#scr7 .foot{flex:none;padding:14px 20px 26px;border-top:1px solid rgba(255,255,255,.08)}
+#scr7 .next{height:56px;border-radius:16px;background:#EA580C;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:17px}
+/* ===== 08-report ===== */
+#scr8 .phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+#scr8 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1;z-index:5}
+#scr8 .cnd{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif}
+#scr8 .scroll{flex:1;overflow-y:auto;padding:8px 18px 16px}
+#scr8 .card{border-radius:26px;overflow:hidden;position:relative;background:linear-gradient(180deg,#3f2a1a 0%,#1b1c28 46%,#0b0f1a 100%);min-height:560px;display:flex;flex-direction:column;justify-content:space-between;padding:22px;border:1px solid rgba(255,255,255,.08)}
+#scr8 .card::before{content:"";position:absolute;inset:0;opacity:.35;background:
+  radial-gradient(circle at 78% 16%,#E45D5D 0 10px,transparent 11px),
+  radial-gradient(circle at 88% 30%,#5A8FDB 0 8px,transparent 9px),
+  radial-gradient(circle at 70% 40%,#DDBB44 0 9px,transparent 10px)}
+#scr8 .ctop{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:flex-start}
+#scr8 .gymname{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:22px;font-weight:700}
+#scr8 .date{color:#cbd5e1;font-size:13px;font-weight:600;margin-top:2px}
+#scr8 .brand{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-weight:700;font-size:14px;letter-spacing:.5px;opacity:.9}
+#scr8 .brand b{color:#EA580C}
+#scr8 .hero{position:relative;z-index:2;text-align:left}
+#scr8 .heronum{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:110px;font-weight:800;line-height:.82;letter-spacing:-1px}
+#scr8 .herolab{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:26px;font-weight:600;color:#EA580C;margin-top:-4px}
+#scr8 .stats{position:relative;z-index:2;display:flex;gap:28px;margin-top:18px}
+#scr8 .stat .v{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:34px;font-weight:700;line-height:1}
+#scr8 .stat .k{font-size:11px;color:#94A3B8;font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-top:5px}
+#scr8 .dist{position:relative;z-index:2;margin-top:18px}
+#scr8 .distbar{display:flex;height:12px;border-radius:6px;overflow:hidden;gap:2px}
+#scr8 .distbar i{display:block}
+#scr8 .legend{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:10px}
+#scr8 .lg{display:flex;align-items:center;gap:6px;font-size:12px;color:#cbd5e1;font-weight:600}
+#scr8 .lg .d{width:10px;height:10px;border-radius:3px}
+#scr8 .strip{display:flex;gap:8px;margin-top:16px}
+#scr8 .strip .tn{flex:1;aspect-ratio:.72;border-radius:12px;background:linear-gradient(160deg,#3a3330,#161a20);position:relative;overflow:hidden}
+#scr8 .strip .tn .sq{position:absolute;top:6px;left:6px;width:12px;height:12px;border-radius:4px}
+#scr8 .strip .tn .pl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#scr8 .strip .tn .pl svg{width:20px;height:20px;opacity:.85}
+#scr8 .acts{padding:14px 2px 6px;display:flex;gap:12px}
+#scr8 .b{flex:1;height:54px;border-radius:15px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:15px;border:none}
+#scr8 .insta{background:#EA580C;color:#fff}
+#scr8 .save{background:#1E2634;color:#fff;flex:0 0 54px}
+#scr8 .save svg{width:22px;height:22px}
+#scr8 .insta svg{width:20px;height:20px}
+/* ===== 09-records ===== */
+#scr9 .phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+#scr9 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
+#scr9 .cnd{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif}
+#scr9 .body{flex:1;overflow-y:auto;padding:4px 20px 20px}
+#scr9 h1{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:30px;font-weight:700;margin:4px 4px 14px}
+#scr9 .statrow{display:flex;gap:10px}
+#scr9 .sc{flex:1;background:#141A26;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px}
+#scr9 .sc .v{font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-size:28px;font-weight:700;line-height:1}
+#scr9 .sc .k{font-size:11px;color:#94A3B8;font-weight:600;margin-top:3px}
+#scr9 .lbl{font-size:12px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:20px 4px 10px}
+#scr9 .curve{background:#141A26;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px}
+#scr9 .chart{height:96px;display:flex;align-items:flex-end;gap:4px}
+#scr9 .chart .bar{flex:1;display:flex;flex-direction:column-reverse}
+#scr9 .chart .bar i{display:block;width:100%;border-radius:2px 2px 0 0}
+#scr9 .xlab{display:flex;gap:4px;color:#64748B;font-size:11px;font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;margin-top:8px}
+#scr9 .xlab span{flex:1;text-align:center}
+#scr9 .viewall{color:#94A3B8;font-size:12px;font-weight:700;text-transform:none;letter-spacing:0}
+#scr9 .legend{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+#scr9 .lg{display:flex;align-items:center;gap:5px;font-size:11px;color:#94A3B8;font-weight:600}
+#scr9 .lg .d{width:9px;height:9px;border-radius:2px}
+#scr9 .dist{background:#141A26;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px}
+#scr9 .drow{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+#scr9 .drow:last-child{margin-bottom:0}
+#scr9 .drow .sqm{width:14px;height:14px;border-radius:4px;flex:none}
+#scr9 .drow .nm{width:76px;font-size:13px;font-weight:600}
+#scr9 .track{flex:1;height:9px;border-radius:5px;background:#1E2634;overflow:hidden}
+#scr9 .track i{display:block;height:100%;border-radius:5px}
+#scr9 .drow .n{width:26px;text-align:right;font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-weight:700;font-size:15px;color:#cbd5e1}
+#scr9 .hintline{font-size:11px;color:#64748B;margin:10px 4px 0}
+#scr9 .scard{display:flex;gap:12px;align-items:center;background:#141A26;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px;margin-bottom:10px}
+#scr9 .scard .th{width:58px;height:58px;border-radius:12px;background:linear-gradient(160deg,#334155,#0f172a);flex:none;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;font-weight:700;font-size:22px}
+#scr9 .scard .th.gone{background:#1E2634;color:#475569;font-size:10px;font-weight:600;text-align:center;line-height:1.2;padding:6px;font-family:Barlow}
+#scr9 .scard .t{font-weight:600;font-size:15px}
+#scr9 .scard .s{font-size:12px;color:#64748B;margin-top:2px}
+#scr9 .scard .mini{display:flex;gap:3px;margin-top:6px}
+#scr9 .scard .mini i{width:14px;height:6px;border-radius:2px}
+#scr9 .tab{height:66px;flex:none;display:flex;border-top:1px solid rgba(255,255,255,.1);background:rgba(20,26,38,.95);padding-bottom:8px}
+#scr9 .tab a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:#64748B;font-weight:700}
+#scr9 .tab a.on{color:#fff}
+#scr9 .tab svg{width:22px;height:22px}
+</style>
+<div id="app">
+<div class="screen" id="scr1"><div class="phone">
+  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+  <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+  <div class="body">
+    <div class="logo">✦ WE-<b>CLIMB</b> · 시작하기</div>
+    <h1>평소 어디까지 푸세요?</h1>
+    <div class="desc">벽을 드래그해서 평소 완등하는 높이에 맞춰주세요.</div>
+    <div class="gaugewrap">
+      <div class="side"><span class="hard">어려움</span><span>쉬움</span></div>
+      <svg width="176" height="470" viewBox="0 0 176 470">
+        <defs>
+          <linearGradient id="grad" x1="0" y1="470" x2="0" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#E45D5D"/><stop offset="0.12" stop-color="#E68A4C"/>
+            <stop offset="0.25" stop-color="#DDBB44"/><stop offset="0.38" stop-color="#46AE72"/>
+            <stop offset="0.52" stop-color="#5A8FDB"/><stop offset="0.66" stop-color="#7C7FDB"/>
+            <stop offset="0.80" stop-color="#A877D2"/><stop offset="0.90" stop-color="#AC7B52"/>
+            <stop offset="1" stop-color="#1E293B"/>
+          </linearGradient>
+          <clipPath id="wall">
+            <path d="M40 22 L150 22 C108 70 70 150 56 430 Q48 448 40 438 Z"/>
+          </clipPath>
+        </defs>
+        <g clip-path="url(#wall)">
+          <rect x="0" y="0" width="176" height="470" fill="url(#grad)" opacity="0.16"/>
+          <!-- climbed fill from rounded base up to handle y=235 -->
+          <rect x="0" y="235" width="176" height="235" fill="url(#grad)"/>
+          <!-- holds along the increasingly-leaning face -->
+          <circle cx="116" cy="60" r="5" fill="rgba(0,0,0,.22)"/>
+          <circle cx="88" cy="124" r="6" fill="rgba(0,0,0,.2)"/>
+          <circle cx="70" cy="206" r="5" fill="rgba(0,0,0,.18)"/>
+          <circle cx="58" cy="300" r="6" fill="rgba(255,255,255,.2)"/>
+          <circle cx="52" cy="366" r="5" fill="rgba(255,255,255,.18)"/>
+          <circle cx="49" cy="410" r="5" fill="rgba(255,255,255,.2)"/>
+        </g>
+        <path d="M40 22 L150 22 C108 70 70 150 56 430 Q48 448 40 438 Z" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5"/>
+        <!-- handle at the climbed height -->
+        <g>
+          <rect x="34" y="231" width="46" height="8" rx="4" fill="#fff"/>
+          <rect x="45" y="225" width="22" height="20" rx="6" fill="#fff"/>
+          <rect x="51" y="231" width="2" height="8" rx="1" fill="#94A3B8"/><rect x="55" y="231" width="2" height="8" rx="1" fill="#94A3B8"/><rect x="59" y="231" width="2" height="8" rx="1" fill="#94A3B8"/>
+        </g>
+      </svg>
+    </div>
+    <div class="hint">기록이 쌓이면 자동으로 더 정확해져요</div>
+  </div>
+  <div class="foot">
+    <div class="skip">잘 모르겠어요 — 건너뛰기</div>
+    <button class="btn">시작하기</button>
+  </div>
+</div></div>
+<div class="screen" id="scr2"><div class="phone">
+  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+  <div class="body">
+    <div class="hi">오늘도 붙어볼까요,</div>
+    <div class="name">기영 님</div>
+
+    <div class="snap">
+      <div class="srow">
+        <div class="ring"><div class="in"><div class="lv">5</div><div class="lb">LEVEL</div></div></div>
+        <div class="sinfo">
+          <div class="t">현재 실력</div>
+          <div class="big"><span class="sq"></span>Lv.5 파랑</div>
+          <div class="p">Lv.6 남색까지 78%</div>
+        </div>
+      </div>
+      <div class="curve">
+        <div class="clab"><span class="t">누적 완등</span><span class="v">총 87</span></div>
+        <div class="chart">
+          <div class="bar"><i style="height:8px;background:#E45D5D"></i><i style="height:4px;background:#E68A4C"></i></div>
+          <div class="bar"><i style="height:12px;background:#E45D5D"></i><i style="height:7px;background:#E68A4C"></i><i style="height:4px;background:#DDBB44"></i></div>
+          <div class="bar"><i style="height:15px;background:#E45D5D"></i><i style="height:9px;background:#E68A4C"></i><i style="height:7px;background:#DDBB44"></i></div>
+          <div class="bar"><i style="height:18px;background:#E45D5D"></i><i style="height:11px;background:#E68A4C"></i><i style="height:9px;background:#DDBB44"></i><i style="height:5px;background:#46AE72"></i></div>
+          <div class="bar"><i style="height:22px;background:#E45D5D"></i><i style="height:13px;background:#E68A4C"></i><i style="height:11px;background:#DDBB44"></i><i style="height:8px;background:#46AE72"></i></div>
+          <div class="bar"><i style="height:26px;background:#E45D5D"></i><i style="height:16px;background:#E68A4C"></i><i style="height:13px;background:#DDBB44"></i><i style="height:11px;background:#46AE72"></i><i style="height:6px;background:#5A8FDB"></i></div>
+        </div>
+        <div class="mon">이번 달 4회 방문 · Lv.5 파랑 첫 완등</div>
+      </div>
+    </div>
+
+    <div class="start">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg>
+      클라이밍 시작
+    </div>
+
+    <div class="sect">최근 클라이밍</div>
+    <div class="rep">
+      <div class="img"><div><div class="big cnd">14</div><div class="meta">닻 클라이밍 · 7월 13일</div></div></div>
+      <div class="foot"><span>1시간 24분 · 최고 Lv.5 파랑</span>
+        <span class="mini"><i style="background:#DDBB44"></i><i style="background:#46AE72"></i><i style="background:#5A8FDB"></i></span>
+      </div>
+    </div>
+  </div>
+  <div class="tab">
+    <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
+    <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg>기록</a>
+  </div>
+</div></div>
+<div class="screen" id="scr3"><div class="phone">
+  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+  <div class="hd">
+    <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div>
+    <h1>어디서 클라이밍해요?</h1>
+  </div>
+  <div class="body">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+      암장 이름 검색
+    </div>
+
+    <div class="sect">선택됨</div>
+    <div class="pick">
+      <div class="top">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+        <div><div class="t">닻 클라이밍</div><div class="s">서울 성동구 · 2.4km</div></div>
+        <div class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/></svg></div>
+      </div>
+      <div class="adv">
+        <div class="ttl">기록으로 보면, 여기선</div>
+        <div class="advrow">
+          <div class="acard"><div class="k">평균 완등</div><div class="val"><span class="sq" style="background:#5A8FDB"></span>파랑</div></div>
+          <div class="acard"><div class="k">도전해볼 만한 레벨</div><div class="val"><span class="sq" style="background:#E45D5D"></span>빨강</div></div>
+        </div>
+      </div>
+      <div class="cmp">
+        <div class="specline"><span class="rl"></span>
+          <div style="flex:1;display:flex;justify-content:space-between;font-size:10px;color:#64748B;font-weight:700;padding:0 2px 5px"><span>쉬움</span><span>어려움</span></div>
+        </div>
+        <div class="specline"><span class="rl">앱 기준</span>
+          <div class="specrow app">
+            <div class="cell cov" style="background:#E45D5D"></div>
+            <div class="cell" style="background:#E68A4C"></div>
+            <div class="cell cov" style="background:#DDBB44"></div>
+            <div class="cell cov" style="background:#46AE72"></div>
+            <div class="cell cov" style="background:#5A8FDB"></div>
+            <div class="cell" style="background:#7C7FDB"></div>
+            <div class="cell cov" style="background:#A877D2"></div>
+            <div class="cell" style="background:#AC7B52"></div>
+            <div class="cell" style="background:#1E293B;border:1px solid #64748B"></div>
+          </div>
+        </div>
+        <div class="specline"><span class="rl">닻 클라이밍</span>
+          <div class="specrow gym">
+            <div class="cell"><span class="chip" style="background:#E2E8F0"></span></div>
+            <div class="cell"></div>
+            <div class="cell"><span class="chip" style="background:#DDBB44"></span></div>
+            <div class="cell"><span class="chip" style="background:#46AE72"></span></div>
+            <div class="cell"><span class="chip" style="background:#5A8FDB"></span></div>
+            <div class="cell"></div>
+            <div class="cell"><span class="chip" style="background:#E45D5D"></span></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+          </div>
+        </div>
+        <div class="specline"><span class="rl"></span>
+          <div class="lvnums"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sect">다른 암장</div>
+    <div class="item">
+      <div class="ic2"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+      <div><div class="t">더클라임 양재점</div><div class="s">서울 서초구 · 6.1km</div></div>
+    </div>
+
+    <div class="add">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+      찾는 암장이 없어요 — 직접 추가
+    </div>
+  </div>
+  <div class="foot">
+    <div class="go">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg>
+      닻 클라이밍에서 시작
+    </div>
+  </div>
+</div></div>
+<div class="screen" id="scr4"><div class="phone">
+  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+  <div class="top">
+    <div class="gym">닻 클라이밍</div>
+    <div class="timer">01:12:44</div>
+    <div class="rec"><span class="d"></span>클라이밍 중</div>
+  </div>
+  <div class="body">
+    <div class="hd"><span class="l">색을 탭해서 완등</span><span class="r">어려움 ↑</span></div>
+
+    <div class="blvl">
+      <span class="sw" style="background:#E45D5D"></span>
+      <div class="track"></div>
+      <div class="cnt" style="color:#334155">0</div>    </div>
+
+    <div class="blvl">
+      <span class="sw" style="background:#5A8FDB"></span>
+      <div class="track"><div class="fill" style="width:100%;background:#5A8FDB"></div><div class="over" style="width:40%;background:#3E6CB5"></div></div>
+      <div class="cnt">7</div>    </div>
+
+    <div class="blvl">
+      <span class="sw" style="background:#46AE72"></span>
+      <div class="track"><div class="fill" style="width:100%;background:#2E7A52"></div><div class="over" style="width:40%;background:#20573A"></div></div>
+      <div class="cnt">12</div>    </div>
+
+    <div class="blvl">
+      <span class="sw" style="background:#DDBB44"></span>
+      <div class="track"><div class="fill" style="width:100%;background:#DDBB44"></div></div>
+      <div class="cnt">5</div>    </div>
+
+    <div class="blvl">
+      <span class="sw" style="background:#E2E8F0"></span>
+      <div class="track"><div class="fill" style="width:40%;background:#E2E8F0"></div></div>
+      <div class="cnt">2</div>    </div>
+
+    <div class="cam">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.4"/></svg>
+      촬영하기
+    </div>
+  </div>
+  <div class="foot">
+    <div class="sum"><b>26</b> 완등 · 최고 <b>Lv.5</b></div>
+    <div class="end">클라이밍 종료<span class="badge">트리밍 2</span></div>
+  </div>
+</div></div>
+<div class="screen" id="scr5"><div class="phone">
+  <div class="wall"></div>
+  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+  <div class="hdr">
+    <div class="selc"><span class="sq"></span>파랑</div>
+    <div class="rec"><span class="d"></span>0:08</div>
+  </div>
+  <div class="mid"></div>
+  <div class="result">
+    <div class="q">방금 시도, 성공했나요?</div>
+    <div class="btns">
+      <button class="big no">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        실패<small>삭제 대기함으로</small>
+      </button>
+      <button class="big ok">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>
+        성공<small>트리밍하기</small>
+      </button>
+    </div>
+  </div>
+</div></div>
+<div class="screen" id="scr6"><div class="phone">
+  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+  <div class="hd"><span class="sq"></span><h1>앞뒤 자르기</h1><span class="r">파랑 · 4트 완등</span></div>
+  <div class="prev">
+    <div class="fig"></div>
+    <div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></div>
+    <div class="time">0:06 / 0:19</div>
+  </div>
+  <div class="tl">
+    <div class="tlbar">
+      <div class="frames"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="sel"><div class="handle l"></div><div class="handle r"></div></div>
+    </div>
+    <div class="tllab"><span>0:00</span><span style="color:#EA580C">선택 0:04 – 0:13</span><span>0:19</span></div>
+  </div>
+  <div class="foot">
+    <button class="b later">나중에 할래요</button>
+    <button class="b save">저장</button>
+  </div>
+</div></div>
+<div class="screen" id="scr7"><div class="phone">
+  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+  <div class="steps"><i class="on"></i><i class="on"></i><i></i></div>
+  <div class="body">
+    <div class="title">정리만 하면 끝이에요</div>
+    <div class="desc">오늘의 한 컷을 남기고, 영상만 빠르게 다듬어요.</div>
+
+    <div class="snap">
+      <span class="req">필수</span>
+      <div class="cta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.4"/></svg>
+        오늘의 한 컷 찍기
+      </div>
+    </div>
+
+    <div class="lbl"><span>미뤄둔 트리밍</span><span style="color:#EA580C">2개</span></div>
+    <div class="q">
+      <div class="thumb"><span class="sq" style="background:#5A8FDB"></span><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div>
+      <div><div class="t">파랑 · Lv.5</div><div class="s">0:19 · 4트 완등 · 재생</div></div>
+      <span class="cut">자르기</span>
+    </div>
+    <div class="q">
+      <div class="thumb"><span class="sq" style="background:#46AE72"></span><span class="pl"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div>
+      <div><div class="t">초록 · Lv.4</div><div class="s">0:24 · 첫 완등 · 재생</div></div>
+      <span class="cut">자르기</span>
+    </div>
+    <div class="hint">썸네일을 탭하면 재생 · 자르지 않으면 원본 그대로 저장돼요.</div>
+
+    <div class="lbl"><span>실패 영상</span><span>47개</span></div>
+    <div class="fail">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#E45D5D" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg></div>
+      <div style="flex:1;min-width:0"><div class="t">실패 영상 47개</div><div class="s">모두 삭제 예정</div></div>
+      <span class="viewall">전체 보기<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="next">리포트 만들기</div>
+  </div>
+</div></div>
+<div class="screen" id="scr8"><div class="phone">
+  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+  <div class="scroll">
+    <div class="card">
+      <div class="ctop">
+        <div><div class="gymname">닻 클라이밍</div><div class="date">2026. 7. 15 · 1시간 24분</div></div>
+        <div class="brand">✦ WE-<b>CLIMB</b></div>
+      </div>
+      <div class="hero">
+        <div class="heronum">14</div>
+        <div class="herolab">완등</div>
+      </div>
+      <div style="position:relative;z-index:2;margin-top:22px">
+        <div style="display:flex;align-items:flex-end;gap:10px;height:104px">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><span class="cnd" style="font-size:15px;font-weight:700;color:#475569">0</span><span style="width:100%;height:6px;border-radius:5px;background:#E2E8F0;opacity:.35"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><span class="cnd" style="font-size:15px;font-weight:700">3</span><span style="width:100%;height:52px;border-radius:6px;background:#DDBB44"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><span class="cnd" style="font-size:15px;font-weight:700">5</span><span style="width:100%;height:86px;border-radius:6px;background:#46AE72"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><span class="cnd" style="font-size:15px;font-weight:700">4</span><span style="width:100%;height:70px;border-radius:6px;background:#5A8FDB"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><span class="cnd" style="font-size:15px;font-weight:700">2</span><span style="width:100%;height:36px;border-radius:6px;background:#E45D5D"></span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><span class="cnd" style="font-size:15px;font-weight:700;color:#475569">0</span><span style="width:100%;height:6px;border-radius:5px;background:#A877D2;opacity:.35"></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="acts">
+      <button class="b insta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="#fff"/></svg>
+        인스타 스토리로 공유
+      </button>
+      <button class="b save">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+      </button>
+    </div>
+  </div>
+</div></div>
+<div class="screen" id="scr9"><div class="phone">
+  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+  <div class="body">
+    <h1>내 기록</h1>
+    <div class="statrow">
+      <div class="sc"><div class="v">87</div><div class="k">총 완등</div></div>
+      <div class="sc"><div class="v">12</div><div class="k">총 방문</div></div>
+      <div class="sc"><div class="v">4회</div><div class="k">이번 달</div></div>
+    </div>
+
+    <div class="lbl" style="display:flex;justify-content:space-between;align-items:center">지난 6개월 완등 <span class="viewall">전체 보기 ›</span></div>
+    <div class="curve">
+      <div class="chart">
+        <div class="bar"><i style="height:8px;background:#E45D5D"></i><i style="height:4px;background:#E68A4C"></i></div>
+        <div class="bar"><i style="height:12px;background:#E45D5D"></i><i style="height:7px;background:#E68A4C"></i><i style="height:4px;background:#DDBB44"></i></div>
+        <div class="bar"><i style="height:16px;background:#E45D5D"></i><i style="height:9px;background:#E68A4C"></i><i style="height:7px;background:#DDBB44"></i></div>
+        <div class="bar"><i style="height:20px;background:#E45D5D"></i><i style="height:12px;background:#E68A4C"></i><i style="height:9px;background:#DDBB44"></i><i style="height:5px;background:#46AE72"></i></div>
+        <div class="bar"><i style="height:24px;background:#E45D5D"></i><i style="height:15px;background:#E68A4C"></i><i style="height:12px;background:#DDBB44"></i><i style="height:8px;background:#46AE72"></i></div>
+        <div class="bar"><i style="height:28px;background:#E45D5D"></i><i style="height:18px;background:#E68A4C"></i><i style="height:14px;background:#DDBB44"></i><i style="height:11px;background:#46AE72"></i><i style="height:6px;background:#5A8FDB"></i></div>
+      </div>
+      <div class="xlab"><span>2월</span><span>3월</span><span>4월</span><span>5월</span><span>6월</span><span>7월</span></div>
+    </div>
+
+    <div class="lbl">등급별 완등</div>
+    <div class="dist">
+      <div class="drow"><span class="sqm" style="background:#5A8FDB"></span><span class="nm">Lv.5 파랑</span><span class="track"><i style="width:18%;background:#5A8FDB"></i></span><span class="n">7</span></div>
+      <div class="drow"><span class="sqm" style="background:#46AE72"></span><span class="nm">Lv.4 초록</span><span class="track"><i style="width:45%;background:#46AE72"></i></span><span class="n">18</span></div>
+      <div class="drow"><span class="sqm" style="background:#DDBB44"></span><span class="nm">Lv.3 노랑</span><span class="track"><i style="width:85%;background:#DDBB44"></i></span><span class="n">34</span></div>
+      <div class="drow"><span class="sqm" style="background:#E68A4C"></span><span class="nm">Lv.2 주황</span><span class="track"><i style="width:70%;background:#E68A4C"></i></span><span class="n">28</span></div>
+      <div class="hintline">암장 색을 앱 레벨로 환산해 합산 · 세션 상세에선 실제 색으로 표시</div>
+    </div>
+
+    <div class="lbl">지난 클라이밍</div>
+    <div class="scard">
+      <div class="th">14</div>
+      <div style="flex:1"><div class="t">닻 클라이밍</div><div class="s">7월 15일 · 최고 Lv.5</div>
+        <div class="mini"><i style="background:#DDBB44"></i><i style="background:#46AE72"></i><i style="background:#5A8FDB"></i><i style="background:#E45D5D"></i></div></div>
+    </div>
+    <div class="scard">
+      <div class="th gone">영상 삭제됨<br>기록은 남음</div>
+      <div style="flex:1"><div class="t">더클라임 양재</div><div class="s">7월 12일 · 최고 Lv.4</div>
+        <div class="mini"><i style="background:#46AE72"></i><i style="background:#5A8FDB"></i></div></div>
+    </div>
+  </div>
+  <div class="tab">
+    <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
+    <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg>기록</a>
+  </div>
+</div></div>
+<div id="jump"><button class="toggle">화면 이동</button><div class="panel"><button data-go="scr1">1. 온보딩</button><button data-go="scr2">2. 홈</button><button data-go="scr3">3. 암장 선택</button><button data-go="scr4">4. 세션 보드</button><button data-go="scr5">5. 촬영</button><button data-go="scr6">6. 트리밍</button><button data-go="scr7">7. 세션 종료</button><button data-go="scr8">8. 리포트</button><button data-go="scr9">9. 기록</button></div></div>
+</div>
+
+<script>
+function go(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  var el=document.getElementById(id); if(el){el.classList.add('active'); el.scrollTop=0;}
+  window.scrollTo(0,0);
+}
+function wire(sel,target){
+  document.querySelectorAll(sel).forEach(function(e){
+    e.setAttribute('data-nav','');
+    e.addEventListener('click',function(ev){ev.stopPropagation();go(target);});
+  });
+}
+wire('#scr1 .btn','scr2');
+wire('#scr1 .skip','scr2');
+wire('#scr2 .start','scr3');
+wire('#scr2 .tab a:nth-child(2)','scr9');
+wire('#scr3 .go','scr4');
+wire('#scr4 .cam','scr5');
+wire('#scr4 .end','scr7');
+wire('#scr5 .ok','scr6');
+wire('#scr5 .no','scr4');
+wire('#scr6 .save','scr4');
+wire('#scr6 .later','scr4');
+wire('#scr7 .next','scr8');
+wire('#scr8 .insta','scr2');
+wire('#scr8 .save','scr2');
+wire('#scr9 .tab a:nth-child(1)','scr2');
+// jump menu
+var jump=document.getElementById('jump');
+jump.querySelector('.toggle').addEventListener('click',function(){jump.classList.toggle('open');});
+jump.querySelectorAll('.panel button').forEach(function(b){
+  b.addEventListener('click',function(){go(b.getAttribute('data-go'));jump.classList.remove('open');});
+});
+go('scr1');
+</script>
