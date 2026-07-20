@@ -2,8 +2,8 @@
 
 ## Project Structure and Module Organization
 
-This repository currently contains product definition and design assets, not an
-application implementation. Keep these areas focused:
+This repository is a monorepo. Keep product assets, shared code, and application
+entry points separated:
 
 - `docs/planning/` contains the product brief, screen and flow definition,
   roadmap, and technical decisions. Treat `03-tech-decisions.md` as the source
@@ -13,18 +13,23 @@ application implementation. Keep these areas focused:
 - `design-bundle/` holds one HTML file per product screen plus `_base.css`.
 - `design-system/we-climb/MASTER.md` defines visual tokens and Compose-facing
   design guidance.
+- `shared/` contains KMP domain, media, and repository contracts reusable by
+  future frontend and backend modules.
+- `frontend/` is the Android Gradle root. `frontend/androidApp/` contains
+  Android-specific CameraX, MediaStore, and sharing code.
 
-When implementation begins, use the planned KMP boundary: shared domain,
-record, statistics, and repository interfaces in `shared/`; Android-specific
-camera and media code in `androidApp/`. Keep Supabase access behind repository
-interfaces so it can later move to Spring Boot.
+Add a future backend as a sibling root-level module such as `backend/`. Do not
+make backend code depend on `frontend/`; depend on `shared/` only when the
+contract is genuinely cross-application.
 
 ## Build, Test, and Development Commands
 
-No build system, executable app, or automated test suite exists yet. Do not
-invent commands in documentation or CI. After adding the KMP scaffold, record
-the verified commands here, for example `./gradlew test` for unit tests and the
-Android instrumentation command used by the project.
+Run commands from `frontend/`:
+
+- `./gradlew :shared:jvmTest` runs shared Kotlin unit tests.
+- `./gradlew :androidApp:assembleDebug` builds the Android debug APK.
+- `adb install -r androidApp/build/outputs/apk/debug/androidApp-debug.apk`
+  installs the APK on a connected device.
 
 You can inspect the current prototype by opening
 `docs/prototype-artifact.html` in a browser. It is a design artifact, not a
@@ -44,10 +49,10 @@ successful video output as documented in `docs/planning/03-tech-decisions.md`.
 ## Testing Guidelines
 
 The repository standard requires at least 80% coverage and unit, integration,
-and end-to-end coverage. Add tests beside the KMP modules when they are created.
-Name tests after behavior, such as `recordsSuccessfulAttemptWhenVideoIsSaved`.
-Test camera and media assumptions on a physical Android device before relying
-on emulator results.
+and end-to-end coverage. Place shared tests in `shared/src/commonTest/` and
+Android-specific tests beside `frontend/androidApp/`. Name tests after behavior,
+such as `recordsSuccessfulAttemptWhenVideoIsSaved`. Test camera and media
+assumptions on a physical Android device before relying on emulator results.
 
 ## Commit and Pull Request Guidelines
 

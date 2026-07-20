@@ -14,7 +14,8 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "we-climb"
+rootProject.name = "we-climb-frontend"
 
 include(":androidApp")
 include(":shared")
+project(":shared").projectDir = file("../shared")
