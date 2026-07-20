@@ -1,6 +1,13 @@
 # Python
 __pycache__/
+**/__pycache__/
 *.pyc
 
 # OS
 .DS_Store
+
+# Android and Gradle
+.gradle/
+.kotlin/
+**/build/
+local.properties
