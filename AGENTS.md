@@ -1,0 +1,59 @@
+# Repository Guidelines
+
+## Project Structure and Module Organization
+
+This repository currently contains product definition and design assets, not an
+application implementation. Keep these areas focused:
+
+- `docs/planning/` contains the product brief, screen and flow definition,
+  roadmap, and technical decisions. Treat `03-tech-decisions.md` as the source
+  of truth for the intended Android architecture.
+- `docs/` also contains interview evidence, problem framing, and the clickable
+  prototype at `docs/prototype-artifact.html`.
+- `design-bundle/` holds one HTML file per product screen plus `_base.css`.
+- `design-system/we-climb/MASTER.md` defines visual tokens and Compose-facing
+  design guidance.
+
+When implementation begins, use the planned KMP boundary: shared domain,
+record, statistics, and repository interfaces in `shared/`; Android-specific
+camera and media code in `androidApp/`. Keep Supabase access behind repository
+interfaces so it can later move to Spring Boot.
+
+## Build, Test, and Development Commands
+
+No build system, executable app, or automated test suite exists yet. Do not
+invent commands in documentation or CI. After adding the KMP scaffold, record
+the verified commands here, for example `./gradlew test` for unit tests and the
+Android instrumentation command used by the project.
+
+You can inspect the current prototype by opening
+`docs/prototype-artifact.html` in a browser. It is a design artifact, not a
+replacement for device-level camera, trimming, storage, or sharing validation.
+
+## Coding Style and Naming Conventions
+
+Follow Kotlin and Jetpack Compose conventions once source code exists: use
+four-space indentation, `PascalCase` for types and composables, and
+`camelCase` for functions, properties, and packages. Prefer immutable data and
+small feature-focused files. Validate inputs at application boundaries and
+handle errors explicitly with user-facing messages where appropriate.
+
+Use CameraX for capture, Media3 Transformer for trimming, and MediaStore for
+successful video output as documented in `docs/planning/03-tech-decisions.md`.
+
+## Testing Guidelines
+
+The repository standard requires at least 80% coverage and unit, integration,
+and end-to-end coverage. Add tests beside the KMP modules when they are created.
+Name tests after behavior, such as `recordsSuccessfulAttemptWhenVideoIsSaved`.
+Test camera and media assumptions on a physical Android device before relying
+on emulator results.
+
+## Commit and Pull Request Guidelines
+
+Use Conventional Commit-style messages seen in the history:
+`feat(camera): add recording flow`, `docs(planning): update spike results`.
+Keep subjects lowercase, imperative, under 50 characters, and without a
+period. Pull requests should describe the user-facing change, link relevant
+issues or planning documents, list verification performed, and include screen
+captures for UI changes. Review the full diff before requesting review.
