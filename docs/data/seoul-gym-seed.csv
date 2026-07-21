@@ -1,0 +1,8 @@
+gym_id,name,address,latitude,longitude,source_type,source_url,verified_at,verified_by,verification_status,attribution_text
+seoul-climbing-park-seongsu,클라이밍파크 성수점,"서울특별시 성동구 연무장13길 7, 매니아빌딩",,,operator_channel,https://booking.naver.com/booking/12/bizes/943595,2026-07-21,web_check,approved,
+seoul-climbing-park-gangnam,클라이밍파크 강남점,"서울특별시 강남구 강남대로 364, 지하1층",,,operator_channel,https://booking.naver.com/booking/12/bizes/1172582,2026-07-21,web_check,approved,
+seoul-climbing-park-jongno,클라이밍파크 종로점,"서울특별시 종로구 종로 199, 한일빌딩 지하2층",,,operator_channel,https://booking.naver.com/booking/12/bizes/1080647,2026-07-21,web_check,approved,
+seoul-climbing-park-sinnonhyeon,클라이밍파크 신논현점,"서울특별시 강남구 강남대로 468, 지하3층",,,operator_channel,https://booking.naver.com/booking/6/bizes/889588,2026-07-21,web_check,approved,
+seoul-climbing-park-hanti,클라이밍파크 한티점,"서울특별시 강남구 선릉로 324, SH타워 지하3층",,,operator_channel,https://booking.naver.com/booking/6/bizes/1118999,2026-07-21,web_check,approved,
+seoul-ssw-climbing-gangnam,손상원클라이밍짐 강남점,"서울특별시 서초구 강남대로 331, 지하1층",,,official_website,https://www.sswclimbing.co.kr/page/sub1_1,2026-07-21,web_check,approved,
+seoul-the-climb,더클라임,"서울특별시 강남구 남부순환로 2615, 지하1층",,,official_website,https://webapp.theclimb.co.kr/,2026-07-21,web_check,approved,
