@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+Usage: scripts/launch-visible-worker --name <name> --prompt <text> [options]
+
+Options:
+  --mode <read-only|shared-write>  Worker access mode. Default: read-only
+  --dry-run                 Print the launch plan without creating anything
+  --help                    Show this help
+EOF
+}
+
+fail() {
+    printf 'error: %s\n' "$1" >&2
+    exit 1
+}
+
+shell_quote() {
+    printf "'%s'" "$(printf '%s' "$1" | sed "s/'/'\\\\''/g")"
+}
+
+name=''
+mode='read-only'
+prompt=''
+dry_run='false'
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --name)
+            [ "$#" -ge 2 ] || fail '--name requires a value'
+            name="$2"
+            shift 2
+            ;;
+        --mode)
+            [ "$#" -ge 2 ] || fail '--mode requires a value'
+            mode="$2"
+            shift 2
+            ;;
+        --prompt)
+            [ "$#" -ge 2 ] || fail '--prompt requires a value'
+            prompt="$2"
+            shift 2
+            ;;
+        --dry-run)
+            dry_run='true'
+            shift
+            ;;
+        --help)
+            usage
+            exit 0
+            ;;
+        *)
+            fail "unknown option: $1"
+            ;;
+    esac
+done
+
+[ -n "$name" ] || fail '--name is required'
+[ -n "$prompt" ] || fail '--prompt is required'
+printf '%s' "$name" | grep -Eq '^[a-z0-9][a-z0-9-]*$' || \
+    fail '--name must use lowercase letters, digits, and hyphens'
+case "$mode" in
+    read-only|shared-write) ;;
+    *) fail '--mode must be read-only or shared-write' ;;
+esac
+
+command -v git >/dev/null 2>&1 || fail 'git is required'
+command -v cmux >/dev/null 2>&1 || fail 'cmux is required'
+command -v codex >/dev/null 2>&1 || fail 'codex is required'
+
+repository_root="$(git rev-parse --show-toplevel)" || fail 'run inside a Git repository'
+worktree="$repository_root"
+sandbox='read-only'
+workspace="${CMUX_WORKSPACE_ID:-}"
+[ -n "$workspace" ] || fail 'run from a cmux terminal so the current workspace is known'
+
+if [ "$mode" = 'shared-write' ]; then
+    sandbox='workspace-write'
+fi
+
+worker_prompt="You are a visible cmux worker. Mode: $mode.
+Scope: $prompt
+Completion: report files inspected or changed, commands run, results, and any blocker.
+Do not expand the scope."
+
+launch_command="exec codex --no-alt-screen -C $(shell_quote "$worktree") -s $sandbox $(shell_quote "$worker_prompt")"
+
+printf 'mode=%s\nworkspace=%s\nworktree=%s\n' "$mode" "$workspace" "$worktree"
+printf 'command=%s\n' "$launch_command"
+
+if [ "$dry_run" = 'true' ]; then
+    exit 0
+fi
+
+split_output="$(cmux new-split right --workspace "$workspace" --focus false)"
+surface="$(printf '%s\n' "$split_output" | sed -n 's/.*\(surface:[0-9][0-9]*\).*/\1/p')"
+[ -n "$surface" ] || fail "cmux did not return a surface: $split_output"
+
+cmux send --workspace "$workspace" --surface "$surface" "$launch_command
+"
+printf 'surface=%s\n' "$surface"

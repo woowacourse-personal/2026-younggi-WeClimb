@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+repository_root="$(git rev-parse --show-toplevel)"
+launcher="$repository_root/scripts/launch-visible-worker"
+test_workspace='workspace:test'
+
+read_only_output="$(CMUX_WORKSPACE_ID="$test_workspace" "$launcher" --dry-run --name docs-scan --mode read-only --prompt 'Inspect planning docs')"
+printf '%s\n' "$read_only_output" | grep -Fx 'mode=read-only' >/dev/null
+printf '%s\n' "$read_only_output" | grep -Fx "workspace=$test_workspace" >/dev/null
+printf '%s\n' "$read_only_output" | grep -Fx "worktree=$repository_root" >/dev/null
+printf '%s\n' "$read_only_output" | grep -F 'codex --no-alt-screen' >/dev/null
+printf '%s\n' "$read_only_output" | grep -F -- '-s read-only' >/dev/null
+
+write_output="$(CMUX_WORKSPACE_ID="$test_workspace" "$launcher" --dry-run --name media-test --mode shared-write --prompt 'Run independent checks')"
+printf '%s\n' "$write_output" | grep -Fx 'mode=shared-write' >/dev/null
+printf '%s\n' "$write_output" | grep -Fx "worktree=$repository_root" >/dev/null
+printf '%s\n' "$write_output" | grep -F -- '-s workspace-write' >/dev/null
+
+if CMUX_WORKSPACE_ID="$test_workspace" "$launcher" --dry-run --name Invalid_Name --prompt 'Invalid name' >/dev/null 2>&1; then
+    printf '%s\n' 'expected invalid name to fail' >&2
+    exit 1
+fi
+
+printf '%s\n' 'launch-visible-worker checks passed'

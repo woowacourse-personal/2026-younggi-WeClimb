@@ -54,6 +54,23 @@ Android-specific tests beside `frontend/androidApp/`. Name tests after behavior,
 such as `recordsSuccessfulAttemptWhenVideoIsSaved`. Test camera and media
 assumptions on a physical Android device before relying on emulator results.
 
+## Delegation and Visible Workers
+
+Classify work before delegating it. Use a visible cmux worker only when the
+task can finish without the current conversation, tool results, or direct
+coordination with an in-progress change. Typical examples are read-only
+research, independent builds, and log collection. Start it with
+`scripts/launch-visible-worker` and state its scope and completion criteria.
+
+Use an internal subagent only when it needs the current task context or a
+shared tool result. Keep final design decisions, integration, conflict
+resolution, commits, and device verification with the primary agent.
+
+Visible workers open as a new terminal split in the caller's current cmux
+workspace and use the same repository. They run read-only by default. A worker
+that changes code must use `--mode shared-write`; do not assign it files being
+changed by another worker. Review its diff and rerun relevant verification.
+
 ## Commit and Pull Request Guidelines
 
 Use Conventional Commit-style messages seen in the history:
