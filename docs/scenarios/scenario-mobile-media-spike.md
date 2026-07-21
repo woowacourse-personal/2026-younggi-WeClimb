@@ -4,7 +4,7 @@ type: 'feature'
 created: '2026-07-20'
 status: 'in-progress'
 baseline_commit: '3119808267a93066c8984064cf6820d73c1bc766'
-test_command: 'cd frontend && ./gradlew :shared:jvmTest'
+test_command: 'cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUnitTest'
 ---
 
 <frozen-after-approval reason="human-owned contract - only the human changes this after approval">
@@ -126,9 +126,9 @@ test_command: 'cd frontend && ./gradlew :shared:jvmTest'
 | S5 | auto | verified | `VideoPersistenceTest.promotesSuccessfulCacheVideoToMediaStore` | `VideoPersistence`, `AndroidMediaStoreGateway` |
 | S6 | auto | verified | `VideoPersistenceTest.deletesOnlyFailedCacheVideos` | `VideoPersistence`, `AndroidCacheGateway` |
 | S7 | auto | verified | `VideoPersistenceTest.preservesSuccessfulCacheVideoWhenMediaStoreWriteFails` | `VideoPersistence`, `AndroidMediaStoreGateway` |
-| S8 | auto | partial | `TrimAndShareTest.sendsValidTrimRequestWithEditListMode` | `TrimService`; Android Media3 adapter missing |
+| S8 | auto | partial | `TrimAndShareTest.sendsValidTrimRequestWithEditListMode`, `AndroidEditListTrimGatewayTest.startsEditListExportAndForwardsCompletion` | `TrimService`, `Media3EditListExporter` |
 | S9 | auto | verified | `TrimAndShareTest.rejectsTrimRangeWithNonPositiveDuration`, `rejectsTrimRangeOutsideVideoDuration` | `TrimService` |
-| S10 | manual | pending | walkthrough pending | Android Media3 adapter missing |
+| S10 | manual | verified | 2026-07-21 device walkthrough | `Media3EditListExporter`, `MainActivity` |
 | S11 | auto | partial | `TrimAndShareTest.createsSingleVideoShareRequestWithReadPermission` | `ShareRequestFactory`, `AndroidShareLauncher` |
 | S12 | manual | verified | 2026-07-20 device walkthrough | `AndroidShareLauncher`, `MainActivity` |
 
@@ -139,13 +139,19 @@ test_command: 'cd frontend && ./gradlew :shared:jvmTest'
 Android 공유 시트에 전달됐고 Instagram Stories 편집기에서 로드됐다. 실패 선택 후
 캐시의 해당 녹화 파일이 삭제되는 것도 확인했다.
 
-2026-07-21, `cd frontend && ./gradlew :shared:jvmTest`가 통과했다. S1-S7의
-도메인 상태와 저장 경계, S9의 트리밍 구간 검증, S11의 공유 요청 계약은 이 테스트에
-포함된다. S4의 CameraX 녹화 시작 실패와 S11의 Android Intent 필드는 아직 Android
-자동 테스트로 검증하지 않았다.
+2026-07-21, `cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUnitTest`와
+`:androidApp:assembleDebug`가 통과했다. S9는 잘못된 구간이 트리밍 게이트웨이를
+호출하지 않는지도 검사한다. S4의 CameraX 녹화 시작 실패와 S11의 Android Intent
+필드는 아직 Android 자동 테스트로 검증하지 않았다.
 
-Media3 edit-list 트리밍은 요청 검증만 구현됐다. 실제 Android Media3 어댑터, MP4
-출력 생성, 갤러리와 Instagram 재생 검증은 아직 남아 있다.
+2026-07-21, SM-S911N(API 36.1-ext21)에서 1초-4초 edit-list 트리밍을 실행했다.
+캐시 출력 MP4를 만들고 `Movies/WeClimb`에 저장했으며, MediaStore가 보고한 길이는
+3,000ms였다. Samsung 포토 플레이어는 `0:00 / 0:03`으로 재생했고, 사용자가 갤러리와
+Instagram에서 시작과 종료 프레임을 수동 확인했다.
+
+S8은 실제 기기에서 MP4 출력을 확인했지만, fixture를 사용해 Media3 출력 생성을
+자동 검증하는 Android instrumentation test는 아직 없다. 그래서 자동 검증 상태는
+`partial`로 유지한다.
 
 ## Notes
 

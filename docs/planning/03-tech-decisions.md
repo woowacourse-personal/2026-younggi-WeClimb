@@ -61,7 +61,7 @@
 
 ---
 
-## 프로젝트 현황 (2026-07-20 기준)
+## 프로젝트 현황 (2026-07-21 기준)
 
 **완료**: 문제 검증(인터뷰 6건) → 기획 문서 3종 → 디자인 시스템 + 화면
 10장(Claude Design 동기화, 피드백 4라운드 반영) → 클릭형 프로토타입 공유
@@ -71,16 +71,18 @@
 
 - 통과: CameraX 권한 획득과 녹화, 녹화 중지 후 성공/실패 분류, 성공 영상의
   MediaStore 저장, 실패 캐시 영상 삭제, `ACTION_SEND` 공유 시트, Instagram
-  Stories 편집기 영상 로드
-- 남음: Media3 edit-list 트리밍 결과를 갤러리와 Instagram에서 재생 검증
+  Stories 편집기 영상 로드, Media3 edit-list 1초-4초 트리밍 MP4 생성,
+  갤러리와 Instagram의 시작·종료 프레임 재생
+- 남음: Media3 fixture 기반 Android instrumentation test, CameraX 시작 실패와
+  Android 공유 Intent의 자동 테스트
 - 보류: Supabase 구글 로그인과 세션 메타데이터 왕복. Phase 1의 기록 로컬
   흐름을 우선 검증한 뒤 다시 편입
 
 **다음 스텝 (순서대로)**:
-1. **트리밍 스파이크** - Media3 edit-list 결과가 갤러리와 Instagram에서
-   정확히 재생되는지 실기기에서 검증
-2. **design-doc** — Phase 1 범위 기술 설계 (KMP 모듈 구조 · 데이터 모델 ·
+1. **design-doc** — Phase 1 범위 기술 설계 (KMP 모듈 구조 · 데이터 모델 ·
    로컬 저장 정책 · repository 경계)
+2. **스파이크 자동화 보강** - Media3 fixture, CameraX 시작 실패, 공유 Intent의
+   Android 테스트
 3. **Phase 1 구현** - 온보딩·홈·암장선택·세션보드·인앱촬영,
    완료 신호 = "실제 암장에서 앱으로만 찍고 완등이 기록된다"
 4. Phase 2 - 트리밍·세션종료·리포트·인스타 공유 = MVP
