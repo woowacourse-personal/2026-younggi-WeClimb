@@ -13,6 +13,11 @@ android {
         versionCode = 1
         versionName = "0.1.0"
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -22,4 +27,6 @@ dependencies {
     implementation("androidx.camera:camera-core:1.6.1")
     implementation("androidx.camera:camera-lifecycle:1.6.1")
     implementation("androidx.camera:camera-video:1.6.1")
+    implementation("androidx.media3:media3-transformer:1.10.1")
+    testImplementation("junit:junit:4.13.2")
 }

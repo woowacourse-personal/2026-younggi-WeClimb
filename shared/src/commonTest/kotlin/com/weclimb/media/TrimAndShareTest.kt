@@ -3,6 +3,7 @@ package com.weclimb.media
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class TrimAndShareTest {
@@ -27,7 +28,8 @@ class TrimAndShareTest {
 
     @Test
     fun rejectsTrimRangeWithNonPositiveDuration() {
-        val service = TrimService(FakeTrimGateway())
+        val gateway = FakeTrimGateway()
+        val service = TrimService(gateway)
 
         val result = service.trim(
             TrimRequest(
@@ -40,11 +42,13 @@ class TrimAndShareTest {
         )
 
         assertEquals(TrimError.INVALID_RANGE, assertIs<TrimResult.Rejected>(result).error)
+        assertNull(gateway.request)
     }
 
     @Test
     fun rejectsTrimRangeOutsideVideoDuration() {
-        val service = TrimService(FakeTrimGateway())
+        val gateway = FakeTrimGateway()
+        val service = TrimService(gateway)
 
         val result = service.trim(
             TrimRequest(
@@ -57,6 +61,7 @@ class TrimAndShareTest {
         )
 
         assertEquals(TrimError.OUT_OF_BOUNDS, assertIs<TrimResult.Rejected>(result).error)
+        assertNull(gateway.request)
     }
 
     @Test

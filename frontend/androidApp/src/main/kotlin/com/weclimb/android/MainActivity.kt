@@ -1,6 +1,7 @@
 package com.weclimb.android
 
 import android.Manifest
+import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import android.widget.Button
 import android.widget.LinearLayout
@@ -10,6 +11,9 @@ import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 import com.weclimb.media.PromotionResult
 import com.weclimb.media.ShareRequestFactory
+import com.weclimb.media.TrimRequest
+import com.weclimb.media.TrimResult
+import com.weclimb.media.TrimService
 import com.weclimb.media.VideoPersistence
 import java.io.File
 
@@ -18,10 +22,12 @@ class MainActivity : ComponentActivity() {
     private lateinit var recordButton: Button
     private lateinit var successButton: Button
     private lateinit var failureButton: Button
+    private lateinit var trimButton: Button
     private lateinit var shareButton: Button
     private lateinit var recorder: CameraRecordingController
     private var completedFile: File? = null
     private var savedUri: String? = null
+    private var trimInProgress = false
     private val persistence by lazy { VideoPersistence(AndroidMediaStoreGateway(this), AndroidCacheGateway()) }
 
     private val permissionLauncher = registerForActivityResult(
@@ -51,6 +57,10 @@ class MainActivity : ComponentActivity() {
             text = "실패"
             setOnClickListener { classifyCompletedRecording("실패") }
         }
+        trimButton = Button(context).apply {
+            text = "1초-4초 트리밍"
+            setOnClickListener { trimCompletedRecording() }
+        }
         shareButton = Button(context).apply {
             text = "영상 공유"
             setOnClickListener { shareSavedVideo() }
@@ -59,6 +69,7 @@ class MainActivity : ComponentActivity() {
         addView(recordButton)
         addView(successButton)
         addView(failureButton)
+        addView(trimButton)
         addView(shareButton)
         updateClassificationButtons()
     }
@@ -131,6 +142,60 @@ class MainActivity : ComponentActivity() {
         updateClassificationButtons()
     }
 
+    private fun trimCompletedRecording() {
+        val source = completedFile ?: return
+        val durationMillis = videoDurationMillis(source) ?: run {
+            status.text = "영상 길이를 읽지 못했습니다"
+            return
+        }
+        val request = TrimRequest(
+            sourcePath = source.absolutePath,
+            outputPath = File(cacheDir, "trim-${System.currentTimeMillis()}.mp4").absolutePath,
+            startMillis = TRIM_START_MILLIS,
+            endMillis = TRIM_END_MILLIS,
+            durationMillis = durationMillis,
+        )
+        val gateway = AndroidEditListTrimGateway(
+            exporter = Media3EditListExporter(this),
+            onCompleted = ::onTrimCompleted,
+            onError = ::onTrimError,
+        )
+        trimInProgress = true
+        when (TrimService(gateway).trim(request)) {
+            TrimResult.Started -> {
+                if (trimInProgress) {
+                    status.text = "edit-list 트리밍 중"
+                }
+                updateClassificationButtons()
+            }
+            is TrimResult.Rejected -> {
+                trimInProgress = false
+                status.text = "트리밍 구간이 올바르지 않습니다"
+                updateClassificationButtons()
+            }
+        }
+    }
+
+    private fun onTrimCompleted(outputPath: String) {
+        completedFile = File(outputPath)
+        trimInProgress = false
+        status.text = "트리밍 완료, 성공 또는 실패를 선택하세요"
+        updateClassificationButtons()
+    }
+
+    private fun onTrimError(message: String) {
+        trimInProgress = false
+        status.text = "트리밍에 실패했습니다: $message"
+        updateClassificationButtons()
+    }
+
+    private fun videoDurationMillis(file: File): Long? = runCatching {
+        MediaMetadataRetriever().use { retriever ->
+            retriever.setDataSource(file.absolutePath)
+            retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLongOrNull()
+        }
+    }.getOrNull()
+
     private fun saveSuccessfulRecording(file: File) {
         when (val result = persistence.promote(file.absolutePath)) {
             is PromotionResult.Saved -> {
@@ -149,9 +214,16 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun updateClassificationButtons() {
-        val enabled = completedFile != null
+        val enabled = completedFile != null && !trimInProgress
         successButton.isEnabled = enabled
         failureButton.isEnabled = enabled
+        trimButton.isEnabled = enabled
         shareButton.isEnabled = savedUri != null
+        recordButton.isEnabled = !trimInProgress
+    }
+
+    private companion object {
+        const val TRIM_START_MILLIS = 1_000L
+        const val TRIM_END_MILLIS = 4_000L
     }
 }
