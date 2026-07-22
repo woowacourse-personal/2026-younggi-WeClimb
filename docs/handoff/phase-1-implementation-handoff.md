@@ -1,13 +1,11 @@
 # Phase 1 구현 인수인계
 
 > 작성일: 2026-07-21
-> 현재 상태: 구현 진행 중, 실기기 확인 전 자동 구현을 계속할 것
+> 현재 상태: Phase 1 세션 루프 구현 및 검증 완료
 
 ## 사용자 요청
 
-Phase 1의 실기기 권한 확인을 제외한 구현과 자동 검증을 완료한다. 중간 상태만
-보고하고 작업을 멈추지 않는다. 최종 응답은 자동 검증 완료, 실제 차단, 또는
-사용자 요청이 있을 때만 보낸다.
+Phase 1 세션 루프의 구현, 자동 검증, 실기기 권한 흐름 검증을 완료했다.
 
 ## 기준 문서
 
@@ -32,31 +30,18 @@ Phase 1의 실기기 권한 확인을 제외한 구현과 자동 검증을 완�
   교체했다.
 - CameraX 녹화 결과를 성공, 저장 대기, 실패 `Attempt` 저장과 세션 종료 캐시 정리에
   연결했다.
-
-## 아직 구현하지 않은 핵심 작업
-
-1. 마지막으로 S16을 SM-S911N 실기기에서 확인한다.
+- S1-S15 자동 테스트와 Room 영속화 통합 테스트를 통과했다.
+- SM-S911N에서 S16 권한 팝업, `다음` 활성화, 홈 진입을 확인했다.
 
 ## 시나리오 상태
 
-- S1-S15: Coverage Map에서 `covered`다. 현재는 shared 단위 테스트 수준이며,
-  Android 전체 테스트가 끝난 뒤에만 `verified`로 바꾼다.
-- S16: 실제 Android 권한 팝업 확인만 남은 manual 시나리오다.
+- S1-S15: 자동 시나리오가 검증됐다.
+- S16: SM-S911N에서 수동 walkthrough가 검증됐다.
 
 ## 현재 변경 사항
 
-아직 커밋하지 않은 변경이 있다. `scenario-dev` 흐름에서는 전체 검증 뒤 한 번의
-로컬 커밋을 만든다. 현재 변경은 다음 범주다.
-
-- `shared/src/commonMain/kotlin/com/weclimb/session/AttemptService.kt`
-- `shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt`
-- `shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopRepository.kt`
-- 관련 shared 테스트 2개
-- `docs/scenarios/scenario-phase-1-session-loop.md`
-- Compose Gradle 설정
-- `AGENTS.md`, `.gitignore`, `scripts/turn-gate`
-
-최근 기준선 커밋은 `54a643e docs(planning): add phase 1 design`이다.
+구현은 `3781eaf feat(session): add local session loop`, 검증 보강은
+`0d5ef25 fix(session): verify persistence flow`에 기록돼 있다.
 
 ## 검증 결과
 
@@ -84,6 +69,10 @@ cd frontend
 
 2026-07-22에 실행을 완료했고 debug APK 생성 및 테스트 XML 무실패를 확인했다.
 
+실기기 검증도 같은 날 SM-S911N에서 완료했다. 카메라와 마이크의 Android 시스템
+팝업을 모두 `앱 사용 중에만 허용`으로 승인한 뒤, 권한 단계의 `다음`이 활성화되고
+홈 화면으로 진입하는 것을 확인했다.
+
 ## 작업 방식 주의
 
 이전 세션에서는 중간 구현 뒤 최종 응답을 보내 작업을 조기에 멈추는 문제가
@@ -97,6 +86,4 @@ cd frontend
 
 ## 다음 시작점
 
-먼저 현재 diff와 Gradle 컴파일을 확인한 뒤, Room 대신 또는 Room과 함께 사용할
-영속화 방식을 확정한다. 설계 문서는 Room을 요구한다. KSP와 Room 의존성을 추가해
-Android repository를 구현하고, 그 뒤 Compose 화면을 연결한다.
+Phase 1은 종료됐다. 다음 사용자 목표에 맞는 새 설계 또는 시나리오 계약을 시작한다.

@@ -2,7 +2,7 @@
 title: 'Phase 1 세션 루프'
 type: 'feature'
 created: '2026-07-21'
-status: 'verifying'
+status: 'done'
 baseline_commit: '54a643e'
 test_command: 'cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUnitTest'
 ---
@@ -169,7 +169,7 @@ test_command: 'cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUni
 | S13 | auto | verified | `AttemptServiceTest.kt` | `AttemptService.kt` |
 | S14 | auto | verified | `AttemptServiceTest.kt`, `RoomSessionLoopRepositoryTest.kt` | `AttemptService.kt` |
 | S15 | auto | verified | `AttemptServiceTest.kt`, `RoomSessionLoopRepositoryTest.kt` | `MainActivity.kt` |
-| S16 | manual | pending | walkthrough in Verification Log | - |
+| S16 | manual | verified | walkthrough in Verification Log | `MainActivity.kt` |
 
 ## Notes
 
@@ -182,5 +182,7 @@ test_command: 'cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUni
 
 - 2026-07-22: `:shared:jvmTest :androidApp:testDebugUnitTest :androidApp:assembleDebug`
   실행 완료. shared와 Android 테스트 XML에 failures/errors가 없고 debug APK가 생성됐다.
-- S16은 실제 Android 시스템 권한 팝업과 Compose 버튼 상호작용을 관찰해야 하므로
-  SM-S911N 실기기 walkthrough가 남아 있다.
+- 2026-07-22: SM-S911N에서 카메라와 마이크 권한을 모두 거부한 상태로 앱을
+  시작했다. `권한 요청`을 누르자 카메라, 마이크 Android 시스템 팝업이 순서대로
+  표시됐다. 두 권한을 `앱 사용 중에만 허용`으로 승인하자 `다음`이 활성화됐고,
+  이를 눌러 `오늘 어디서 클라이밍할까요?` 홈 화면 진입을 확인했다.
