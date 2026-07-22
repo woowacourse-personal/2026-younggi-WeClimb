@@ -72,6 +72,9 @@ interface SessionLoopDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAttempt(attempt: AttemptEntity)
+
+    @Query("DELETE FROM attempts WHERE id IN (:ids)")
+    fun deleteAttempts(ids: List<String>)
 }
 
 @Database(
@@ -108,6 +111,10 @@ class RoomSessionLoopRepository(private val dao: SessionLoopDao) : SessionLoopRe
 
     override fun saveAttempt(attempt: Attempt): Result<Unit> = runCatching { dao.saveAttempt(attempt.toEntity()) }
 
+    override fun deleteAttempts(ids: List<String>): Result<Unit> = runCatching {
+        if (ids.isNotEmpty()) dao.deleteAttempts(ids)
+    }
+
     fun importSeedGyms(seedGyms: List<Gym>) {
         dao.insertGyms(seedGyms.map(Gym::toEntity))
     }
@@ -123,16 +130,16 @@ fun loadSeedGyms(context: Context): List<Gym> = context.assets.open("seoul-gym-s
         }.toList()
     }
 
-private fun GymEntity.toDomain(): Gym = Gym(id, name, GymSource.valueOf(source), hidden)
+internal fun GymEntity.toDomain(): Gym = Gym(id, name, GymSource.valueOf(source), hidden)
 
-private fun Gym.toEntity(): GymEntity = GymEntity(id, name, source.name, hidden)
+internal fun Gym.toEntity(): GymEntity = GymEntity(id, name, source.name, hidden)
 
-private fun SessionEntity.toDomain(): Session = Session(id, gymId, startedAtEpochMillis, endedAtEpochMillis, SessionStatus.valueOf(status))
+internal fun SessionEntity.toDomain(): Session = Session(id, gymId, startedAtEpochMillis, endedAtEpochMillis, SessionStatus.valueOf(status))
 
-private fun Session.toEntity(): SessionEntity = SessionEntity(id, gymId, startedAtEpochMillis, endedAtEpochMillis, status.name)
+internal fun Session.toEntity(): SessionEntity = SessionEntity(id, gymId, startedAtEpochMillis, endedAtEpochMillis, status.name)
 
-private fun AttemptEntity.toDomain(): Attempt = Attempt(id, sessionId, color, recordedAtEpochMillis, AttemptOutcome.valueOf(outcome), videoUri, cachePath)
+internal fun AttemptEntity.toDomain(): Attempt = Attempt(id, sessionId, color, recordedAtEpochMillis, AttemptOutcome.valueOf(outcome), videoUri, cachePath)
 
-private fun Attempt.toEntity(): AttemptEntity = AttemptEntity(id, sessionId, color, recordedAtEpochMillis, outcome.name, videoUri, cachePath)
+internal fun Attempt.toEntity(): AttemptEntity = AttemptEntity(id, sessionId, color, recordedAtEpochMillis, outcome.name, videoUri, cachePath)
 
 private const val LOCAL_GUEST_ID = "local-guest"

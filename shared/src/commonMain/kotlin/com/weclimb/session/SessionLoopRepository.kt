@@ -16,4 +16,6 @@ interface SessionLoopRepository {
     fun attempts(sessionId: String): List<Attempt>
 
     fun saveAttempt(attempt: Attempt): Result<Unit>
+
+    fun deleteAttempts(ids: List<String>): Result<Unit>
 }

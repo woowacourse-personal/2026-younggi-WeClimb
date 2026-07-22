@@ -41,7 +41,7 @@ class AndroidMediaStoreGateway(
 }
 
 class AndroidCacheGateway : CacheGateway {
-    override fun delete(path: String) {
-        File(path).delete()
+    override fun delete(path: String): Result<Unit> = runCatching {
+        check(File(path).delete()) { "실패 영상을 삭제하지 못했습니다" }
     }
 }

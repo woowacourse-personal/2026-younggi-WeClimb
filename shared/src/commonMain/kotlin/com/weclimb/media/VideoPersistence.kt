@@ -5,7 +5,7 @@ interface MediaStoreGateway {
 }
 
 interface CacheGateway {
-    fun delete(path: String)
+    fun delete(path: String): Result<Unit>
 }
 
 enum class StoreError {
@@ -29,6 +29,6 @@ class VideoPersistence(
         )
 
     fun deleteFailed(paths: List<String>) {
-        paths.forEach(cache::delete)
+        paths.forEach { path -> cache.delete(path).getOrThrow() }
     }
 }

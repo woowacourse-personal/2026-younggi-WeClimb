@@ -2,7 +2,7 @@
 title: 'Phase 1 세션 루프'
 type: 'feature'
 created: '2026-07-21'
-status: 'in-progress'
+status: 'verifying'
 baseline_commit: '54a643e'
 test_command: 'cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUnitTest'
 ---
@@ -154,21 +154,21 @@ test_command: 'cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUni
 
 | Scenario | Verification | Status | Test | Implementation |
 |----------|--------------|--------|------|----------------|
-| S1 | auto | covered | [SessionLoopServiceTest.kt#L12](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L12) | [SessionLoopService.kt#L30](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L30) |
-| S2 | auto | covered | [SessionLoopServiceTest.kt#L19](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L19) | [SessionLoopService.kt#L30](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L30) |
-| S3 | auto | covered | [SessionLoopServiceTest.kt#L26](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L26) | [SessionLoopService.kt#L98](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L98) |
-| S4 | auto | covered | [SessionLoopServiceTest.kt#L33](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L33) | [SessionLoopService.kt#L103](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L103) |
-| S5 | auto | covered | [SessionLoopServiceTest.kt#L40](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L40) | [SessionLoopService.kt#L55](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L55) |
-| S6 | auto | covered | [SessionLoopServiceTest.kt#L48](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L48) | [SessionLoopService.kt#L62](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L62) |
-| S7 | auto | covered | [SessionLoopServiceTest.kt#L55](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L55) | [SessionLoopService.kt#L62](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L62) |
-| S8 | auto | covered | [SessionLoopServiceTest.kt#L60](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L60) | [SessionLoopService.kt#L70](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L70) |
-| S9 | auto | covered | [SessionLoopServiceTest.kt#L67](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L67) | [SessionLoopService.kt#L72](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L72) |
-| S10 | auto | covered | [SessionLoopServiceTest.kt#L74](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L74) | [SessionLoopService.kt#L105](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L105) |
-| S11 | auto | covered | [SessionLoopServiceTest.kt#L81](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L81) | [SessionLoopService.kt#L105](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L105) |
-| S12 | auto | covered | [AttemptServiceTest.kt#L14](../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptServiceTest.kt#L14) | [AttemptService.kt#L30](../../shared/src/commonMain/kotlin/com/weclimb/session/AttemptService.kt#L30) |
-| S13 | auto | covered | [AttemptServiceTest.kt#L23](../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptServiceTest.kt#L23) | [AttemptService.kt#L30](../../shared/src/commonMain/kotlin/com/weclimb/session/AttemptService.kt#L30) |
-| S14 | auto | covered | [AttemptServiceTest.kt#L32](../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptServiceTest.kt#L32) | [AttemptService.kt#L73](../../shared/src/commonMain/kotlin/com/weclimb/session/AttemptService.kt#L73) |
-| S15 | auto | covered | [AttemptServiceTest.kt#L32](../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptServiceTest.kt#L32) | [AttemptService.kt#L73](../../shared/src/commonMain/kotlin/com/weclimb/session/AttemptService.kt#L73) |
+| S1 | auto | verified | `SessionLoopServiceTest.kt` | `SessionLoopService.kt` |
+| S2 | auto | verified | `SessionLoopServiceTest.kt`, `RoomSessionLoopRepositoryTest.kt` | `SessionLoopRoom.kt` |
+| S3 | auto | verified | `SessionLoopServiceTest.kt`, `RoomSessionLoopRepositoryTest.kt` | `SessionLoopRoom.kt` |
+| S4 | auto | verified | `SessionLoopServiceTest.kt` | `SessionLoopService.kt` |
+| S5 | auto | verified | `SessionLoopServiceTest.kt` | `SessionLoopService.kt` |
+| S6 | auto | verified | `SessionLoopServiceTest.kt` | `SessionLoopService.kt` |
+| S7 | auto | verified | `SessionLoopServiceTest.kt` | `SessionLoopService.kt` |
+| S8 | auto | verified | `SessionLoopServiceTest.kt` | `SessionLoopService.kt` |
+| S9 | auto | verified | `SessionLoopServiceTest.kt` | `SessionLoopService.kt` |
+| S10 | auto | verified | `SessionLoopServiceTest.kt`, `RoomSessionLoopRepositoryTest.kt` | `SessionLoopRoom.kt` |
+| S11 | auto | verified | `SessionLoopServiceTest.kt` | `SessionLoopService.kt` |
+| S12 | auto | verified | `AttemptServiceTest.kt`, `RoomSessionLoopRepositoryTest.kt` | `AttemptService.kt` |
+| S13 | auto | verified | `AttemptServiceTest.kt` | `AttemptService.kt` |
+| S14 | auto | verified | `AttemptServiceTest.kt`, `RoomSessionLoopRepositoryTest.kt` | `AttemptService.kt` |
+| S15 | auto | verified | `AttemptServiceTest.kt`, `RoomSessionLoopRepositoryTest.kt` | `MainActivity.kt` |
 | S16 | manual | pending | walkthrough in Verification Log | - |
 
 ## Notes
@@ -177,3 +177,10 @@ test_command: 'cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUni
 - 기존 미디어 경계: [모바일 미디어 스파이크](scenario-mobile-media-spike.md)
 - 자동 테스트 기준 명령은 현재 shared JVM 단위 테스트와 Android 단위 테스트다.
   Compose navigation과 Room gateway를 추가하면 같은 명령에 해당 테스트를 포함한다.
+
+## Verification Log
+
+- 2026-07-22: `:shared:jvmTest :androidApp:testDebugUnitTest :androidApp:assembleDebug`
+  실행 완료. shared와 Android 테스트 XML에 failures/errors가 없고 debug APK가 생성됐다.
+- S16은 실제 Android 시스템 권한 팝업과 Compose 버튼 상호작용을 관찰해야 하므로
+  SM-S911N 실기기 walkthrough가 남아 있다.

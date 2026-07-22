@@ -2,7 +2,10 @@ package com.weclimb.android
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import java.io.File
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -32,6 +35,7 @@ import com.weclimb.session.AttemptOutcome
 import com.weclimb.session.AttemptService
 import com.weclimb.session.Gym
 import com.weclimb.session.GymCatalog
+import com.weclimb.session.GymSource
 import com.weclimb.session.OnboardingResult
 import com.weclimb.session.OnboardingService
 import com.weclimb.session.PermissionState
@@ -59,13 +63,18 @@ class MainActivity : ComponentActivity() {
                 SessionLoopApp(
                     state,
                     ::requestPermissions,
+                    ::openAppSettings,
                     ::completeOnboarding,
                     ::openGyms,
                     ::startSession,
                     ::addGym,
+                    ::renameGym,
+                    ::hideGym,
                     ::toggleRecording,
                     ::classifySuccess,
                     ::classifyFailure,
+                    ::retryPendingAttempt,
+                    ::requestEndSession,
                     ::endSession,
                 )
             }
@@ -87,24 +96,32 @@ class MainActivity : ComponentActivity() {
                 screen = destination.toScreen(),
                 gyms = repository.gyms(),
                 activeSession = activeSession,
-                attempts = activeSession?.let(repository::attempts).orEmpty(),
+                attempts = activeSession?.let { session -> repository.attempts(session.id) }.orEmpty(),
                 cameraReady = state.cameraReady,
             )
         }.fold(::render, ::showError)
     }
 
     private fun requestPermissions() {
+        render(state.copy(permissionRequested = true))
         permissionLauncher.launch(arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
     }
 
+    private fun openAppSettings() {
+        startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")))
+    }
+
     private fun onPermissionsUpdated() {
-        if (hasPermission(Manifest.permission.CAMERA) && hasPermission(Manifest.permission.RECORD_AUDIO)) {
+        val granted = hasPermission(Manifest.permission.CAMERA) && hasPermission(Manifest.permission.RECORD_AUDIO)
+        if (granted) {
             recorder.bind(
-                onReady = { render(state.copy(cameraReady = true)) },
+                onReady = { render(state.copy(cameraReady = true, permissionsGranted = true, settingsRequired = false)) },
                 onError = { message -> render(state.copy(message = message)) },
             )
         } else {
-            render(state.copy(message = "카메라와 마이크 권한이 필요합니다"))
+            val settingsRequired = state.permissionRequested && !shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) &&
+                !shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)
+            render(state.copy(permissionsGranted = false, settingsRequired = settingsRequired, message = "카메라와 마이크 권한이 필요합니다"))
         }
     }
 
@@ -142,14 +159,38 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun renameGym(gym: Gym, name: String) = background {
+        if (gym.source != GymSource.USER_ADDED || name.isBlank()) {
+            render(state.copy(message = "개인 암장 이름을 입력하세요"))
+            return@background
+        }
+        repository.saveGym(GymCatalog().rename(gym, name)).fold({ loadInitialState() }, ::showError)
+    }
+
+    private fun hideGym(gym: Gym) = background {
+        if (gym.source != GymSource.USER_ADDED) {
+            render(state.copy(message = "시드 암장은 숨길 수 없습니다"))
+            return@background
+        }
+        repository.saveGym(GymCatalog().hide(gym)).fold({ loadInitialState() }, ::showError)
+    }
+
     private fun endSession() = background {
         val session = repository.activeSession() ?: return@background
         val finished = SessionFinisher(AndroidCacheGateway()).finish(
             session,
             repository.attempts(session.id),
             System.currentTimeMillis(),
-        )
+        ).getOrThrow()
+        val removedIds = repository.attempts(session.id)
+            .filter { it.outcome == AttemptOutcome.FAILURE }
+            .map(Attempt::id)
+        repository.deleteAttempts(removedIds).getOrThrow()
         repository.saveSession(finished.session).fold({ loadInitialState() }, ::showError)
+    }
+
+    private fun requestEndSession() {
+        render(state.copy(confirmEnd = true))
     }
 
     private fun toggleRecording() {
@@ -209,6 +250,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun retryPendingAttempt(attempt: Attempt) = background {
+        val retried = AttemptService(AndroidMediaStoreGateway(this)).retrySave(attempt)
+        repository.saveAttempt(retried).fold({ loadInitialState() }, ::showError)
+    }
+
     private fun background(block: () -> Unit) { executor.execute { runCatching(block).onFailure(::showError) } }
     private fun render(value: AppState) { runOnUiThread { state = value } }
     private fun showError(error: Throwable) { render(state.copy(message = error.message ?: "처리하지 못했습니다")) }
@@ -224,6 +270,10 @@ private data class AppState(
     val capturedFile: File? = null,
     val cameraReady: Boolean = false,
     val recording: Boolean = false,
+    val confirmEnd: Boolean = false,
+    val permissionsGranted: Boolean = false,
+    val permissionRequested: Boolean = false,
+    val settingsRequired: Boolean = false,
     val message: String? = null,
 )
 private enum class Screen { Loading, Onboarding, Home, Gyms, Board }
@@ -233,13 +283,18 @@ private fun AppDestination?.toScreen() = when (this) { AppDestination.Home -> Sc
 private fun SessionLoopApp(
     state: AppState,
     requestPermissions: () -> Unit,
+    openAppSettings: () -> Unit,
     completeOnboarding: () -> Unit,
     openGyms: () -> Unit,
     startSession: (Gym) -> Unit,
     addGym: (String) -> Unit,
+    renameGym: (Gym, String) -> Unit,
+    hideGym: (Gym) -> Unit,
     toggleRecording: () -> Unit,
     classifySuccess: (String) -> Unit,
     classifyFailure: (String) -> Unit,
+    retryPendingAttempt: (Attempt) -> Unit,
+    requestEndSession: () -> Unit,
     endSession: () -> Unit,
 ) {
     var name by remember { mutableStateOf("") }
@@ -247,10 +302,42 @@ private fun SessionLoopApp(
         state.message?.let { message -> Text(message) }
         when (state.screen) {
             Screen.Loading -> Text("준비 중")
-            Screen.Onboarding -> { Text("We-Climb 시작하기"); Button(requestPermissions) { Text("권한 요청") }; Button(completeOnboarding) { Text("다음") } }
+            Screen.Onboarding -> {
+                Text("We-Climb 시작하기")
+                Button(if (state.settingsRequired) openAppSettings else requestPermissions) { Text(if (state.settingsRequired) "설정 열기" else "권한 요청") }
+                Button(completeOnboarding, enabled = state.permissionsGranted) { Text("다음") }
+            }
             Screen.Home -> { Text("오늘 어디서 클라이밍할까요?"); Button(openGyms) { Text("암장 선택") } }
-            Screen.Gyms -> { OutlinedTextField(name, { name = it }, label = { Text("개인 암장 이름") }, modifier = Modifier.fillMaxWidth()); Button({ addGym(name) }) { Text("개인 암장 추가") }; LazyColumn { items(GymCatalog().search(state.gyms, name)) { gym -> Button({ startSession(gym) }, Modifier.fillMaxWidth()) { Text(gym.name) } } } }
-            Screen.Board -> SessionBoard(state, toggleRecording, classifySuccess, classifyFailure, endSession)
+            Screen.Gyms -> GymPicker(state.gyms, name, { name = it }, startSession, addGym, renameGym, hideGym)
+            Screen.Board -> SessionBoard(state, toggleRecording, classifySuccess, classifyFailure, retryPendingAttempt, requestEndSession, endSession)
+        }
+    }
+}
+
+@Composable
+private fun GymPicker(
+    gyms: List<Gym>,
+    name: String,
+    updateName: (String) -> Unit,
+    startSession: (Gym) -> Unit,
+    addGym: (String) -> Unit,
+    renameGym: (Gym, String) -> Unit,
+    hideGym: (Gym) -> Unit,
+) {
+    val results = GymCatalog().search(gyms, name)
+    OutlinedTextField(name, updateName, label = { Text("암장 이름 또는 검색어") }, modifier = Modifier.fillMaxWidth())
+    if (name.isNotBlank() && results.isEmpty()) {
+        Button({ addGym(name) }) { Text("개인 암장 추가") }
+    }
+    LazyColumn {
+        items(results) { gym ->
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Button({ startSession(gym) }, Modifier.fillMaxWidth()) { Text(gym.name) }
+                if (gym.source == GymSource.USER_ADDED) {
+                    Button({ renameGym(gym, name) }) { Text("입력한 이름으로 수정") }
+                    Button({ hideGym(gym) }) { Text("목록에서 숨기기") }
+                }
+            }
         }
     }
 }
@@ -261,19 +348,30 @@ private fun SessionBoard(
     toggleRecording: () -> Unit,
     classifySuccess: (String) -> Unit,
     classifyFailure: (String) -> Unit,
+    retryPendingAttempt: (Attempt) -> Unit,
+    requestEndSession: () -> Unit,
     endSession: () -> Unit,
 ) {
+    var color by remember { mutableStateOf("blue") }
     Text("세션 진행 중")
     Text("완등 ${state.attempts.count { it.outcome == AttemptOutcome.SUCCESS }}개")
     state.attempts.filter { it.outcome == AttemptOutcome.SUCCESS }
         .groupingBy(Attempt::color)
         .eachCount()
         .toSortedMap()
-        .forEach { (color, count) -> Text("$color $count개") }
+        .forEach { (color, count) -> Text("$color ${count}개") }
     Button(toggleRecording) { Text(if (state.recording) "녹화 중지" else "촬영 시작") }
     if (state.capturedFile != null) {
-        Button({ classifySuccess("blue") }) { Text("파랑 성공") }
-        Button({ classifyFailure("blue") }) { Text("파랑 실패") }
+        OutlinedTextField(color, { color = it }, label = { Text("홀드 색상") })
+        Button({ classifySuccess(color) }) { Text("성공") }
+        Button({ classifyFailure(color) }) { Text("실패") }
     }
-    Button(endSession) { Text("운동 종료") }
+    state.attempts.filter { it.outcome == AttemptOutcome.SAVE_PENDING }
+        .forEach { attempt -> Button({ retryPendingAttempt(attempt) }) { Text("${attempt.color} 저장 재시도") } }
+    if (state.confirmEnd) {
+        Text("실패 영상을 삭제하고 운동을 종료할까요?")
+        Button(endSession) { Text("운동 종료 확정") }
+    } else {
+        Button(requestEndSession) { Text("운동 종료") }
+    }
 }

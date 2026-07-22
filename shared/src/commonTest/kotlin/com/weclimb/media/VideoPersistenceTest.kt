@@ -62,7 +62,8 @@ private class FakeCache(initialPaths: Set<String>) : CacheGateway {
     var paths: Set<String> = initialPaths
         private set
 
-    override fun delete(path: String) {
+    override fun delete(path: String): Result<Unit> {
         paths = paths - path
+        return Result.success(Unit)
     }
 }

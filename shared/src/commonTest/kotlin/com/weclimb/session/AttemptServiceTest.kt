@@ -27,6 +27,18 @@ class AttemptServiceTest {
     }
 
     @Test
+    fun retriesSavePendingAttemptWithoutChangingItsIdentity() {
+        val pending = Attempt("attempt-1", activeSession.id, "blue", 2L, AttemptOutcome.SAVE_PENDING, null, "/cache/a.mp4")
+
+        val result = AttemptService(SuccessfulMediaStore()).retrySave(pending)
+
+        assertEquals(pending.id, result.id)
+        assertEquals(AttemptOutcome.SUCCESS, result.outcome)
+        assertEquals("content://video/1", result.videoUri)
+        assertEquals(null, result.cachePath)
+    }
+
+    @Test
     fun endsSessionAndDeletesOnlyFailedCacheAttempts() {
         val cache = RecordingCache()
         val attempts = listOf(
@@ -34,12 +46,21 @@ class AttemptServiceTest {
             Attempt("failure", activeSession.id, "red", 3L, AttemptOutcome.FAILURE, null, "/cache/failure.mp4"),
         )
 
-        val result = SessionFinisher(cache).finish(activeSession, attempts, 4L)
+        val result = SessionFinisher(cache).finish(activeSession, attempts, 4L).getOrThrow()
 
         assertEquals(SessionStatus.ENDED, result.session.status)
         assertEquals(AppDestination.Home, result.destination)
         assertEquals(listOf("/cache/failure.mp4"), cache.deleted)
         assertTrue(result.attempts.none { it.outcome == AttemptOutcome.FAILURE && it.cachePath != null })
+    }
+
+    @Test
+    fun keepsSessionActiveWhenFailedCacheCannotBeDeleted() {
+        val attempts = listOf(Attempt("failure", activeSession.id, "red", 3L, AttemptOutcome.FAILURE, null, "/cache/failure.mp4"))
+
+        val result = SessionFinisher(FailingCache()).finish(activeSession, attempts, 4L)
+
+        assertTrue(result.isFailure)
     }
 
     private class SuccessfulMediaStore : MediaStoreGateway {
@@ -53,8 +74,13 @@ class AttemptServiceTest {
     private class RecordingCache : CacheGateway {
         val deleted = mutableListOf<String>()
 
-        override fun delete(path: String) {
+        override fun delete(path: String): Result<Unit> {
             deleted += path
+            return Result.success(Unit)
         }
+    }
+
+    private class FailingCache : CacheGateway {
+        override fun delete(path: String): Result<Unit> = Result.failure(IllegalStateException("delete failed"))
     }
 }

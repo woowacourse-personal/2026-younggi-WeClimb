@@ -35,11 +35,7 @@ Phase 1의 실기기 권한 확인을 제외한 구현과 자동 검증을 완�
 
 ## 아직 구현하지 않은 핵심 작업
 
-1. 개인 암장 이름 수정과 숨기기 UI를 추가한다.
-2. Room gateway와 Compose 상태 전이의 Android 단위 또는 instrumentation 테스트를
-   추가한다.
-3. 전체 자동 검증을 성공 종료로 다시 확인하고 Coverage Map을 `verified`로 바꾼다.
-4. 마지막으로만 S16을 SM-S911N 실기기에서 확인한다.
+1. 마지막으로 S16을 SM-S911N 실기기에서 확인한다.
 
 ## 시나리오 상태
 
@@ -79,12 +75,14 @@ cd frontend
 ./gradlew :androidApp:dependencies --configuration debugCompileClasspath --console=plain --no-daemon
 ```
 
-아직 실행할 최종 명령:
+최종 자동 검증:
 
 ```sh
 cd frontend
 ./gradlew :shared:jvmTest :androidApp:testDebugUnitTest :androidApp:assembleDebug --console=plain --no-daemon
 ```
+
+2026-07-22에 실행을 완료했고 debug APK 생성 및 테스트 XML 무실패를 확인했다.
 
 ## 작업 방식 주의
 
