@@ -182,7 +182,28 @@ test_command: 'cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUni
 
 - 2026-07-22: `:shared:jvmTest :androidApp:testDebugUnitTest :androidApp:assembleDebug`
   실행 완료. shared와 Android 테스트 XML에 failures/errors가 없고 debug APK가 생성됐다.
-- 2026-07-22: SM-S911N에서 카메라와 마이크 권한을 모두 거부한 상태로 앱을
-  시작했다. `권한 요청`을 누르자 카메라, 마이크 Android 시스템 팝업이 순서대로
+- 2026-07-22: S16을 SM-S911N에서 카메라와 마이크 권한을 모두 거부한 상태로 앱을
+  시작해 검증했다. `권한 요청`을 누르자 카메라, 마이크 Android 시스템 팝업이 순서대로
   표시됐다. 두 권한을 `앱 사용 중에만 허용`으로 승인하자 `다음`이 활성화됐고,
   이를 눌러 `오늘 어디서 클라이밍할까요?` 홈 화면 진입을 확인했다.
+
+## Scenario Traceability
+
+| Scenario | Verified by | Implementation |
+|----------|-------------|----------------|
+| S1: 권한이 모두 허용되기 전에는 온보딩을 완료하지 않는다 | [`SessionLoopServiceTest.kt:12`](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L12) | [`SessionLoopService.kt:25`](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L25) |
+| S2: 필요한 권한이 모두 허용되면 온보딩을 완료한다 | [`SessionLoopServiceTest.kt:19`](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L19) | [`SessionLoopService.kt:25`](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L25) |
+| S3: 활성 세션은 앱 재시작 뒤 세션 보드로 복원한다 | [`SessionLoopServiceTest.kt:26`](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L26) | [`SessionLoopService.kt:94`](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L94) |
+| S4: 활성 세션 중에는 홈으로 이동하지 않는다 | [`SessionLoopServiceTest.kt:33`](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L33) | [`SessionLoopService.kt:94`](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L94) |
+| S5: 시드와 활성 개인 암장을 이름으로 검색한다 | [`SessionLoopServiceTest.kt:40`](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L40) | [`SessionLoopService.kt:51`](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L51) |
+| S6: 검색 결과가 없으면 이름으로 개인 암장을 추가한다 | [`SessionLoopServiceTest.kt:48`](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L48) | [`SessionLoopService.kt:59`](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L59) |
+| S7: 빈 이름으로 개인 암장을 추가하지 않는다 | [`SessionLoopServiceTest.kt:55`](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L55) | [`SessionLoopService.kt:59`](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L59) |
+| S8: 개인 암장의 이름을 수정한다 | [`SessionLoopServiceTest.kt:60`](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L60) | [`SessionLoopService.kt:68`](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L68) |
+| S9: 기록이 있는 개인 암장은 목록에서 숨긴다 | [`SessionLoopServiceTest.kt:67`](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L67) | [`SessionLoopService.kt:70`](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L70) |
+| S10: 암장을 선택하면 활성 세션을 하나만 시작한다 | [`SessionLoopServiceTest.kt:74`](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L74) | [`SessionLoopService.kt:102`](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L102) |
+| S11: 활성 세션이 있으면 두 번째 세션을 시작하지 않는다 | [`SessionLoopServiceTest.kt:81`](../../shared/src/commonTest/kotlin/com/weclimb/session/SessionLoopServiceTest.kt#L81) | [`SessionLoopService.kt:102`](../../shared/src/commonMain/kotlin/com/weclimb/session/SessionLoopService.kt#L102) |
+| S12: 성공 시도는 영상 URI와 함께 개별 기록으로 저장한다 | [`AttemptServiceTest.kt:13`](../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptServiceTest.kt#L13) | [`AttemptService.kt:27`](../../shared/src/commonMain/kotlin/com/weclimb/session/AttemptService.kt#L27) |
+| S13: 성공 영상 저장 실패는 재시도 가능한 시도를 보존한다 | [`AttemptServiceTest.kt:22`](../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptServiceTest.kt#L22) | [`AttemptService.kt:27`](../../shared/src/commonMain/kotlin/com/weclimb/session/AttemptService.kt#L27) |
+| S14: 실패 시도는 성공 집계에 넣지 않고 종료 시 삭제한다 | [`AttemptServiceTest.kt:42`](../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptServiceTest.kt#L42) | [`AttemptService.kt:82`](../../shared/src/commonMain/kotlin/com/weclimb/session/AttemptService.kt#L82) |
+| S15: 운동 종료 후에는 홈으로 돌아가고 세션을 복원하지 않는다 | [`AttemptServiceTest.kt:42`](../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptServiceTest.kt#L42) | [`MainActivity.kt:48`](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/MainActivity.kt#L48) |
+| S16: 실제 Android 권한 팝업을 완료하면 온보딩에서 다음 단계로 갈 수 있다 | manual walkthrough (see Verification Log) | [`MainActivity.kt:48`](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/MainActivity.kt#L48) |

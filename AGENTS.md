@@ -102,20 +102,18 @@ scripts/turn-gate clear status
 This is a workflow guard, not a replacement for judgment. If the script and
 the task state disagree, report the discrepancy and keep the task active.
 
-### Continuous Implementation Override
+### Continuous Implementation Boundary
 
 When the current handoff or user request explicitly says to continue an
-implementation without intermediate stops, that instruction takes precedence
-over workflow skills that require approval checkpoints or human review between
-implementation stages. Treat already approved design and scenario documents as
-the implementation contract, keep reporting through commentary, and continue
-tool calls until the authorized work is complete or a real external blocker
-occurs.
+implementation without intermediate stops, continue through all automatable
+work in the approved contract. A workflow skill's explicit HALT for approval,
+scope selection, or user-only observation still takes precedence and is the
+only normal reason to pause before completion.
 
 Do not send a final response merely to report a successful partial build, a
-fixed compiler error, or a workflow checkpoint. `scripts/turn-gate` records
-the active task but cannot technically intercept a final response; the agent
-must check its active status before ending a turn.
+fixed compiler error, or an internal workflow checkpoint. `scripts/turn-gate`
+records the active task but cannot technically intercept a final response; the
+agent must check its active status before ending a turn.
 
 ## Commit and Pull Request Guidelines
 
