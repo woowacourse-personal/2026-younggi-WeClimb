@@ -71,6 +71,52 @@ workspace and use the same repository. They run read-only by default. A worker
 that changes code must use `--mode shared-write`; do not assign it files being
 changed by another worker. Review its diff and rerun relevant verification.
 
+## Active Work Gate
+
+For a user request that authorizes implementation, create a local active-work
+record before the first code change:
+
+```sh
+scripts/turn-gate start "Phase 1 Android implementation"
+```
+
+While this record exists, use commentary for progress updates and continue
+working in the same turn. Do not send a final response merely because a small
+implementation group, test, or skill checkpoint has completed.
+
+Before a final response, run `scripts/turn-gate check-final`. A final response
+is allowed only after one of these terminal conditions is true:
+
+- the authorized work is complete and verification has run;
+- a real blocker requires user input or an external state change;
+- the user explicitly asks to stop or for a status-only response.
+
+Clear the record only with the terminal reason:
+
+```sh
+scripts/turn-gate clear complete
+scripts/turn-gate clear blocked
+scripts/turn-gate clear status
+```
+
+This is a workflow guard, not a replacement for judgment. If the script and
+the task state disagree, report the discrepancy and keep the task active.
+
+### Continuous Implementation Override
+
+When the current handoff or user request explicitly says to continue an
+implementation without intermediate stops, that instruction takes precedence
+over workflow skills that require approval checkpoints or human review between
+implementation stages. Treat already approved design and scenario documents as
+the implementation contract, keep reporting through commentary, and continue
+tool calls until the authorized work is complete or a real external blocker
+occurs.
+
+Do not send a final response merely to report a successful partial build, a
+fixed compiler error, or a workflow checkpoint. `scripts/turn-gate` records
+the active task but cannot technically intercept a final response; the agent
+must check its active status before ending a turn.
+
 ## Commit and Pull Request Guidelines
 
 Use Conventional Commit-style messages seen in the history:

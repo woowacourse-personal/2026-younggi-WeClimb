@@ -11,3 +11,6 @@ __pycache__/
 .kotlin/
 **/build/
 local.properties
+
+# Agent turn state
+.agent-state/
