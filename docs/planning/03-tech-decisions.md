@@ -61,33 +61,42 @@
 
 ---
 
-## 프로젝트 현황 (2026-07-21 기준)
+## 프로젝트 현황 (2026-07-23 기준)
 
 **완료**: 문제 검증(인터뷰 6건) → 기획 문서 3종 → 디자인 시스템 + 화면
 10장(Claude Design 동기화, 피드백 4라운드 반영) → 클릭형 프로토타입 공유
 링크 → 기술 스택 확정 → Android/KMP 스파이크 셸과 실기기 촬영, 저장, 공유 검증.
 
-**스파이크 결과 (SM-S911N, API 36.1-ext21)**:
+**스파이크와 Phase 2 검증 결과 (SM-S911N, Android 16)**:
 
 - 통과: CameraX 권한 획득과 녹화, 녹화 중지 후 성공/실패 분류, 성공 영상의
   MediaStore 저장, 실패 캐시 영상 삭제, `ACTION_SEND` 공유 시트, Instagram
   Stories 편집기 영상 로드, Media3 edit-list 1초-4초 트리밍 MP4 생성,
   갤러리와 Instagram의 시작, 종료 프레임 재생
-- 남음: Media3 fixture 기반 Android instrumentation test, CameraX 시작 실패와
-  Android 공유 Intent의 자동 테스트
+- 통과: Media3 fixture 기반 Android instrumentation test, CameraX 시작 실패와
+  Android 공유 Intent의 자동 테스트, 트리밍 결과의 별도 MediaStore 저장,
+  아카이브 재생과 삭제된 영상 플레이스홀더
 - 보류: Supabase 구글 로그인과 세션 메타데이터 왕복. Phase 1의 기록 로컬
   흐름을 우선 검증한 뒤 다시 편입
 
+**Phase 2 완료 범위**:
+
+- 성공 영상의 즉시 트리밍, 나중에 처리, 원본 유지
+- 성공 영상 아카이브, 앱 내 재생, `ACTION_SEND` 공유
+- 현재 실제 Compose 화면(`01`-`06`)의 design-bundle 시각 체계 적용
+- `shared:jvmTest`, Android 단위 테스트, SM-S911N instrumentation 11건과
+  실기기 walkthrough 통과
+
+**다음 결정이 필요한 항목**:
+
+- 기존 Phase 1 설치본의 Room v1 성공 Attempt를 영상 처리 상태가 있는 현재 모델로
+  옮길지와 기존 영상 보존 정책
+- 세션 종료 사진, 리포트 카드, 기록 통계, 리포트 기반 공유의 제품 계약과 구현 순서
+
 **다음 스텝 (순서대로)**:
-1. **외부 데이터 획득 게이트** - [크롤링 정책](../design/data-acquisition-crawling-policy.md)의
-   수동 시드, 제공사 약관, 출처 표시 조건 확정
-2. **design-doc** - Phase 1 범위 기술 설계 (KMP 모듈 구조, 데이터 모델,
-   로컬 저장 정책, repository 경계)
-3. **스파이크 자동화 보강** - Media3 fixture, CameraX 시작 실패, 공유 Intent의
-   Android 테스트
-4. **Phase 1 구현** - 온보딩, 홈, 암장선택, 세션보드, 인앱촬영,
-   완료 신호 = "실제 암장에서 앱으로만 찍고 완등이 기록된다"
-5. Phase 2 - 트리밍, 세션종료, 리포트, 인스타 공유 = MVP
+1. 기존 설치본의 영상 상태 마이그레이션과 보존 정책 결정
+2. 세션 종료 후처리, 리포트 카드, 기록 통계, 리포트 기반 공유의 설계 계약 확정
+3. 다음 계약을 구현하고 실제 암장 사용으로 세션 기록 흐름을 관찰
 
 **참고 자산**:
 - 화면 목업: `design-bundle/*.html` (Claude Design "We-Climb" 프로젝트와 동기)
