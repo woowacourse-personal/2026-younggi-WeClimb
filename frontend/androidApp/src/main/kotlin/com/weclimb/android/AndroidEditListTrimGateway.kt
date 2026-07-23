@@ -40,12 +40,7 @@ class Media3EditListExporter(
         onCompleted: (String) -> Unit,
         onError: (String) -> Unit,
     ) {
-        val source = File(request.sourcePath)
         val output = File(request.outputPath)
-        if (!source.isFile) {
-            onError("트리밍 원본 영상을 찾을 수 없습니다")
-            return
-        }
         if (output.exists()) {
             onError("트리밍 출력 파일이 이미 존재합니다")
             return
@@ -58,7 +53,7 @@ class Media3EditListExporter(
             .build()
 
         val input = MediaItem.Builder()
-            .setUri(Uri.fromFile(source))
+            .setUri(request.sourceUri())
             .setClippingConfiguration(
                 MediaItem.ClippingConfiguration.Builder()
                     .setStartPositionMs(request.startMillis)
@@ -101,4 +96,9 @@ class Media3EditListExporter(
             onError(exception.message ?: "트리밍에 실패했습니다")
         }
     }
+}
+
+private fun TrimRequest.sourceUri(): Uri {
+    val uri = Uri.parse(sourcePath)
+    return if (uri.scheme == null) Uri.fromFile(File(sourcePath)) else uri
 }

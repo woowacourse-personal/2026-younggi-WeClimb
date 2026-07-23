@@ -2,6 +2,7 @@ package com.weclimb.session
 
 import com.weclimb.media.CacheGateway
 import com.weclimb.media.MediaStoreGateway
+import com.weclimb.media.AttemptMediaState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -15,6 +16,7 @@ class AttemptServiceTest {
 
         assertEquals(AttemptOutcome.SUCCESS, result.attempt.outcome)
         assertEquals("content://video/1", result.attempt.videoUri)
+        assertEquals(AttemptMediaState.TRIM_PENDING, result.attempt.media.state)
         assertEquals(1, result.successCount)
     }
 
@@ -43,6 +45,7 @@ class AttemptServiceTest {
         assertEquals(AttemptOutcome.SUCCESS, result.outcome)
         assertEquals("content://video/1", result.videoUri)
         assertEquals(null, result.cachePath)
+        assertEquals(AttemptMediaState.TRIM_PENDING, result.media.state)
     }
 
     @Test

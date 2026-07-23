@@ -2,6 +2,7 @@ package com.weclimb.session
 
 import com.weclimb.media.CacheGateway
 import com.weclimb.media.MediaStoreGateway
+import com.weclimb.media.AttemptMedia
 
 enum class AttemptOutcome {
     SUCCESS,
@@ -17,7 +18,14 @@ data class Attempt(
     val outcome: AttemptOutcome,
     val videoUri: String?,
     val cachePath: String?,
+    val media: AttemptMedia = videoUri?.let(AttemptMedia::pending) ?: AttemptMedia.none(),
 )
+
+val Attempt.originalVideoUri: String
+    get() = media.originalVideoUri.ifBlank { requireNotNull(videoUri) }
+
+val Attempt.displayVideoUri: String?
+    get() = media.displayVideoUri.ifBlank { videoUri }
 
 data class SuccessAttemptResult(
     val attempt: Attempt,
@@ -44,6 +52,7 @@ class AttemptService(
                     outcome = AttemptOutcome.SUCCESS,
                     videoUri = uri,
                     cachePath = null,
+                    media = AttemptMedia.pending(uri),
                 ),
                 successCount = 1,
             )
@@ -69,7 +78,14 @@ class AttemptService(
         require(attempt.outcome == AttemptOutcome.SAVE_PENDING)
         val cachePath = requireNotNull(attempt.cachePath)
         return mediaStore.save(cachePath).fold(
-            onSuccess = { uri -> attempt.copy(outcome = AttemptOutcome.SUCCESS, videoUri = uri, cachePath = null) },
+            onSuccess = { uri ->
+                attempt.copy(
+                    outcome = AttemptOutcome.SUCCESS,
+                    videoUri = uri,
+                    cachePath = null,
+                    media = AttemptMedia.pending(uri),
+                )
+            },
             onFailure = { attempt },
         )
     }

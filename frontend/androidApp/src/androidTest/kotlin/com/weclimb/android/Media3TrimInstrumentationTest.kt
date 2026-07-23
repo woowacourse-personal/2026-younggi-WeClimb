@@ -2,6 +2,7 @@ package com.weclimb.android
 
 import android.media.MediaMetadataRetriever
 import android.graphics.Color
+import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.weclimb.media.TrimRequest
@@ -19,6 +20,8 @@ class Media3TrimInstrumentationTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val directory = File(context.cacheDir, "trim-instrumentation").apply { mkdirs() }
         val source = Mp4Fixture.create(File(directory, "source.mp4"))
+        val sourceUri = AndroidMediaStoreGateway(context).save(source.absolutePath).getOrThrow()
+        source.delete()
         val output = File(directory, "trimmed.mp4")
         output.delete()
         val completed = CountDownLatch(1)
@@ -27,7 +30,7 @@ class Media3TrimInstrumentationTest {
         InstrumentationRegistry.getInstrumentation().runOnMainSync {
             Media3EditListExporter(context).export(
                 TrimRequest(
-                    sourcePath = source.absolutePath,
+                    sourcePath = sourceUri,
                     outputPath = output.absolutePath,
                     startMillis = 500,
                     endMillis = 1_500,
@@ -45,12 +48,22 @@ class Media3TrimInstrumentationTest {
             retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
         }
         assertTrue("unexpected duration: $duration", duration in 800..1_200)
-        assertTrue(kotlin.math.abs(sourceLuma(source, 500) - sourceLuma(output, 0)) <= 20)
-        assertTrue(kotlin.math.abs(sourceLuma(source, 1_400) - sourceLuma(output, 900)) <= 20)
+        assertTrue(kotlin.math.abs(sourceLuma(context, sourceUri, 500) - sourceLuma(output, 0)) <= 20)
+        assertTrue(kotlin.math.abs(sourceLuma(context, sourceUri, 1_400) - sourceLuma(output, 900)) <= 20)
+        context.contentResolver.delete(Uri.parse(sourceUri), null, null)
+        output.delete()
     }
 
     private fun sourceLuma(file: File, timeMillis: Long): Int = MediaMetadataRetriever().use { retriever ->
         retriever.setDataSource(file.absolutePath)
+        val frame = requireNotNull(
+            retriever.getFrameAtTime(timeMillis * 1_000, MediaMetadataRetriever.OPTION_CLOSEST),
+        )
+        Color.red(frame.getPixel(frame.width / 2, frame.height / 2))
+    }
+
+    private fun sourceLuma(context: android.content.Context, uri: String, timeMillis: Long): Int = MediaMetadataRetriever().use { retriever ->
+        retriever.setDataSource(context, Uri.parse(uri))
         val frame = requireNotNull(
             retriever.getFrameAtTime(timeMillis * 1_000, MediaMetadataRetriever.OPTION_CLOSEST),
         )

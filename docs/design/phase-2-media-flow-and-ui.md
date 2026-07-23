@@ -39,6 +39,8 @@ Phase 1은 촬영, 성공/실패 분류, 로컬 저장, 세션 기본 종료까�
 - Instagram Stories 전용 `ADD_TO_STORY`
 - 서버 동기화, 계정 기능, iOS 구현
 - `07-session-end`, `08-report`, `09-records` Compose 화면 구현과 실제 진입
+- 기존 Phase 1 설치본의 Room v1 성공 Attempt를 v2 영상 처리 상태로 변환하는
+  마이그레이션과 회귀 검증
 
 ## 요구사항
 

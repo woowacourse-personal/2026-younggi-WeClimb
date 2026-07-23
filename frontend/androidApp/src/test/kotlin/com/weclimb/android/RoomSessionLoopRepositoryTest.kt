@@ -8,6 +8,8 @@ import com.weclimb.session.Gym
 import com.weclimb.session.GymSource
 import com.weclimb.session.Session
 import com.weclimb.session.SessionStatus
+import com.weclimb.media.AttemptMedia
+import com.weclimb.media.AttemptMediaState
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -63,5 +65,41 @@ class RoomSessionLoopRepositoryTest {
 
         assertEquals(emptyList<Attempt>(), repository.attempts(session.id))
         assertEquals(null, repository.activeSession())
+    }
+
+    @Test
+    fun returnsOnlySuccessfulArchiveAttemptsInNewestFirstOrder() {
+        val gym = Gym("gym-1", "테스트 암장", GymSource.USER_ADDED)
+        val session = Session("session-1", gym.id, 10L, status = SessionStatus.ACTIVE)
+        val oldSuccess = Attempt("success-1", session.id, "blue", 20L, AttemptOutcome.SUCCESS, "content://video/old", null, AttemptMedia.pending("content://video/old"))
+        val newSuccess = Attempt("success-2", session.id, "red", 30L, AttemptOutcome.SUCCESS, "content://video/new", null, AttemptMedia.originalKept("content://video/new"))
+        val failure = Attempt("failure", session.id, "green", 40L, AttemptOutcome.FAILURE, null, "/cache/failure.mp4")
+
+        repository.saveGym(gym).getOrThrow()
+        repository.saveSession(session).getOrThrow()
+        repository.saveAttempt(oldSuccess).getOrThrow()
+        repository.saveAttempt(newSuccess).getOrThrow()
+        repository.saveAttempt(failure).getOrThrow()
+
+        assertEquals(listOf(newSuccess.id, oldSuccess.id), repository.archiveAttempts().map { it.attempt.id })
+        assertEquals("테스트 암장", repository.archiveAttempts().first().gymName)
+    }
+
+    @Test
+    fun recoversInterruptedTrimWithoutRemovingOriginalVideo() {
+        val session = Session("session-1", "gym-1", 10L, status = SessionStatus.ACTIVE)
+        val processing = Attempt(
+            "success-1", session.id, "blue", 20L, AttemptOutcome.SUCCESS, "content://video/original", null,
+            AttemptMedia(AttemptMediaState.TRIM_PROCESSING, "content://video/original", "content://video/orphan"),
+        )
+
+        repository.saveSession(session).getOrThrow()
+        repository.saveAttempt(processing).getOrThrow()
+        repository.recoverInterruptedTrims().getOrThrow()
+
+        val recovered = repository.attempts(session.id).single()
+        assertEquals(AttemptMediaState.TRIM_FAILED, recovered.media.state)
+        assertEquals("content://video/original", recovered.media.originalVideoUri)
+        assertEquals(null, recovered.media.trimmedVideoUri)
     }
 }

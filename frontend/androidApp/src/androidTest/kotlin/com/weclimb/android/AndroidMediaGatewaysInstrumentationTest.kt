@@ -11,6 +11,7 @@ import java.io.File
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
+import org.junit.Assert.assertFalse
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -76,6 +77,20 @@ class AndroidMediaGatewaysInstrumentationTest {
         assertEquals(missingSource.absolutePath, result.attempt.cachePath)
         assertNotNull(result.saveErrorMessage)
         assertTrue(!missingSource.exists())
+    }
+
+    @Test
+    fun distinguishesReadableAndMissingMediaStoreUrisForPlayback() {
+        val source = Mp4Fixture.create(File(context.cacheDir, "readable-video.mp4"))
+        val uri = AndroidMediaStoreGateway(context).save(source.absolutePath).getOrThrow()
+
+        try {
+            assertTrue(isReadableVideoUri(context, uri))
+            assertFalse(isReadableVideoUri(context, "content://media/external/video/media/does-not-exist"))
+        } finally {
+            context.contentResolver.delete(android.net.Uri.parse(uri), null, null)
+            source.delete()
+        }
     }
 }
 

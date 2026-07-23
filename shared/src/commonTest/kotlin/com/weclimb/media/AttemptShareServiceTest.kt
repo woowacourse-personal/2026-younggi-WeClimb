@@ -26,4 +26,26 @@ class AttemptShareServiceTest {
             assertIs<AttemptShareResult.Ready>(result).request.streamUri,
         )
     }
+
+    @Test
+    fun sharesTrimmedVideoInsteadOfRetainedOriginal() {
+        val attempt = Attempt(
+            id = "attempt-1",
+            sessionId = "session-1",
+            color = "blue",
+            recordedAtEpochMillis = 1L,
+            outcome = AttemptOutcome.SUCCESS,
+            videoUri = "content://media/original",
+            cachePath = null,
+            media = AttemptMedia(
+                state = AttemptMediaState.TRIMMED,
+                originalVideoUri = "content://media/original",
+                trimmedVideoUri = "content://media/trimmed",
+            ),
+        )
+
+        val result = AttemptShareService().create(attempt)
+
+        assertEquals("content://media/trimmed", assertIs<AttemptShareResult.Ready>(result).request.streamUri)
+    }
 }

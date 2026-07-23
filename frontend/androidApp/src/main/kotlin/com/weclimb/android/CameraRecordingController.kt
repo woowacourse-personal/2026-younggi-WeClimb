@@ -75,6 +75,15 @@ class CameraRecordingController(
         recording = null
     }
 
+    fun release() {
+        stop()
+        ProcessCameraProvider.getInstance(context).addListener(
+            { ProcessCameraProvider.getInstance(context).get().unbindAll() },
+            executor,
+        )
+        videoCapture = null
+    }
+
     private fun handleEvent(
         event: VideoRecordEvent,
         output: File,
