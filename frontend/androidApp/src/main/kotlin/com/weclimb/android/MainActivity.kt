@@ -42,6 +42,8 @@ import com.weclimb.session.PermissionState
 import com.weclimb.session.Session
 import com.weclimb.session.SessionFinisher
 import com.weclimb.session.SessionNavigator
+import com.weclimb.media.AttemptShareResult
+import com.weclimb.media.AttemptShareService
 import java.util.UUID
 import java.util.concurrent.Executors
 
@@ -73,6 +75,7 @@ class MainActivity : ComponentActivity() {
                     ::toggleRecording,
                     ::classifySuccess,
                     ::classifyFailure,
+                    ::shareAttempt,
                     ::retryPendingAttempt,
                     ::requestEndSession,
                     ::endSession,
@@ -87,7 +90,7 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
     }
 
-    private fun loadInitialState() = background {
+    private fun loadInitialState(message: String? = null) = background {
         runCatching {
             repository.importSeedGyms(loadSeedGyms(this))
             val destination = if (repository.hasGuestProfile()) SessionNavigator().initialDestination(repository.activeSession()) else null
@@ -98,6 +101,7 @@ class MainActivity : ComponentActivity() {
                 activeSession = activeSession,
                 attempts = activeSession?.let { session -> repository.attempts(session.id) }.orEmpty(),
                 cameraReady = state.cameraReady,
+                message = message,
             )
         }.fold(::render, ::showError)
     }
@@ -204,12 +208,14 @@ class MainActivity : ComponentActivity() {
             return
         }
         val output = File(cacheDir, "attempt-${System.currentTimeMillis()}.mp4")
-        recorder.start(
+        val started = recorder.start(
             output = output,
             onFinalized = { file -> render(state.copy(recording = false, capturedFile = file, message = "성공 또는 실패를 선택하세요")) },
             onError = { message -> render(state.copy(recording = false, message = message)) },
         )
-        render(state.copy(recording = true, capturedFile = null, message = "녹화 중"))
+        if (started) {
+            render(state.copy(recording = true, capturedFile = null, message = "녹화 중"))
+        }
     }
 
     private fun classifySuccess(color: String) {
@@ -223,7 +229,7 @@ class MainActivity : ComponentActivity() {
                 System.currentTimeMillis(),
             )
             repository.saveAttempt(result.attempt).fold(
-                onSuccess = { loadInitialState() },
+                onSuccess = { loadInitialState(result.saveErrorMessage) },
                 onFailure = ::showError,
             )
         }
@@ -247,6 +253,13 @@ class MainActivity : ComponentActivity() {
                 onSuccess = { loadInitialState() },
                 onFailure = ::showError,
             )
+        }
+    }
+
+    private fun shareAttempt(attempt: Attempt) {
+        when (val result = AttemptShareService().create(attempt)) {
+            is AttemptShareResult.Ready -> AndroidShareLauncher(this).launch(result.request)
+            AttemptShareResult.VideoUnavailable -> render(state.copy(message = "공유할 영상을 찾을 수 없습니다"))
         }
     }
 
@@ -293,6 +306,7 @@ private fun SessionLoopApp(
     toggleRecording: () -> Unit,
     classifySuccess: (String) -> Unit,
     classifyFailure: (String) -> Unit,
+    shareAttempt: (Attempt) -> Unit,
     retryPendingAttempt: (Attempt) -> Unit,
     requestEndSession: () -> Unit,
     endSession: () -> Unit,
@@ -309,7 +323,7 @@ private fun SessionLoopApp(
             }
             Screen.Home -> { Text("오늘 어디서 클라이밍할까요?"); Button(openGyms) { Text("암장 선택") } }
             Screen.Gyms -> GymPicker(state.gyms, name, { name = it }, startSession, addGym, renameGym, hideGym)
-            Screen.Board -> SessionBoard(state, toggleRecording, classifySuccess, classifyFailure, retryPendingAttempt, requestEndSession, endSession)
+            Screen.Board -> SessionBoard(state, toggleRecording, classifySuccess, classifyFailure, shareAttempt, retryPendingAttempt, requestEndSession, endSession)
         }
     }
 }
@@ -348,6 +362,7 @@ private fun SessionBoard(
     toggleRecording: () -> Unit,
     classifySuccess: (String) -> Unit,
     classifyFailure: (String) -> Unit,
+    shareAttempt: (Attempt) -> Unit,
     retryPendingAttempt: (Attempt) -> Unit,
     requestEndSession: () -> Unit,
     endSession: () -> Unit,
@@ -368,6 +383,8 @@ private fun SessionBoard(
     }
     state.attempts.filter { it.outcome == AttemptOutcome.SAVE_PENDING }
         .forEach { attempt -> Button({ retryPendingAttempt(attempt) }) { Text("${attempt.color} 저장 재시도") } }
+    state.attempts.filter { it.outcome == AttemptOutcome.SUCCESS && it.videoUri != null }
+        .forEach { attempt -> Button({ shareAttempt(attempt) }) { Text("${attempt.color} 영상 공유") } }
     if (state.confirmEnd) {
         Text("실패 영상을 삭제하고 운동을 종료할까요?")
         Button(endSession) { Text("운동 종료 확정") }

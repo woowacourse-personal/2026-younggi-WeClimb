@@ -49,16 +49,25 @@ class CameraRecordingController(
         )
     }
 
-    fun start(output: File, onFinalized: (File) -> Unit, onError: (String) -> Unit) {
+    fun start(output: File, onFinalized: (File) -> Unit, onError: (String) -> Unit): Boolean {
         val capture = videoCapture
         if (capture == null) {
             onError("카메라가 아직 준비되지 않았습니다")
-            return
+            return false
         }
-        recording = capture.output
-            .prepareRecording(context, FileOutputOptions.Builder(output).build())
-            .withAudioEnabled()
-            .start(executor) { event -> handleEvent(event, output, onFinalized, onError) }
+        recording = CameraRecordingStartGuard().start(
+            start = {
+                capture.output
+                    .prepareRecording(context, FileOutputOptions.Builder(output).build())
+                    .withAudioEnabled()
+                    .start(executor) { event -> handleEvent(event, output, onFinalized, onError) }
+            },
+            onError = {
+                output.delete()
+                onError(it)
+            },
+        )
+        return recording != null
     }
 
     fun stop() {
@@ -75,10 +84,19 @@ class CameraRecordingController(
         if (event is VideoRecordEvent.Finalize) {
             recording = null
             if (event.hasError()) {
+                output.delete()
                 onError("녹화를 저장하지 못했습니다")
             } else {
                 onFinalized(output)
             }
         }
     }
+}
+
+class CameraRecordingStartGuard {
+    fun <T> start(start: () -> T, onError: (String) -> Unit): T? = runCatching(start)
+        .getOrElse {
+            onError("녹화를 시작하지 못했습니다")
+            null
+        }
 }

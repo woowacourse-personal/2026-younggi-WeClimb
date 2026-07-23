@@ -22,6 +22,7 @@ data class Attempt(
 data class SuccessAttemptResult(
     val attempt: Attempt,
     val successCount: Int,
+    val saveErrorMessage: String? = null,
 )
 
 class AttemptService(
@@ -47,7 +48,7 @@ class AttemptService(
                 successCount = 1,
             )
         },
-        onFailure = {
+        onFailure = { error ->
             SuccessAttemptResult(
                 attempt = Attempt(
                     id = "${session.id}-$recordedAtEpochMillis",
@@ -59,6 +60,7 @@ class AttemptService(
                     cachePath = cachePath,
                 ),
                 successCount = 0,
+                saveErrorMessage = error.message ?: "성공 영상을 저장하지 못했습니다",
             )
         },
     )

@@ -2,9 +2,10 @@
 title: '모바일 미디어 스파이크 검증'
 type: 'feature'
 created: '2026-07-20'
-status: 'in-progress'
-baseline_commit: '3119808267a93066c8984064cf6820d73c1bc766'
-test_command: 'cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUnitTest'
+status: 'done'
+baseline_commit: 'f5fe32b4248f16dc8eea9f221c10e8b4d9a8d047'
+test_command: 'cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUnitTest :androidApp:connectedDebugAndroidTest'
+loop_iteration: 2
 ---
 
 <frozen-after-approval reason="human-owned contract - only the human changes this after approval">
@@ -119,20 +120,24 @@ test_command: 'cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUni
 
 | Scenario | Verification | Status | Test | Implementation |
 |----------|--------------|--------|------|----------------|
-| S1 | auto | verified | `RecordingCoordinatorTest.startsRecordingWithCacheOutputWhenPermissionsAreGranted` | `RecordingCoordinator`, `CameraRecordingController` |
-| S2 | auto | verified | `RecordingCoordinatorTest.successfulRecordingReturnsToReadyStateAndKeepsCandidate` | `RecordingCoordinator`, `MainActivity` |
-| S3 | auto | verified | `RecordingCoordinatorTest.failedRecordingReturnsToReadyStateAndQueuesOnlyFailedCandidate` | `RecordingCoordinator`, `MainActivity` |
-| S4 | auto | partial | `RecordingCoordinatorTest.missingCameraPermissionReturnsCameraPermissionErrorWithoutRecording`, `missingMicrophonePermissionReturnsMicrophonePermissionErrorWithoutRecording` | `RecordingCoordinator`, `CameraRecordingController` |
-| S5 | auto | verified | `VideoPersistenceTest.promotesSuccessfulCacheVideoToMediaStore` | `VideoPersistence`, `AndroidMediaStoreGateway` |
-| S6 | auto | verified | `VideoPersistenceTest.deletesOnlyFailedCacheVideos` | `VideoPersistence`, `AndroidCacheGateway` |
-| S7 | auto | verified | `VideoPersistenceTest.preservesSuccessfulCacheVideoWhenMediaStoreWriteFails` | `VideoPersistence`, `AndroidMediaStoreGateway` |
-| S8 | auto | partial | `TrimAndShareTest.sendsValidTrimRequestWithEditListMode`, `AndroidEditListTrimGatewayTest.startsEditListExportAndForwardsCompletion` | `TrimService`, `Media3EditListExporter` |
+| S1 | auto | verified | `RecordingCoordinatorTest.startsRecordingWithCacheOutputWhenPermissionsAreGranted`; `../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/CameraRecordingFlowInstrumentationTest.kt:31` | `RecordingCoordinator`, `CameraRecordingController` |
+| S2 | auto | verified | `RecordingCoordinatorTest.successfulRecordingReturnsToReadyStateAndKeepsCandidate`; `../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/CameraRecordingFlowInstrumentationTest.kt:40` | `RecordingCoordinator`, `MainActivity` |
+| S3 | auto | verified | `RecordingCoordinatorTest.failedRecordingReturnsToReadyStateAndQueuesOnlyFailedCandidate`; `../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/CameraRecordingFlowInstrumentationTest.kt:31` | `RecordingCoordinator`, `MainActivity` |
+| S4 | auto | verified | `RecordingCoordinatorTest.missingCameraPermissionReturnsCameraPermissionErrorWithoutRecording`, `missingMicrophonePermissionReturnsMicrophonePermissionErrorWithoutRecording`; `../../frontend/androidApp/src/test/kotlin/com/weclimb/android/CameraRecordingStartGuardTest.kt:10` | `RecordingCoordinator`, `../../frontend/androidApp/src/main/kotlin/com/weclimb/android/CameraRecordingController.kt:51` |
+| S5 | auto | verified | `VideoPersistenceTest.promotesSuccessfulCacheVideoToMediaStore`; `../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/AndroidMediaGatewaysInstrumentationTest.kt:21` | `VideoPersistence`, `AndroidMediaStoreGateway` |
+| S6 | auto | verified | `VideoPersistenceTest.deletesOnlyFailedCacheVideos`; `../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/AndroidMediaGatewaysInstrumentationTest.kt:44` | `VideoPersistence`, `AndroidCacheGateway` |
+| S7 | auto | verified | `VideoPersistenceTest.preservesSuccessfulCacheVideoWhenMediaStoreWriteFails`; `../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptServiceTest.kt:31`; `../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/AndroidMediaGatewaysInstrumentationTest.kt:64` | `VideoPersistence`, `AndroidMediaStoreGateway`, `AttemptService` |
+| S8 | auto | verified | `TrimAndShareTest.sendsValidTrimRequestWithEditListMode`, `AndroidEditListTrimGatewayTest.startsEditListExportAndForwardsCompletion`; `../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/Media3TrimInstrumentationTest.kt:18` | `TrimService`, `../../frontend/androidApp/src/main/kotlin/com/weclimb/android/AndroidEditListTrimGateway.kt:35` |
 | S9 | auto | verified | `TrimAndShareTest.rejectsTrimRangeWithNonPositiveDuration`, `rejectsTrimRangeOutsideVideoDuration` | `TrimService` |
 | S10 | manual | verified | 2026-07-21 device walkthrough | `Media3EditListExporter`, `MainActivity` |
-| S11 | auto | partial | `TrimAndShareTest.createsSingleVideoShareRequestWithReadPermission` | `ShareRequestFactory`, `AndroidShareLauncher` |
-| S12 | manual | verified | 2026-07-20 device walkthrough | `AndroidShareLauncher`, `MainActivity` |
+| S11 | auto | verified | `TrimAndShareTest.createsSingleVideoShareRequestWithReadPermission`; `../../frontend/androidApp/src/test/kotlin/com/weclimb/android/AndroidShareLauncherTest.kt:15`; `../../shared/src/commonTest/kotlin/com/weclimb/media/AttemptShareServiceTest.kt:10`; `../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/CameraRecordingFlowInstrumentationTest.kt:40` | `ShareRequestFactory`, `AttemptShareService`, `../../frontend/androidApp/src/main/kotlin/com/weclimb/android/AndroidShareLauncher.kt:17` |
+| S12 | manual | verified | 2026-07-20 device walkthrough; 2026-07-22 app chooser walkthrough | `AndroidShareLauncher`, `MainActivity` |
 
 ## Verification Log
+
+S10, 2026-07-21의 갤러리와 Instagram 재생 walkthrough는 식별 가능한 시작, 종료
+프레임과 edit-list 출력 길이를 확인했다. S12, 2026-07-20의 Instagram Stories
+walkthrough는 공유된 단일 MP4가 스토리 편집기에 로드된 것을 확인했다.
 
 2026-07-20, SM-S911N(API 36.1-ext21)에서 CameraX 녹화와 성공/실패 분류,
 성공 영상 MediaStore 저장, 실패 캐시 영상 삭제를 확인했다. 저장된 단일 MP4는
@@ -153,7 +158,48 @@ S8은 실제 기기에서 MP4 출력을 확인했지만, fixture를 사용해 Me
 자동 검증하는 Android instrumentation test는 아직 없다. 그래서 자동 검증 상태는
 `partial`로 유지한다.
 
+2026-07-22, `CameraRecordingStartGuardTest`와 `AndroidShareLauncherTest`를 추가했고
+`cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUnitTest :androidApp:compileDebugAndroidTestKotlin`이
+통과했다. S8의 `Media3TrimInstrumentationTest`는 실제 MP4 fixture를 만들고 Media3
+출력 길이를 검사하도록 추가했으나, 실행 시점에 연결된 Android 기기가 없어
+`connectedDebugAndroidTest`는 아직 실행하지 못했다.
+
+2026-07-22, SM-S911N(API 36.1-ext21)에 앱과 instrumentation APK를 설치하고
+`Media3TrimInstrumentationTest.createsCompletedMp4ForValidEditListRange`를 직접
+실행했다. 실제 MP4 fixture에서 500ms-1,500ms edit-list 트리밍이 완료됐고, 출력 MP4의
+길이는 800ms-1,200ms 범위로 확인됐다.
+
+2026-07-22, SM-S911N(API 36.1-ext21)에서 `AndroidMediaGatewaysInstrumentationTest`의
+MediaStore 저장, 실패 캐시 삭제, 저장 실패 시 캐시 보존을 확인했다. 강화한
+`Media3TrimInstrumentationTest`는 시작과 종료 프레임 밝기를 원본 구간과 비교했고,
+`CameraRecordingFlowInstrumentationTest`는 실제 CameraX 녹화 후 실패 분류와 성공
+분류, Android chooser 호출까지 통과했다.
+
+2026-07-22, 전체 자동 명령과 두 개의 맥락 없는 리뷰를 실행했다. 리뷰는 스파이크용
+순수 서비스 테스트가 현재 Android 앱 경로와 분리돼 S1-S7을 충분히 증명하지 못하며,
+S8은 시간 경계 프레임을 식별하지 못하고, 공유 런처가 앱 화면에 연결되지 않아 S11-S12를
+충족하지 못한다고 확인했다. S4의 동기 시작 실패 UI 상태와 S7의 실패 이유 반환은
+수정했고 각각의 단위 테스트를 추가했다. 남은 계약·구현 방향은 사람 결정이 필요해
+모든 영향을 받은 항목을 `partial`로 되돌렸다.
+
 ## Notes
+
+## Scenario Traceability
+
+| Scenario | Test or walkthrough | Implementation |
+|----------|---------------------|----------------|
+| S1: | [Camera flow](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/CameraRecordingFlowInstrumentationTest.kt) | [Camera controller](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/CameraRecordingController.kt) |
+| S2: | [Camera flow](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/CameraRecordingFlowInstrumentationTest.kt) | [Activity](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/MainActivity.kt) |
+| S3: | [Camera flow](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/CameraRecordingFlowInstrumentationTest.kt) | [Activity](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/MainActivity.kt) |
+| S4: | [Start guard](../../frontend/androidApp/src/test/kotlin/com/weclimb/android/CameraRecordingStartGuardTest.kt) | [Camera controller](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/CameraRecordingController.kt) |
+| S5: | [Media gateway](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/AndroidMediaGatewaysInstrumentationTest.kt) | [Media gateway](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/AndroidMediaGateways.kt) |
+| S6: | [Media gateway](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/AndroidMediaGatewaysInstrumentationTest.kt) | [Cache gateway](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/AndroidMediaGateways.kt) |
+| S7: | [Media gateway](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/AndroidMediaGatewaysInstrumentationTest.kt) | [Attempt service](../../shared/src/commonMain/kotlin/com/weclimb/session/AttemptService.kt) |
+| S8: | [Trim instrumentation](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/Media3TrimInstrumentationTest.kt) | [Media3 exporter](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/AndroidEditListTrimGateway.kt) |
+| S9: | [Trim tests](../../shared/src/commonTest/kotlin/com/weclimb/media/TrimAndShareTest.kt) | [Trim service](../../shared/src/commonMain/kotlin/com/weclimb/media/TrimService.kt) |
+| S10: | S10 device walkthrough | [Media3 exporter](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/AndroidEditListTrimGateway.kt) |
+| S11: | [Share launcher](../../frontend/androidApp/src/test/kotlin/com/weclimb/android/AndroidShareLauncherTest.kt) | [Share launcher](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/AndroidShareLauncher.kt) |
+| S12: | S12 device walkthrough | [Share launcher](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/AndroidShareLauncher.kt) |
 
 - 기준 계획: [기술 결정](../planning/03-tech-decisions.md),
   [프로덕트 정의](../planning/01-product.md)

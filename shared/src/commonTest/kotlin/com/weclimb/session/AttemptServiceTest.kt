@@ -27,6 +27,13 @@ class AttemptServiceTest {
     }
 
     @Test
+    fun returnsSaveFailureReasonWhenMediaStoreSaveFails() {
+        val result = AttemptService(FailingMediaStore()).recordSuccess(activeSession, "blue", "/cache/a.mp4", 2L)
+
+        assertEquals("MediaStore write failed", result.saveErrorMessage)
+    }
+
+    @Test
     fun retriesSavePendingAttemptWithoutChangingItsIdentity() {
         val pending = Attempt("attempt-1", activeSession.id, "blue", 2L, AttemptOutcome.SAVE_PENDING, null, "/cache/a.mp4")
 
@@ -68,7 +75,7 @@ class AttemptServiceTest {
     }
 
     private class FailingMediaStore : MediaStoreGateway {
-        override fun save(path: String): Result<String> = Result.failure(IllegalStateException())
+        override fun save(path: String): Result<String> = Result.failure(IllegalStateException("MediaStore write failed"))
     }
 
     private class RecordingCache : CacheGateway {
