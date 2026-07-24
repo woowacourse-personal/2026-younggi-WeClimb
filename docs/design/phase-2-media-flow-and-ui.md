@@ -120,8 +120,9 @@ UI는 공통 디자인 토큰을 적용해 현재 실제 화면을 구성한다.
   연결한다.
 - [x] #5 아카이브 목록, 영상 재생, 삭제된 영상 플레이스홀더를 구현한다.
 - [x] #6 선택 영상의 `ACTION_SEND` 공유를 아카이브와 트리밍 화면에 연결한다.
-- [x] #7 디자인 토큰과 공통 Compose 컴포넌트를 만들고 현재 실제 화면에
-  design-bundle UI를 적용한다.
+- [ ] #7 기존 bundle의 토큰 방향 적용은 완료했다. 새 bundle을 받은 뒤
+  [UI 재구현 계약](ui-rebuild-contract.md)에 따라 시안 충실도 Compose UI를
+  재구현한다.
 - [x] #8 단위, Room 통합, Android Intent 테스트와 실기기 트리밍, 재생, 공유
   walkthrough를 완료한다.
 

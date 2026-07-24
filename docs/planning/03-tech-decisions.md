@@ -83,7 +83,8 @@
 
 - 성공 영상의 즉시 트리밍, 나중에 처리, 원본 유지
 - 성공 영상 아카이브, 앱 내 재생, `ACTION_SEND` 공유
-- 현재 실제 Compose 화면(`01`-`06`)의 design-bundle 시각 체계 적용
+- 기존 화면에 design-bundle 색상과 토큰 방향 적용. 화면 구조의 시안 충실도
+  재구현은 [UI 재구현 계약](../design/ui-rebuild-contract.md)과 새 bundle 수령 뒤 진행
 - `shared:jvmTest`, Android 단위 테스트, SM-S911N instrumentation 11건과
   실기기 walkthrough 통과
 
