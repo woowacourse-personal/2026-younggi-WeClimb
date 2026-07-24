@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>4 · 세션 보드 (분류 · 처리 선택 · 종료)</title>
+<title>4 · 세션 보드 (완등 기록 · 종료)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -13,7 +13,7 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
 .pageh h1 b{color:#EA580C}
 .pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:680px;line-height:1.55}
-.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1660px;margin:0 auto}
+.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1240px;margin:0 auto}
 .frame{width:390px}
 .cap{display:flex;align-items:center;gap:9px;margin-bottom:11px}
 .cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
@@ -41,41 +41,10 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .foot{flex:none;padding:12px 20px 22px;display:flex;align-items:center;gap:12px;border-top:1px solid rgba(255,255,255,.08)}
 .sum{flex:1;font-size:13px;color:#94A3B8;font-weight:600}
 .sum b{color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:18px}
-.end{padding:12px 18px;border-radius:14px;background:#1E2634;font-weight:700;font-size:14px;position:relative}
-.badge{position:absolute;top:-8px;right:-6px;background:#EA580C;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.end{padding:12px 18px;border-radius:14px;background:#1E2634;font-weight:700;font-size:14px}
 
-/* pending panel */
-.pend{background:#141A26;border:1px solid rgba(234,88,12,.35);border-radius:16px;padding:14px;margin-bottom:13px}
-.pend .ph{display:flex;align-items:center;gap:9px;margin-bottom:11px}
-.pend .ph .t{font-weight:700;font-size:14px}
-.pend .ph .t b{color:#EA580C}
-.pend .ph .arc{margin-left:auto;font-size:12px;color:#94A3B8;font-weight:700;display:flex;align-items:center;gap:3px}
-.pend .ph .arc svg{width:14px;height:14px}
-.pitem{display:flex;align-items:center;gap:11px;padding:9px 0;border-top:1px solid rgba(255,255,255,.06)}
-.pitem .th{width:44px;height:44px;border-radius:10px;flex:none;position:relative;overflow:hidden}
-.pitem .th .sq{position:absolute;left:5px;top:5px;width:10px;height:10px;border-radius:3px}
-.pitem .pt{font-weight:700;font-size:13px}
-.pitem .pp{font-size:11px;color:#94A3B8;margin-top:1px}
-.pitem .resume{margin-left:auto;background:rgba(234,88,12,.16);color:#EA580C;font-weight:700;font-size:12px;padding:8px 12px;border-radius:10px}
-
-/* scrim + sheet + dialog */
+/* end dialog */
 .scrim{position:absolute;inset:0;background:rgba(0,0,0,.6);z-index:8}
-.sheet{position:absolute;left:0;right:0;bottom:0;z-index:9;background:#141A26;border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);padding:8px 22px 30px;box-shadow:0 -20px 50px rgba(0,0,0,.5)}
-.grab{width:40px;height:4px;border-radius:2px;background:#334155;margin:6px auto 14px}
-.sheet .badge2{display:inline-flex;align-items:center;gap:7px;background:rgba(5,150,105,.16);color:#34d399;font-weight:700;font-size:12px;padding:6px 12px;border-radius:20px;margin-bottom:12px}
-.sheet .badge2 .sq{width:11px;height:11px;border-radius:3px;background:#5A8FDB}
-.sheet h2{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:700;margin-bottom:4px}
-.sheet .sd{font-size:13px;color:#94A3B8;margin-bottom:16px}
-.opt{display:flex;align-items:center;gap:14px;background:#1E2634;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px;margin-bottom:10px}
-.opt.primary{border-color:#EA580C;background:linear-gradient(160deg,#20140b,#1e2634)}
-.opt .oi{width:40px;height:40px;border-radius:12px;background:#0d111a;display:flex;align-items:center;justify-content:center;flex:none}
-.opt.primary .oi{background:rgba(234,88,12,.18)}
-.opt .oi svg{width:20px;height:20px}
-.opt .ot{font-weight:700;font-size:15px}
-.opt .os{font-size:12px;color:#94A3B8;margin-top:1px}
-.opt .chev{margin-left:auto;color:#475569}
-.opt .chev svg{width:18px;height:18px}
-
 .dialog{position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);z-index:9;background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:24px 22px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
 .dialog h2{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;margin-bottom:8px;text-align:center}
 .dialog p{font-size:13px;color:#94A3B8;line-height:1.55;text-align:center;margin-bottom:16px}
@@ -86,13 +55,13 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .recap .rc.warn .v{color:#EA580C}
 .dbtns{display:flex;flex-direction:column;gap:10px}
 .dbtn{height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;border:none}
-.dbtn.end{background:#EA580C;color:#fff}
+.dbtn.end2{background:#EA580C;color:#fff}
 .dbtn.cont{background:transparent;border:1px solid rgba(255,255,255,.16);color:#cbd5e1}
 </style></head>
 <body>
 <div class="pageh">
-  <h1>4 · 세션 보드 — <b>기록 · 처리 선택 · 종료</b></h1>
-  <p>색 탭으로 완등 카운트. 촬영에서 돌아온 성공 영상은 처리 선택 바텀시트로, 보류 영상은 재진입 패널로, 종료는 확인 다이얼로그로. 전체 페이지 대신 시트·다이얼로그 우선.</p>
+  <h1>4 · 세션 보드 — <b>완등 기록 · 종료</b></h1>
+  <p>색을 탭해 완등을 카운트하고, 촬영으로 진입한다. 성공 영상 처리 선택(지금/나중에/원본)은 촬영 직후 화면으로 이동했고, 보드에는 트리밍 재진입이 없다. 나중에 처리한 영상은 아카이브에서 이어서 정리한다.</p>
 </div>
 <div class="stage">
 
@@ -115,62 +84,9 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
     </div>
   </div>
 
-  <!-- 성공 처리 바텀시트 -->
-  <div class="frame">
-    <div class="cap"><span class="n">B</span><span class="t">성공 처리 선택 시트</span><span class="d">자르기 · 나중에 · 원본 유지</span></div>
-    <div class="phone">
-      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
-      <div class="top" style="opacity:.4"><div class="gym">닻 클라이밍</div><div class="timer">01:13:02</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
-      <div class="body" style="opacity:.4"><div class="blvl"><span class="sw" style="background:#5A8FDB"></span><div class="track"><div class="fill" style="width:100%;background:#5A8FDB"></div></div><div class="cnt">8</div></div></div>
-      <div class="scrim"></div>
-      <div class="sheet">
-        <div class="grab"></div>
-        <div class="badge2"><span class="sq"></span>파랑 · 8번째 완등</div>
-        <h2>성공 영상, 어떻게 할까요?</h2>
-        <div class="sd">지금 자르면 바로 정리돼요. 나중에 해도 원본은 안전하게 보관돼요.</div>
-        <div class="opt primary">
-          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg></div>
-          <div><div class="ot">지금 자르기</div><div class="os">앞뒤 컷 편집 후 저장</div></div>
-          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
-        </div>
-        <div class="opt">
-          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-          <div><div class="ot">나중에</div><div class="os">트리밍 대기함에 보관</div></div>
-          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
-        </div>
-        <div class="opt">
-          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg></div>
-          <div><div class="ot">원본 그대로</div><div class="os">자르지 않고 아카이브에</div></div>
-          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 보류 영상 재진입 + 아카이브 -->
-  <div class="frame">
-    <div class="cap"><span class="n">C</span><span class="t">보류 영상 재진입</span><span class="d">대기함 · 아카이브 진입</span></div>
-    <div class="phone">
-      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
-      <div class="top"><div class="gym">닻 클라이밍</div><div class="timer">01:20:11</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
-      <div class="body">
-        <div class="pend">
-          <div class="ph"><span class="t">트리밍 대기 <b>2</b></span><span class="arc">영상 아카이브 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span></div>
-          <div class="pitem"><div class="th" style="background:linear-gradient(160deg,#2f3b52,#141a26)"><span class="sq" style="background:#5A8FDB"></span></div><div><div class="pt">파랑 완등</div><div class="pp">0:19 · 방금</div></div><span class="resume">이어서 자르기</span></div>
-          <div class="pitem"><div class="th" style="background:linear-gradient(160deg,#3a3330,#161a20)"><span class="sq" style="background:#46AE72"></span></div><div><div class="pt">초록 완등</div><div class="pp">0:24 · 5분 전</div></div><span class="resume">이어서 자르기</span></div>
-        </div>
-        <div class="hd"><span class="l">색을 탭해서 완등</span><span class="r">어려움 ↑</span></div>
-        <div class="blvl"><span class="sw" style="background:#5A8FDB"></span><div class="track"><div class="fill" style="width:100%;background:#5A8FDB"></div><div class="over" style="width:40%;background:#3E6CB5"></div></div><div class="cnt">7</div></div>
-        <div class="blvl"><span class="sw" style="background:#46AE72"></span><div class="track"><div class="fill" style="width:100%;background:#2E7A52"></div></div><div class="cnt">12</div></div>
-        <div class="cam"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.4"/></svg>촬영하기</div>
-      </div>
-      <div class="foot"><div class="sum"><b>26</b> 완등 · 최고 <b>Lv.5</b></div><div class="end">클라이밍 종료<span class="badge">트리밍 2</span></div></div>
-    </div>
-  </div>
-
   <!-- 세션 종료 확인 다이얼로그 -->
   <div class="frame">
-    <div class="cap"><span class="n">D</span><span class="t">세션 종료 확인</span><span class="d">다이얼로그 · 대기 영상 경고</span></div>
+    <div class="cap"><span class="n">B</span><span class="t">세션 종료 확인</span><span class="d">다이얼로그 · 대기 영상 안내</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="top" style="opacity:.4"><div class="gym">닻 클라이밍</div><div class="timer">01:24:07</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
@@ -178,14 +94,14 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
       <div class="scrim"></div>
       <div class="dialog">
         <h2>클라이밍을 종료할까요?</h2>
-        <p>종료하면 이번 세션 기록이 저장돼요.<br>트리밍 대기 영상은 아카이브에서 계속 정리할 수 있어요.</p>
+        <p>종료하면 이번 세션 기록이 저장돼요.<br>나중에 처리한 영상은 아카이브에서 계속 정리할 수 있어요.</p>
         <div class="recap">
           <div class="rc"><div class="v">26</div><div class="k">완등</div></div>
           <div class="rc"><div class="v" style="color:#5A8FDB">Lv.5</div><div class="k">최고</div></div>
           <div class="rc warn"><div class="v">2</div><div class="k">트리밍 대기</div></div>
         </div>
         <div class="dbtns">
-          <button class="dbtn end">종료하기</button>
+          <button class="dbtn end2">종료하기</button>
           <button class="dbtn cont">계속 클라이밍</button>
         </div>
       </div>

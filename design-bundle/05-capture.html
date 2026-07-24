@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>5 · 촬영 (녹화 · 분류 · 준비 · 오류)</title>
+<title>5 · 촬영 (녹화 · 분류 · 처리 선택 · 준비 · 오류)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -12,7 +12,7 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .pageh{max-width:1240px;margin:0 auto 26px}
 .pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
 .pageh h1 b{color:#EA580C}
-.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:680px;line-height:1.55}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:700px;line-height:1.55}
 .stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1660px;margin:0 auto}
 .frame{width:390px}
 .cap{display:flex;align-items:center;gap:9px;margin-bottom:11px}
@@ -20,7 +20,6 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
 .cap .d{font-size:12px;color:#64748B;font-weight:600}
 .phone{width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06);background:#05070a}
-/* CameraX preview region */
 .preview{position:absolute;inset:0;background:linear-gradient(180deg,#2a2320 0%,#161a20 45%,#0e1219 100%)}
 .wall{position:absolute;inset:0;opacity:.5;background:
   radial-gradient(circle at 30% 26%,#E45D5D 0 14px,transparent 15px),
@@ -41,13 +40,11 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 .mid{flex:1;position:relative;z-index:3}
 
-/* recording bottom: stop */
 .stopwrap{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;padding-bottom:36px;gap:14px}
 .hintline{color:rgba(255,255,255,.7);font-size:12px;font-weight:600;background:rgba(0,0,0,.35);padding:5px 12px;border-radius:16px}
 .stop{width:78px;height:78px;border-radius:50%;border:5px solid rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25)}
 .stop i{width:28px;height:28px;border-radius:7px;background:#E45D5D;display:block}
 
-/* result classify */
 .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,7,13,0) 30%,rgba(5,7,13,.82) 78%);z-index:3}
 .result{position:relative;z-index:4;margin-top:auto;padding:0 18px 34px}
 .q{text-align:center;font-weight:700;font-size:18px;margin-bottom:16px;text-shadow:0 2px 8px rgba(0,0,0,.6)}
@@ -58,7 +55,24 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .big svg{width:30px;height:30px}
 .big small{font-weight:600;font-size:12px;opacity:.85}
 
-/* camera preparing / error overlay */
+/* success handling sheet */
+.dim{position:absolute;inset:0;background:rgba(5,7,13,.55);z-index:4}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:5;background:#141A26;border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);padding:8px 22px 30px;box-shadow:0 -20px 50px rgba(0,0,0,.5)}
+.grab{width:40px;height:4px;border-radius:2px;background:#334155;margin:6px auto 14px}
+.badge2{display:inline-flex;align-items:center;gap:7px;background:rgba(5,150,105,.16);color:#34d399;font-weight:700;font-size:12px;padding:6px 12px;border-radius:20px;margin-bottom:12px}
+.badge2 .sq{width:11px;height:11px;border-radius:3px;background:#5A8FDB}
+.sheet h2{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:700;margin-bottom:4px}
+.sheet .sd{font-size:13px;color:#94A3B8;margin-bottom:16px}
+.opt{display:flex;align-items:center;gap:14px;background:#1E2634;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px;margin-bottom:10px}
+.opt.primary{border-color:#EA580C;background:linear-gradient(160deg,#20140b,#1e2634)}
+.opt .oi{width:40px;height:40px;border-radius:12px;background:#0d111a;display:flex;align-items:center;justify-content:center;flex:none}
+.opt.primary .oi{background:rgba(234,88,12,.18)}
+.opt .oi svg{width:20px;height:20px}
+.opt .ot{font-weight:700;font-size:15px}
+.opt .os{font-size:12px;color:#94A3B8;margin-top:1px}
+.opt .chev{margin-left:auto;color:#475569}
+.opt .chev svg{width:18px;height:18px}
+
 .center{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(5,7,13,.72);padding:0 40px;text-align:center}
 .spin{width:44px;height:44px;border-radius:50%;border:4px solid rgba(255,255,255,.16);border-top-color:#EA580C;animation:sp .9s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -75,7 +89,7 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 <body>
 <div class="pageh">
   <h1>5 · 촬영 — <b>CameraX 프리뷰 위 오버레이</b></h1>
-  <p>전체 화면은 실제 카메라 프리뷰(CameraX PreviewView). 그 위에 선택 색상·녹화 상태·정지, 정지 후 성공/실패 분류를 오버레이. 카메라 준비 중과 오류 변형 포함.</p>
+  <p>전체 화면은 실제 카메라 프리뷰(CameraX PreviewView). 녹화·정지 후 성공/실패 분류, 성공을 고르면 바로 이 화면에서 처리 선택 시트(지금 자르기 · 나중에 · 원본 유지)가 뜬다. 카메라 준비 중·오류 변형 포함.</p>
 </div>
 <div class="stage">
 
@@ -121,9 +135,43 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
     </div>
   </div>
 
+  <!-- 성공 후 처리 선택 시트 -->
+  <div class="frame">
+    <div class="cap"><span class="n">C</span><span class="t">성공 후 처리 선택</span><span class="d">지금 자르기 · 나중에 · 원본</span></div>
+    <div class="phone">
+      <div class="preview"><div class="wall"></div><div class="climber"></div></div>
+      <div class="pvtag">CameraX · 마지막 프레임 정지</div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hdr"><div class="selc" style="opacity:.5"><span class="sq"></span>파랑</div></div>
+      <div class="mid"></div>
+      <div class="dim"></div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="badge2"><span class="sq"></span>파랑 완등 · 0:19</div>
+        <h2>이 영상, 어떻게 할까요?</h2>
+        <div class="sd">지금 자르면 바로 정리돼요. 나중에 해도 원본은 안전하게 보관돼요.</div>
+        <div class="opt primary">
+          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg></div>
+          <div><div class="ot">지금 자르기</div><div class="os">앞뒤 컷 편집 후 저장</div></div>
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+        </div>
+        <div class="opt">
+          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <div><div class="ot">나중에</div><div class="os">트리밍 대기함에 보관 · 아카이브에서 이어서</div></div>
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+        </div>
+        <div class="opt">
+          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg></div>
+          <div><div class="ot">원본 그대로</div><div class="os">자르지 않고 아카이브에</div></div>
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 카메라 준비 중 -->
   <div class="frame">
-    <div class="cap"><span class="n">C</span><span class="t">카메라 준비 중</span><span class="d">CameraX 바인딩 대기</span></div>
+    <div class="cap"><span class="n">D</span><span class="t">카메라 준비 중</span><span class="d">CameraX 바인딩 대기</span></div>
     <div class="phone">
       <div class="preview" style="background:#0e1219"></div>
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
@@ -140,7 +188,7 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 
   <!-- 카메라 오류 -->
   <div class="frame">
-    <div class="cap"><span class="n">D</span><span class="t">카메라 오류</span><span class="d">바인딩 실패 · 재시도/설정</span></div>
+    <div class="cap"><span class="n">E</span><span class="t">카메라 오류</span><span class="d">바인딩 실패 · 재시도/설정</span></div>
     <div class="phone">
       <div class="preview" style="background:#0e1219"></div>
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
