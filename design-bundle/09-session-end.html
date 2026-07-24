@@ -1,0 +1,160 @@
+<!-- @dsCard group="Screens" -->
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>9 · 세션 정리 (종료 직후)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:30px 24px 56px}
+.cnd{font-family:'Barlow Condensed',sans-serif}
+.pageh{max-width:1240px;margin:0 auto 26px}
+.pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
+.pageh h1 b{color:#EA580C}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:700px;line-height:1.55}
+.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1240px;margin:0 auto}
+.frame{width:390px}
+.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px;flex-wrap:wrap}
+.cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
+.cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
+.cap .d{font-size:12px;color:#64748B;font-weight:600}
+.p3tag{font-size:10px;font-weight:700;color:#c084fc;background:rgba(168,119,210,.14);border:1px solid rgba(168,119,210,.4);padding:3px 8px;border-radius:8px}
+.phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1;z-index:5}
+.steps{display:flex;gap:6px;padding:4px 22px 0}
+.steps i{height:4px;flex:1;border-radius:2px;background:#1E2634}
+.steps i.on{background:#EA580C}
+.body{flex:1;overflow-y:auto;padding:12px 22px 16px}
+
+.done{display:flex;align-items:center;gap:9px;color:#34d399;font-weight:700;font-size:14px}
+.done svg{width:20px;height:20px}
+.meta{font-size:13px;color:#94A3B8;font-weight:600;margin-top:4px}
+
+.hero{margin-top:14px;background:linear-gradient(160deg,#20140b,#141a26);border:1px solid rgba(234,88,12,.28);border-radius:20px;padding:18px 18px 16px;display:flex;align-items:center;gap:18px}
+.hero .num{font-family:'Barlow Condensed',sans-serif;font-size:64px;font-weight:800;line-height:.85;color:#EA580C}
+.hero .hr .unit{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700}
+.hero .hr .best{display:inline-flex;align-items:center;gap:7px;margin-top:8px;background:rgba(0,0,0,.3);border-radius:16px;padding:6px 11px;font-weight:700;font-size:13px}
+.hero .hr .best .sq{width:13px;height:13px;border-radius:4px;background:#5A8FDB}
+
+.lbl{font-size:11px;color:#64748B;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin:20px 2px 10px;display:flex;justify-content:space-between;align-items:center}
+.lbl .cnt{color:#EA580C}
+
+/* phase3 photo */
+.snap{position:relative;height:130px;border-radius:16px;background:linear-gradient(160deg,#3a3330,#161a20);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.1)}
+.snap.off{opacity:.55}
+.snap .cta{display:flex;flex-direction:column;align-items:center;gap:7px;color:#fff;font-weight:700;font-size:14px}
+.snap .cta svg{width:28px;height:28px}
+.snap .p3{position:absolute;top:9px;right:10px}
+
+/* pending trim -> archive */
+.trimcard{display:flex;align-items:center;gap:12px;background:#141A26;border:1px solid rgba(234,88,12,.35);border-radius:14px;padding:13px 14px}
+.trimcard .pi{width:40px;height:40px;border-radius:12px;background:rgba(234,88,12,.16);display:flex;align-items:center;justify-content:center;flex:none}
+.trimcard .pi svg{width:20px;height:20px}
+.trimcard .tt{font-weight:700;font-size:14px}
+.trimcard .tt b{color:#EA580C}
+.trimcard .ts{font-size:12px;color:#94A3B8;margin-top:1px}
+.trimcard .go{margin-left:auto;background:rgba(234,88,12,.16);color:#EA580C;font-weight:700;font-size:12px;padding:9px 12px;border-radius:11px;display:flex;align-items:center;gap:4px}
+.trimcard .go svg{width:13px;height:13px}
+
+/* phase3 fail batch */
+.fail{position:relative;background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.22);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:12px}
+.fail.off{opacity:.55}
+.fail .ic{width:38px;height:38px;border-radius:11px;background:rgba(220,38,38,.14);display:flex;align-items:center;justify-content:center;flex:none}
+.fail .ic svg{width:19px;height:19px}
+.fail .t{font-weight:700;font-size:14px}
+.fail .s{font-size:12px;color:#94A3B8;margin-top:2px}
+.fail .p3{position:absolute;top:9px;right:10px}
+
+.allclear{display:flex;align-items:center;gap:11px;background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.35);border-radius:14px;padding:13px 14px;font-size:13px;font-weight:600;color:#6ee7b7}
+.allclear svg{width:20px;height:20px;flex:none}
+
+.foot{flex:none;padding:14px 22px 30px;display:flex;flex-direction:column;gap:10px;border-top:1px solid rgba(255,255,255,.08)}
+.b{height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:16px;border:none}
+.b svg{width:19px;height:19px}
+.report{background:#EA580C;color:#fff;position:relative}
+.report .p3{position:absolute;top:-9px;right:12px}
+.home{background:transparent;border:1px solid rgba(255,255,255,.16);color:#cbd5e1;height:48px;font-size:14px}
+</style></head>
+<body>
+<div class="pageh">
+  <h1>9 · 세션 정리 — <b>종료 직후</b> <span style="font-size:14px;color:#64748B;font-weight:600">병합 · Phase2+3</span></h1>
+  <p>세션 보드 "종료하기"의 목적지. 완등 요약과 미뤄둔 트리밍(→아카이브)은 작동, 오늘의 한 컷·실패 일괄 삭제·리포트 생성은 <span style="color:#c084fc;font-weight:700">Phase 3 · 비활성</span>(UI만 완성). "리포트 만들기" → 10 리포트.</p>
+</div>
+<div class="stage">
+
+  <!-- 대기 영상 있음 -->
+  <div class="frame">
+    <div class="cap"><span class="n">A</span><span class="t">대기 영상 있음</span><span class="d">정리 유도 · 리포트 진입</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="steps"><i class="on"></i><i class="on"></i><i></i></div>
+      <div class="body">
+        <div class="done"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>세션 종료</div>
+        <div class="meta">닻 클라이밍 · 1시간 24분 · 7월 24일</div>
+
+        <div class="hero">
+          <div class="num">26</div>
+          <div class="hr"><div class="unit">완등</div><div class="best"><span class="sq"></span>최고 Lv.5 파랑</div></div>
+        </div>
+
+        <div class="lbl"><span>오늘의 한 컷</span><span class="p3tag">Phase 3 · 비활성</span></div>
+        <div class="snap off">
+          <span class="p3 p3tag">비활성</span>
+          <div class="cta"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.4"/></svg>오늘의 한 컷 찍기</div>
+        </div>
+
+        <div class="lbl"><span>미뤄둔 트리밍</span><span class="cnt">2개</span></div>
+        <div class="trimcard">
+          <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg></div>
+          <div><div class="tt">트리밍 대기 <b>2</b></div><div class="ts">아카이브에서 이어서 자르기</div></div>
+          <div class="go">정리하기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></div>
+        </div>
+
+        <div class="lbl"><span>실패 영상</span><span class="p3tag">Phase 3 · 비활성</span></div>
+        <div class="fail off">
+          <span class="p3 p3tag">비활성</span>
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#E45D5D" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg></div>
+          <div style="flex:1;min-width:0"><div class="t">실패 영상 47개</div><div class="s">일괄 삭제 · 복구함(예정)</div></div>
+        </div>
+      </div>
+      <div class="foot">
+        <button class="b report"><span class="p3 p3tag">Phase 3</span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 15l3-4 2 2 3-5"/></svg>리포트 만들기</button>
+        <button class="b home"><svg viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈으로</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 대기 없음 -->
+  <div class="frame">
+    <div class="cap"><span class="n">B</span><span class="t">대기 영상 없음</span><span class="d">모두 정리됨</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="steps"><i class="on"></i><i class="on"></i><i></i></div>
+      <div class="body">
+        <div class="done"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>세션 종료</div>
+        <div class="meta">더클라임 양재점 · 58분 · 7월 24일</div>
+
+        <div class="hero">
+          <div class="num">18</div>
+          <div class="hr"><div class="unit">완등</div><div class="best"><span class="sq" style="background:#DDBB44"></span>최고 Lv.3 노랑</div></div>
+        </div>
+
+        <div class="lbl"><span>오늘의 한 컷</span><span class="p3tag">Phase 3 · 비활성</span></div>
+        <div class="snap off">
+          <span class="p3 p3tag">비활성</span>
+          <div class="cta"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.4"/></svg>오늘의 한 컷 찍기</div>
+        </div>
+
+        <div class="lbl"><span>미뤄둔 트리밍</span></div>
+        <div class="allclear"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/></svg>모든 영상을 정리했어요 · 대기 없음</div>
+      </div>
+      <div class="foot">
+        <button class="b report"><span class="p3 p3tag">Phase 3</span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 15l3-4 2 2 3-5"/></svg>리포트 만들기</button>
+        <button class="b home"><svg viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈으로</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body></html>
