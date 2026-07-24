@@ -1,0 +1,132 @@
+<!-- @dsCard group="Screens" -->
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>9 · 세션 요약 (종료 직후)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:30px 24px 56px}
+.cnd{font-family:'Barlow Condensed',sans-serif}
+.pageh{max-width:1240px;margin:0 auto 26px}
+.pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
+.pageh h1 b{color:#EA580C}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:700px;line-height:1.55}
+.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1240px;margin:0 auto}
+.frame{width:390px}
+.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
+.cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
+.cap .d{font-size:12px;color:#64748B;font-weight:600}
+.phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1;z-index:5}
+.body{flex:1;overflow-y:auto;padding:10px 22px 20px;display:flex;flex-direction:column}
+
+.done{display:flex;align-items:center;gap:9px;color:#34d399;font-weight:700;font-size:14px}
+.done svg{width:20px;height:20px}
+.meta{font-size:13px;color:#94A3B8;font-weight:600;margin-top:4px}
+
+.hero{margin-top:20px;text-align:center;background:linear-gradient(160deg,#20140b,#141a26);border:1px solid rgba(234,88,12,.28);border-radius:24px;padding:26px 20px}
+.hero .num{font-family:'Barlow Condensed',sans-serif;font-size:88px;font-weight:800;line-height:.9;color:#EA580C}
+.hero .unit{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#fff;margin-top:4px}
+.hero .best{display:inline-flex;align-items:center;gap:8px;margin-top:14px;background:rgba(0,0,0,.3);border-radius:20px;padding:8px 15px;font-weight:700;font-size:14px}
+.hero .best .sq{width:15px;height:15px;border-radius:5px;background:#5A8FDB}
+
+.breaklab{font-size:11px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:22px 2px 12px}
+.brow{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+.brow .sw{width:22px;height:22px;border-radius:7px;flex:none}
+.brow .bt{width:52px;font-size:13px;font-weight:600;color:#cbd5e1;flex:none}
+.brow .bar{flex:1;height:14px;border-radius:7px;background:#0d111a;overflow:hidden}
+.brow .bar i{display:block;height:100%;border-radius:7px}
+.brow .bc{width:26px;text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700}
+
+.pend{margin-top:20px;display:flex;align-items:center;gap:13px;background:#141A26;border:1px solid rgba(234,88,12,.4);border-radius:16px;padding:14px 15px}
+.pend .pi{width:42px;height:42px;border-radius:12px;background:rgba(234,88,12,.16);display:flex;align-items:center;justify-content:center;flex:none}
+.pend .pi svg{width:21px;height:21px}
+.pend .pt{font-weight:700;font-size:14px}
+.pend .pt b{color:#EA580C}
+.pend .ps{font-size:12px;color:#94A3B8;margin-top:1px}
+.pend .go{margin-left:auto;background:rgba(234,88,12,.16);color:#EA580C;font-weight:700;font-size:12px;padding:9px 12px;border-radius:11px;display:flex;align-items:center;gap:4px}
+.pend .go svg{width:13px;height:13px}
+
+.allclear{margin-top:20px;display:flex;align-items:center;gap:11px;background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.35);border-radius:16px;padding:14px 15px;font-size:13px;font-weight:600;color:#6ee7b7}
+.allclear svg{width:20px;height:20px;flex:none}
+
+.foot{flex:none;padding:14px 22px 30px;display:flex;flex-direction:column;gap:10px}
+.b{height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:16px;border:none}
+.b svg{width:19px;height:19px}
+.home{background:#EA580C;color:#fff}
+.arc{background:transparent;border:1px solid rgba(255,255,255,.16);color:#cbd5e1;height:48px;font-size:14px}
+</style></head>
+<body>
+<div class="pageh">
+  <h1>9 · 세션 요약 — <b>종료 직후</b> <span style="font-size:14px;color:#64748B;font-weight:600">신규 · 최소 범위</span></h1>
+  <p>세션 보드에서 "종료하기"의 목적지. 완등 수·최고 레벨·색상 분포를 보여 주고, 트리밍 대기 영상을 아카이브로 넘겨 정리하도록 연결한다. 풀 리포트(성장 곡선 등)는 Phase 3 유지.</p>
+</div>
+<div class="stage">
+
+  <!-- 대기 영상 있음 -->
+  <div class="frame">
+    <div class="cap"><span class="n">A</span><span class="t">대기 영상 있음</span><span class="d">아카이브 정리 유도</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="body">
+        <div class="done"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>세션 종료</div>
+        <div class="meta">닻 클라이밍 · 1시간 24분 · 7월 24일</div>
+
+        <div class="hero">
+          <div class="num">26</div>
+          <div class="unit">완등</div>
+          <div class="best"><span class="sq"></span>최고 Lv.5 파랑</div>
+        </div>
+
+        <div class="breaklab">색상별 완등</div>
+        <div class="brow"><span class="sw" style="background:#46AE72"></span><span class="bt">초록</span><div class="bar"><i style="width:100%;background:#46AE72"></i></div><span class="bc">12</span></div>
+        <div class="brow"><span class="sw" style="background:#5A8FDB"></span><span class="bt">파랑</span><div class="bar"><i style="width:60%;background:#5A8FDB"></i></div><span class="bc">7</span></div>
+        <div class="brow"><span class="sw" style="background:#DDBB44"></span><span class="bt">노랑</span><div class="bar"><i style="width:42%;background:#DDBB44"></i></div><span class="bc">5</span></div>
+        <div class="brow"><span class="sw" style="background:#E2E8F0"></span><span class="bt">하양</span><div class="bar"><i style="width:17%;background:#E2E8F0"></i></div><span class="bc">2</span></div>
+
+        <div class="pend">
+          <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg></div>
+          <div><div class="pt">트리밍 대기 <b>2</b></div><div class="ps">나중에 미룬 영상이 있어요</div></div>
+          <div class="go">정리하기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></div>
+        </div>
+      </div>
+      <div class="foot">
+        <button class="b home"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈으로</button>
+        <button class="b arc"><svg viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg>영상 아카이브 열기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 대기 없음 -->
+  <div class="frame">
+    <div class="cap"><span class="n">B</span><span class="t">대기 영상 없음</span><span class="d">모두 정리됨</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="body">
+        <div class="done"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>세션 종료</div>
+        <div class="meta">더클라임 양재점 · 58분 · 7월 24일</div>
+
+        <div class="hero">
+          <div class="num">18</div>
+          <div class="unit">완등</div>
+          <div class="best"><span class="sq" style="background:#DDBB44"></span>최고 Lv.3 노랑</div>
+        </div>
+
+        <div class="breaklab">색상별 완등</div>
+        <div class="brow"><span class="sw" style="background:#DDBB44"></span><span class="bt">노랑</span><div class="bar"><i style="width:100%;background:#DDBB44"></i></div><span class="bc">9</span></div>
+        <div class="brow"><span class="sw" style="background:#46AE72"></span><span class="bt">초록</span><div class="bar"><i style="width:66%;background:#46AE72"></i></div><span class="bc">6</span></div>
+        <div class="brow"><span class="sw" style="background:#E45D5D"></span><span class="bt">빨강</span><div class="bar"><i style="width:33%;background:#E45D5D"></i></div><span class="bc">3</span></div>
+
+        <div class="allclear"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/></svg>모든 영상을 정리했어요 · 트리밍 대기 없음</div>
+      </div>
+      <div class="foot">
+        <button class="b home"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈으로</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body></html>
