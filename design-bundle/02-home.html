@@ -2,100 +2,176 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>2 · 홈</title>
+<title>2 · 홈 (시작 · 아카이브 · 빈 상태)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#05070d;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px;font-family:'Barlow',system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
-.phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
-.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
+body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:30px 24px 56px}
 .cnd{font-family:'Barlow Condensed',sans-serif}
-.body{flex:1;overflow-y:auto;padding:6px 20px 20px}
+.pageh{max-width:1240px;margin:0 auto 26px}
+.pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
+.pageh h1 b{color:#EA580C}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:680px;line-height:1.55}
+.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1240px;margin:0 auto}
+.frame{width:390px}
+.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
+.cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
+.cap .d{font-size:12px;color:#64748B;font-weight:600}
+.phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1;z-index:5}
+.body{flex:1;overflow-y:auto;padding:8px 20px 20px}
 .hi{font-size:15px;color:#94A3B8;font-weight:600}
 .name{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;margin-top:1px}
-.snap{background:linear-gradient(160deg,#0f1830,#141a26);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:18px;margin-top:14px}
-.srow{display:flex;align-items:center;gap:18px}
-.ring{width:96px;height:96px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;position:relative;
-  background:conic-gradient(#5A8FDB 0 78%,rgba(255,255,255,.08) 78% 100%)}
-.ring::before{content:"";position:absolute;inset:7px;border-radius:50%;background:#141a26}
-.ring .in{position:relative;z-index:2;text-align:center}
-.ring .lv{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;line-height:.9;color:#5A8FDB}
-.ring .lb{font-size:10px;color:#94A3B8;font-weight:700;letter-spacing:.5px}
-.sinfo .t{font-size:13px;color:#94A3B8;font-weight:600}
-.sinfo .big{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;margin:2px 0 4px;display:flex;align-items:center;gap:8px}
-.sinfo .big .sq{width:16px;height:16px;border-radius:5px;background:#5A8FDB}
-.sinfo .p{font-size:12px;color:#46AE72;font-weight:600}
-.curve{margin-top:16px}
-.clab{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
-.clab .t{font-size:12px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.clab .v{font-size:12px;color:#94A3B8;font-weight:600}
-.chart{height:84px;border-radius:12px;background:#0f1420;position:relative;overflow:hidden;display:flex;align-items:flex-end;gap:3px;padding:8px}
-.chart .bar{flex:1;border-radius:3px 3px 0 0;display:flex;flex-direction:column-reverse}
-.chart .bar i{display:block;width:100%}
-.legend{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
-.lg{display:flex;align-items:center;gap:5px;font-size:11px;color:#94A3B8;font-weight:600}
-.lg .d{width:9px;height:9px;border-radius:2px}
-.mon{font-size:12px;color:#64748B;font-weight:600;margin-top:10px;text-align:center}
-.start{height:60px;border-radius:18px;background:#EA580C;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:18px;margin-top:18px;box-shadow:0 12px 30px rgba(234,88,12,.3)}
-.start svg{width:24px;height:24px}
-.sect{font-size:12px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:22px 4px 10px}
-.rep{background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:20px;overflow:hidden}
-.rep .img{height:130px;background:linear-gradient(160deg,#334155,#0f172a);display:flex;align-items:flex-end;padding:16px}
-.rep .big{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:700;line-height:.9}
-.rep .meta{font-size:12px;color:#cbd5e1;font-weight:600}
-.rep .foot{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-size:12px;color:#94A3B8}
-.mini{display:flex;gap:4px}
-.mini i{width:16px;height:8px;border-radius:3px;display:block}
+
+.start{height:112px;border-radius:22px;background:linear-gradient(140deg,#EA580C,#c2410c);display:flex;align-items:center;gap:16px;padding:0 22px;margin-top:16px;box-shadow:0 14px 34px rgba(234,88,12,.34);position:relative;overflow:hidden}
+.start::after{content:"";position:absolute;right:-20px;top:-20px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.08)}
+.start .pl{width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;flex:none}
+.start .pl svg{width:26px;height:26px}
+.start .st{position:relative;z-index:2}
+.start .st .k{font-size:13px;color:rgba(255,255,255,.85);font-weight:600}
+.start .st .v{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;line-height:1.05}
+.start .arw{margin-left:auto;position:relative;z-index:2}
+.start .arw svg{width:24px;height:24px}
+
+.sect{display:flex;align-items:center;justify-content:space-between;margin:24px 2px 12px}
+.sect .l{font-size:12px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
+.sect .more{font-size:12px;color:#EA580C;font-weight:700;display:flex;align-items:center;gap:3px}
+.sect .more svg{width:14px;height:14px}
+
+/* archive strip */
+.strip{display:flex;gap:11px;overflow-x:auto;padding-bottom:4px}
+.vc{width:118px;flex:none;border-radius:15px;overflow:hidden;background:#141A26;border:1px solid rgba(255,255,255,.08)}
+.vc .th{height:150px;position:relative;display:flex;align-items:flex-end;padding:8px}
+.vc .th .badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);border-radius:20px;padding:3px 8px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px}
+.vc .th .badge .sq{width:9px;height:9px;border-radius:3px}
+.vc .th .play{position:absolute;right:8px;bottom:8px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+.vc .th .play svg{width:12px;height:12px}
+.vc .mt{padding:9px 11px}
+.vc .mt .g{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vc .mt .d{font-size:11px;color:#64748B;margin-top:1px}
+
+/* recent session card */
+.rsc{margin-top:2px;background:#141A26;border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:15px 16px;display:flex;align-items:center;gap:14px}
+.rsc .num{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:700;line-height:1}
+.rsc .info .g{font-weight:700;font-size:15px}
+.rsc .info .s{font-size:12px;color:#94A3B8;margin-top:2px}
+.rsc .mini{margin-left:auto;display:flex;gap:4px}
+.rsc .mini i{width:14px;height:8px;border-radius:3px;display:block}
+
+/* empty */
+.empty{margin-top:2px;border:1.5px dashed rgba(255,255,255,.14);border-radius:18px;padding:30px 22px;text-align:center}
+.empty .eic{width:54px;height:54px;border-radius:16px;background:#141A26;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.empty .eic svg{width:26px;height:26px}
+.empty h3{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;margin-bottom:5px}
+.empty p{font-size:13px;color:#94A3B8;line-height:1.5}
+
 .tab{height:66px;flex:none;display:flex;border-top:1px solid rgba(255,255,255,.1);background:rgba(20,26,38,.95);padding-bottom:8px}
 .tab a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:#64748B;font-weight:700}
 .tab a.on{color:#fff}
+.tab a.on svg{stroke:#EA580C}
 .tab svg{width:22px;height:22px}
 </style></head>
-<body><div class="phone">
-  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
-  <div class="body">
-    <div class="hi">오늘도 붙어볼까요,</div>
-    <div class="name">기영 님</div>
+<body>
+<div class="pageh">
+  <h1>2 · 홈 — <b>세션 시작 · 영상 아카이브</b></h1>
+  <p>리포트/통계는 이번 범위 밖이라 홈은 촬영 진입과 아카이브에 집중. 상태: 세션 시작(암장 선택으로) · 아카이브 진입(최근 영상) · 첫 기록 빈 상태.</p>
+</div>
+<div class="stage">
 
-    <div class="snap">
-      <div class="srow">
-        <div class="ring"><div class="in"><div class="lv">5</div><div class="lb">LEVEL</div></div></div>
-        <div class="sinfo">
-          <div class="t">현재 실력</div>
-          <div class="big"><span class="sq"></span>Lv.5 파랑</div>
-          <div class="p">Lv.6 남색까지 78%</div>
+  <!-- 암장 선택 시작 -->
+  <div class="frame">
+    <div class="cap"><span class="n">A</span><span class="t">암장 선택 시작</span><span class="d">클라이밍 시작 → 암장 선택</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="body">
+        <div class="hi">오늘도 붙어볼까요,</div>
+        <div class="name">기영 님</div>
+        <div class="start">
+          <div class="pl"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg></div>
+          <div class="st"><div class="k">바로 촬영 시작</div><div class="v">클라이밍 시작</div></div>
+          <div class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        </div>
+        <div class="sect"><span class="l">내 영상</span><span class="more">전체 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span></div>
+        <div class="strip">
+          <div class="vc"><div class="th" style="background:linear-gradient(160deg,#2f3b52,#141a26)"><span class="badge"><span class="sq" style="background:#5A8FDB"></span>파랑</span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">닻 클라이밍</div><div class="d">7월 22일</div></div></div>
+          <div class="vc"><div class="th" style="background:linear-gradient(160deg,#3a3330,#161a20)"><span class="badge"><span class="sq" style="background:#46AE72"></span>초록</span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">닻 클라이밍</div><div class="d">7월 22일</div></div></div>
+          <div class="vc"><div class="th" style="background:linear-gradient(160deg,#40304a,#161a20)"><span class="badge"><span class="sq" style="background:#DDBB44"></span>노랑</span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">더클라임</div><div class="d">7월 19일</div></div></div>
+        </div>
+        <div class="sect"><span class="l">최근 클라이밍</span></div>
+        <div class="rsc">
+          <div class="num cnd" style="color:#5A8FDB">14</div>
+          <div class="info"><div class="g">닻 클라이밍</div><div class="s">7월 22일 · 1시간 24분 · 최고 Lv.5 파랑</div></div>
+          <div class="mini"><i style="background:#DDBB44"></i><i style="background:#46AE72"></i><i style="background:#5A8FDB"></i></div>
         </div>
       </div>
-      <div class="curve">
-        <div class="clab"><span class="t">누적 완등</span><span class="v">총 87</span></div>
-        <div class="chart">
-          <div class="bar"><i style="height:8px;background:#E45D5D"></i><i style="height:4px;background:#E68A4C"></i></div>
-          <div class="bar"><i style="height:12px;background:#E45D5D"></i><i style="height:7px;background:#E68A4C"></i><i style="height:4px;background:#DDBB44"></i></div>
-          <div class="bar"><i style="height:15px;background:#E45D5D"></i><i style="height:9px;background:#E68A4C"></i><i style="height:7px;background:#DDBB44"></i></div>
-          <div class="bar"><i style="height:18px;background:#E45D5D"></i><i style="height:11px;background:#E68A4C"></i><i style="height:9px;background:#DDBB44"></i><i style="height:5px;background:#46AE72"></i></div>
-          <div class="bar"><i style="height:22px;background:#E45D5D"></i><i style="height:13px;background:#E68A4C"></i><i style="height:11px;background:#DDBB44"></i><i style="height:8px;background:#46AE72"></i></div>
-          <div class="bar"><i style="height:26px;background:#E45D5D"></i><i style="height:16px;background:#E68A4C"></i><i style="height:13px;background:#DDBB44"></i><i style="height:11px;background:#46AE72"></i><i style="height:6px;background:#5A8FDB"></i></div>
-        </div>
-        <div class="mon">이번 달 4회 방문 · Lv.5 파랑 첫 완등</div>
-      </div>
-    </div>
-
-    <div class="start">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg>
-      클라이밍 시작
-    </div>
-
-    <div class="sect">최근 클라이밍</div>
-    <div class="rep">
-      <div class="img"><div><div class="big cnd">14</div><div class="meta">닻 클라이밍 · 7월 13일</div></div></div>
-      <div class="foot"><span>1시간 24분 · 최고 Lv.5 파랑</span>
-        <span class="mini"><i style="background:#DDBB44"></i><i style="background:#46AE72"></i><i style="background:#5A8FDB"></i></span>
+      <div class="tab">
+        <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
+        <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="3"/><path d="M9 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg>영상</a>
       </div>
     </div>
   </div>
-  <div class="tab">
-    <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
-    <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg>기록</a>
+
+  <!-- 영상 아카이브 진입 -->
+  <div class="frame">
+    <div class="cap"><span class="n">B</span><span class="t">영상 아카이브 진입</span><span class="d">영상 탭 / 전체 보기 강조</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="body">
+        <div class="hi">오늘도 붙어볼까요,</div>
+        <div class="name">기영 님</div>
+        <div class="start">
+          <div class="pl"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg></div>
+          <div class="st"><div class="k">바로 촬영 시작</div><div class="v">클라이밍 시작</div></div>
+          <div class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        </div>
+        <div class="sect"><span class="l">내 영상 · 12</span><span class="more" style="background:rgba(234,88,12,.14);padding:5px 10px;border-radius:20px">전체 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span></div>
+        <div class="strip">
+          <div class="vc" style="outline:2px solid #EA580C;outline-offset:1px"><div class="th" style="background:linear-gradient(160deg,#2f3b52,#141a26)"><span class="badge"><span class="sq" style="background:#5A8FDB"></span>파랑</span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">닻 클라이밍</div><div class="d">7월 22일</div></div></div>
+          <div class="vc"><div class="th" style="background:linear-gradient(160deg,#3a3330,#161a20)"><span class="badge"><span class="sq" style="background:#46AE72"></span>초록</span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">닻 클라이밍</div><div class="d">7월 22일</div></div></div>
+          <div class="vc"><div class="th" style="background:linear-gradient(160deg,#40304a,#161a20)"><span class="badge"><span class="sq" style="background:#DDBB44"></span>노랑</span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">더클라임</div><div class="d">7월 19일</div></div></div>
+        </div>
+        <div class="sect"><span class="l">최근 클라이밍</span></div>
+        <div class="rsc">
+          <div class="num cnd" style="color:#5A8FDB">14</div>
+          <div class="info"><div class="g">닻 클라이밍</div><div class="s">7월 22일 · 1시간 24분 · 최고 Lv.5 파랑</div></div>
+          <div class="mini"><i style="background:#DDBB44"></i><i style="background:#46AE72"></i><i style="background:#5A8FDB"></i></div>
+        </div>
+      </div>
+      <div class="tab">
+        <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
+        <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="3"/><path d="M9 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg>영상</a>
+      </div>
+    </div>
   </div>
-</div></body></html>
+
+  <!-- 첫 기록 빈 상태 -->
+  <div class="frame">
+    <div class="cap"><span class="n">C</span><span class="t">첫 기록 빈 상태</span><span class="d">아직 영상 없음</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="body">
+        <div class="hi">반가워요,</div>
+        <div class="name">기영 님</div>
+        <div class="start">
+          <div class="pl"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg></div>
+          <div class="st"><div class="k">첫 세션을 시작해요</div><div class="v">클라이밍 시작</div></div>
+          <div class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        </div>
+        <div class="sect"><span class="l">내 영상</span></div>
+        <div class="empty">
+          <div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></div>
+          <h3>아직 저장된 영상이 없어요</h3>
+          <p>첫 클라이밍을 촬영하면<br>성공 영상이 여기 쌓여요</p>
+        </div>
+      </div>
+      <div class="tab">
+        <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
+        <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="3"/><path d="M9 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg>영상</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body></html>

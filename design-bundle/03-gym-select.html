@@ -2,23 +2,50 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>3 · 암장 선택 (+ 색 비교)</title>
+<title>3 · 암장 선택 (검색 · 추가 · 선택 · 관리)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#05070d;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px;font-family:'Barlow',system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
-.phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
-.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
+body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:30px 24px 56px}
 .cnd{font-family:'Barlow Condensed',sans-serif}
+.pageh{max-width:1240px;margin:0 auto 26px}
+.pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
+.pageh h1 b{color:#EA580C}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:680px;line-height:1.55}
+.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1660px;margin:0 auto}
+.frame{width:390px}
+.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
+.cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
+.cap .d{font-size:12px;color:#64748B;font-weight:600}
+.phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1;z-index:5}
 .hd{display:flex;align-items:center;gap:14px;padding:6px 20px 10px}
 .back{width:34px;height:34px;display:flex;align-items:center;justify-content:center}
 .back svg{width:22px;height:22px}
 .hd h1{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700}
 .body{flex:1;overflow-y:auto;padding:0 20px}
-.search{display:flex;align-items:center;gap:10px;background:#1E2634;border-radius:14px;padding:12px 16px;color:#94A3B8;font-size:14px;font-weight:500}
+.search{display:flex;align-items:center;gap:10px;background:#1E2634;border-radius:14px;padding:12px 16px;color:#94A3B8;font-size:14px;font-weight:500;border:1px solid transparent}
+.search.active{border-color:#EA580C;color:#fff}
 .search svg{width:17px;height:17px;flex:none}
-.sect{font-size:11px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:16px 4px 8px}
+.search .clr{margin-left:auto}
+.search .clr svg{width:16px;height:16px}
+.sect{font-size:11px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:18px 4px 8px}
+
+.item{display:flex;align-items:center;gap:14px;padding:13px 4px;border-bottom:1px solid rgba(255,255,255,.06)}
+.item .ic2{width:38px;height:38px;border-radius:11px;background:#1E2634;display:flex;align-items:center;justify-content:center;flex:none}
+.item .ic2 svg{width:18px;height:18px}
+.item .t{font-weight:600;font-size:15px}
+.item .t em{font-style:normal;color:#EA580C}
+.item .s{font-size:12px;color:#64748B;margin-top:1px}
+.item .mine{margin-left:auto;font-size:10px;font-weight:700;color:#94A3B8;background:#1E2634;padding:3px 8px;border-radius:8px}
+.item .kebab{margin-left:auto;padding:6px}
+.item .kebab svg{width:20px;height:20px}
+.add{display:flex;align-items:center;gap:10px;margin:14px 0;padding:12px 4px;color:#EA580C;font-weight:700;font-size:14px}
+.add svg{width:19px;height:19px}
+
+/* selected card */
 .pick{border:1px solid rgba(234,88,12,.5);background:linear-gradient(160deg,#20140b,#141a26);border-radius:16px;padding:14px}
 .pick .top{display:flex;align-items:center;gap:12px}
 .ic{width:38px;height:38px;border-radius:11px;background:rgba(234,88,12,.15);display:flex;align-items:center;justify-content:center;flex:none}
@@ -34,106 +61,144 @@ body{background:#05070d;display:flex;justify-content:center;align-items:flex-sta
 .acard .k{font-size:11px;color:#94A3B8;font-weight:600}
 .acard .val{display:flex;align-items:center;gap:6px;margin-top:5px;font-weight:700;font-size:13px}
 .acard .sq{width:14px;height:14px;border-radius:4px}
-/* level spectrum */
-.cmp{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)}
-.cmphd{font-size:11px;color:#64748B;font-weight:700;letter-spacing:.2px;margin-bottom:10px;padding:0 2px}
-.specline{display:flex;align-items:center;gap:9px;margin-bottom:6px}
-.rl{width:74px;flex:none;text-align:left;font-size:11px;font-weight:700;color:#94A3B8}
-.specrow{flex:1;display:grid;grid-template-columns:repeat(9,1fr);gap:3px}
-.specrow.app .cell{height:12px;border-radius:3px;opacity:.28}
-.specrow.app .cell.cov{opacity:1}
-.specrow.gym .cell{height:24px;border-radius:6px;background:#161d2b;display:flex;align-items:center;justify-content:center}
-.specrow.gym .cell .chip{width:16px;height:16px;border-radius:5px}
-.lvnums{flex:1;display:grid;grid-template-columns:repeat(9,1fr);gap:3px}
-.lvnums span{text-align:center;font-size:9px;color:#475569;font-family:'Barlow Condensed',sans-serif;font-weight:600}
-.item{display:flex;align-items:center;gap:14px;padding:13px 4px;border-bottom:1px solid rgba(255,255,255,.06)}
-.item .ic2{width:38px;height:38px;border-radius:11px;background:#1E2634;display:flex;align-items:center;justify-content:center;flex:none}
-.item .ic2 svg{width:18px;height:18px}
-.item .t{font-weight:600;font-size:15px}
-.item .s{font-size:12px;color:#64748B;margin-top:1px}
-.add{display:flex;align-items:center;gap:10px;margin:12px 0;padding:12px 4px;color:#EA580C;font-weight:700;font-size:14px}
-.add svg{width:19px;height:19px}
 .foot{flex:none;padding:12px 20px 24px;border-top:1px solid rgba(255,255,255,.08)}
 .go{height:56px;border-radius:16px;background:#EA580C;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:17px}
 .go svg{width:22px;height:22px}
+
+/* bottom sheet (add / manage) */
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:8}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:9;background:#141A26;border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);padding:8px 22px 30px;box-shadow:0 -20px 50px rgba(0,0,0,.5)}
+.grab{width:40px;height:4px;border-radius:2px;background:#334155;margin:6px auto 16px}
+.sheet h2{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;margin-bottom:4px}
+.sheet .sd{font-size:12px;color:#94A3B8;margin-bottom:16px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;color:#94A3B8;font-weight:600;margin-bottom:7px}
+.inp{display:flex;align-items:center;gap:9px;background:#0d111a;border:1px solid #2a3446;border-radius:12px;padding:13px 14px;font-size:15px;font-weight:600}
+.inp.focus{border-color:#EA580C}
+.inp .cur{width:2px;height:18px;background:#EA580C;animation:bl 1s step-end infinite}
+@keyframes bl{50%{opacity:0}}
+.inp .ph{color:#475569;font-weight:500}
+.sheet .save{height:52px;border-radius:14px;background:#EA580C;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;border:none;width:100%;margin-top:6px}
+.sheet .save.disabled{background:#1E2634;color:#475569}
+
+/* manage menu rows */
+.mrow{display:flex;align-items:center;gap:14px;padding:15px 4px;border-bottom:1px solid rgba(255,255,255,.06);font-weight:600;font-size:15px}
+.mrow svg{width:20px;height:20px;flex:none}
+.mrow.danger{color:#DC2626;border-bottom:none}
+.mrow .chev{margin-left:auto;color:#475569}
 </style></head>
-<body><div class="phone">
-  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
-  <div class="hd">
-    <div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div>
-    <h1>어디서 클라이밍해요?</h1>
-  </div>
-  <div class="body">
-    <div class="search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
-      암장 이름 검색
-    </div>
+<body>
+<div class="pageh">
+  <h1>3 · 암장 선택 — <b>검색 · 추가 · 선택 · 관리</b></h1>
+  <p>검색 결과, 찾는 암장이 없을 때 개인 암장 추가(바텀시트), 선택 확정, 개인 암장 이름 수정·숨기기 관리 메뉴.</p>
+</div>
+<div class="stage">
 
-    <div class="sect">선택됨</div>
-    <div class="pick">
-      <div class="top">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-        <div><div class="t">닻 클라이밍</div><div class="s">서울 성동구 · 2.4km</div></div>
-        <div class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/></svg></div>
-      </div>
-      <div class="adv">
-        <div class="ttl">기록으로 보면, 여기선</div>
-        <div class="advrow">
-          <div class="acard"><div class="k">평균 완등</div><div class="val"><span class="sq" style="background:#5A8FDB"></span>파랑</div></div>
-          <div class="acard"><div class="k">도전해볼 만한 레벨</div><div class="val"><span class="sq" style="background:#E45D5D"></span>빨강</div></div>
+  <!-- 검색 결과 -->
+  <div class="frame">
+    <div class="cap"><span class="n">A</span><span class="t">검색 결과</span><span class="d">이름 입력 · 매칭 하이라이트</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hd"><div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div><h1>어디서 클라이밍해요?</h1></div>
+      <div class="body">
+        <div class="search active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          클라임<span class="cur" style="width:2px;height:16px;background:#EA580C;display:inline-block"></span>
+          <span class="clr"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></span>
         </div>
+        <div class="sect">검색 결과 3</div>
+        <div class="item"><div class="ic2"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div><div><div class="t">더<em>클라임</em> 양재점</div><div class="s">서울 서초구 · 6.1km</div></div></div>
+        <div class="item"><div class="ic2"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div><div><div class="t">더<em>클라임</em> 강남점</div><div class="s">서울 강남구 · 8.3km</div></div></div>
+        <div class="item"><div class="ic2"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div><div><div class="t">피<em>클라임</em></div><div class="s">서울 마포구 · 11.2km</div></div></div>
+        <div class="add"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>찾는 암장이 없어요 — 직접 추가</div>
       </div>
-      <div class="cmp">
-        <div class="specline"><span class="rl"></span>
-          <div style="flex:1;display:flex;justify-content:space-between;font-size:10px;color:#64748B;font-weight:700;padding:0 2px 5px"><span>쉬움</span><span>어려움</span></div>
+    </div>
+  </div>
+
+  <!-- 개인 암장 추가 -->
+  <div class="frame">
+    <div class="cap"><span class="n">B</span><span class="t">개인 암장 추가</span><span class="d">바텀시트 · 이름 입력</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hd"><div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div><h1>어디서 클라이밍해요?</h1></div>
+      <div class="body" style="filter:blur(1px);opacity:.5">
+        <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>암장 이름 검색</div>
+        <div class="sect">최근</div>
+        <div class="item"><div class="ic2"></div><div><div class="t">닻 클라이밍</div><div class="s">서울 성동구</div></div></div>
+      </div>
+      <div class="scrim"></div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h2>개인 암장 추가</h2>
+        <div class="sd">목록에 없는 암장을 직접 만들어요. 나에게만 보여요.</div>
+        <div class="field">
+          <label>암장 이름</label>
+          <div class="inp focus">클라이밍 파크 성수<span class="cur"></span></div>
         </div>
-        <div class="specline"><span class="rl">앱 기준</span>
-          <div class="specrow app">
-            <div class="cell cov" style="background:#E45D5D"></div>
-            <div class="cell" style="background:#E68A4C"></div>
-            <div class="cell cov" style="background:#DDBB44"></div>
-            <div class="cell cov" style="background:#46AE72"></div>
-            <div class="cell cov" style="background:#5A8FDB"></div>
-            <div class="cell" style="background:#7C7FDB"></div>
-            <div class="cell cov" style="background:#A877D2"></div>
-            <div class="cell" style="background:#AC7B52"></div>
-            <div class="cell" style="background:#1E293B;border:1px solid #64748B"></div>
+        <div class="field">
+          <label>메모 (선택)</label>
+          <div class="inp"><span class="ph">지점·위치 등</span></div>
+        </div>
+        <button class="save">추가하고 선택</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 선택됨 -->
+  <div class="frame">
+    <div class="cap"><span class="n">C</span><span class="t">선택됨</span><span class="d">확정 · 시작 CTA</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hd"><div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div><h1>어디서 클라이밍해요?</h1></div>
+      <div class="body">
+        <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>암장 이름 검색</div>
+        <div class="sect">선택됨</div>
+        <div class="pick">
+          <div class="top">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+            <div><div class="t">닻 클라이밍</div><div class="s">서울 성동구 · 2.4km</div></div>
+            <div class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/></svg></div>
+          </div>
+          <div class="adv">
+            <div class="ttl">기록으로 보면, 여기선</div>
+            <div class="advrow">
+              <div class="acard"><div class="k">평균 완등</div><div class="val"><span class="sq" style="background:#5A8FDB"></span>파랑</div></div>
+              <div class="acard"><div class="k">도전해볼 만한</div><div class="val"><span class="sq" style="background:#E45D5D"></span>빨강</div></div>
+            </div>
           </div>
         </div>
-        <div class="specline"><span class="rl">닻 클라이밍</span>
-          <div class="specrow gym">
-            <div class="cell"><span class="chip" style="background:#E2E8F0"></span></div>
-            <div class="cell"></div>
-            <div class="cell"><span class="chip" style="background:#DDBB44"></span></div>
-            <div class="cell"><span class="chip" style="background:#46AE72"></span></div>
-            <div class="cell"><span class="chip" style="background:#5A8FDB"></span></div>
-            <div class="cell"></div>
-            <div class="cell"><span class="chip" style="background:#E45D5D"></span></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-          </div>
-        </div>
-        <div class="specline"><span class="rl"></span>
-          <div class="lvnums"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div>
-        </div>
+        <div class="sect">다른 암장</div>
+        <div class="item"><div class="ic2"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div><div><div class="t">더클라임 양재점</div><div class="s">서울 서초구 · 6.1km</div></div></div>
+        <div class="item"><div class="ic2"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div><div><div class="t">클라이밍 파크 성수</div><div class="s">직접 추가</div></div><span class="mine">내 암장</span></div>
+      </div>
+      <div class="foot">
+        <div class="go"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg>닻 클라이밍에서 시작</div>
       </div>
     </div>
+  </div>
 
-    <div class="sect">다른 암장</div>
-    <div class="item">
-      <div class="ic2"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-      <div><div class="t">더클라임 양재점</div><div class="s">서울 서초구 · 6.1km</div></div>
-    </div>
-
-    <div class="add">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
-      찾는 암장이 없어요 — 직접 추가
+  <!-- 이름 수정 / 숨기기 관리 -->
+  <div class="frame">
+    <div class="cap"><span class="n">D</span><span class="t">이름 수정 · 숨기기 관리</span><span class="d">개인 암장 관리 메뉴</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hd"><div class="back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div><h1>어디서 클라이밍해요?</h1></div>
+      <div class="body" style="filter:blur(1px);opacity:.5">
+        <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>암장 이름 검색</div>
+        <div class="sect">내 암장</div>
+        <div class="item"><div class="ic2"></div><div><div class="t">클라이밍 파크 성수</div><div class="s">직접 추가</div></div><span class="kebab"><svg viewBox="0 0 24 24" fill="#94A3B8"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></span></div>
+      </div>
+      <div class="scrim"></div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h2>클라이밍 파크 성수</h2>
+        <div class="sd">내가 추가한 암장이에요</div>
+        <div class="mrow"><svg viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><path d="M4 20h4L18 10l-4-4L4 16v4z"/><path d="M13 5l4 4"/></svg>이름 수정<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span></div>
+        <div class="mrow"><svg viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><path d="M4 4l16 16"/></svg>목록에서 숨기기<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span></div>
+        <div class="mrow danger"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg>삭제</div>
+      </div>
     </div>
   </div>
-  <div class="foot">
-    <div class="go">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg>
-      닻 클라이밍에서 시작
-    </div>
-  </div>
-</div></body></html>
+
+</div>
+</body></html>

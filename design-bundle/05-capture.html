@@ -2,61 +2,159 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>5 · 촬영 (성공/실패)</title>
+<title>5 · 촬영 (녹화 · 분류 · 준비 · 오류)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#05070d;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px;font-family:'Barlow',system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
-.phone{width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06);
-  background:linear-gradient(180deg,#2a2320 0%,#161a20 45%,#0e1219 100%)}
-.wall{position:absolute;inset:0;opacity:.5;background:
-  radial-gradient(circle at 30% 30%,#E45D5D 0 14px,transparent 15px),
-  radial-gradient(circle at 62% 22%,#5A8FDB 0 12px,transparent 13px),
-  radial-gradient(circle at 44% 52%,#DDBB44 0 13px,transparent 14px),
-  radial-gradient(circle at 72% 62%,#E45D5D 0 12px,transparent 13px),
-  radial-gradient(circle at 30% 74%,#46AE72 0 13px,transparent 14px),
-  radial-gradient(circle at 58% 82%,#5A8FDB 0 12px,transparent 13px)}
-.sb{position:relative;z-index:3;height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#fff}
+body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:30px 24px 56px}
 .cnd{font-family:'Barlow Condensed',sans-serif}
-.hdr{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:6px 20px}
-.selc{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:7px 14px;font-weight:700;font-size:14px}
+.pageh{max-width:1240px;margin:0 auto 26px}
+.pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
+.pageh h1 b{color:#EA580C}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:680px;line-height:1.55}
+.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1660px;margin:0 auto}
+.frame{width:390px}
+.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
+.cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
+.cap .d{font-size:12px;color:#64748B;font-weight:600}
+.phone{width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06);background:#05070a}
+/* CameraX preview region */
+.preview{position:absolute;inset:0;background:linear-gradient(180deg,#2a2320 0%,#161a20 45%,#0e1219 100%)}
+.wall{position:absolute;inset:0;opacity:.5;background:
+  radial-gradient(circle at 30% 26%,#E45D5D 0 14px,transparent 15px),
+  radial-gradient(circle at 62% 20%,#5A8FDB 0 12px,transparent 13px),
+  radial-gradient(circle at 44% 48%,#DDBB44 0 13px,transparent 14px),
+  radial-gradient(circle at 72% 58%,#E45D5D 0 12px,transparent 13px),
+  radial-gradient(circle at 28% 70%,#46AE72 0 13px,transparent 14px),
+  radial-gradient(circle at 58% 80%,#5A8FDB 0 12px,transparent 13px)}
+.climber{position:absolute;left:44%;top:38%;width:52px;height:120px;background:rgba(255,255,255,.12);border-radius:26px}
+.pvtag{position:absolute;left:50%;top:16px;transform:translateX(-50%);z-index:4;font-size:10px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.5px;border:1px dashed rgba(255,255,255,.25);border-radius:8px;padding:3px 9px}
+.sb{position:relative;z-index:3;height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#fff}
+.hdr{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:10px 20px 0}
+.selc{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:8px 14px;font-weight:700;font-size:14px}
 .selc .sq{width:16px;height:16px;border-radius:5px;background:#5A8FDB}
-.rec{display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.45);border-radius:20px;padding:7px 12px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px}
-.rec .d{width:9px;height:9px;border-radius:50%;background:#E45D5D;box-shadow:0 0 0 0 rgba(239,68,68,.6)}
-.mid{flex:1}
-.result{position:relative;z-index:3;padding:0 18px 30px}
+.selc svg{width:14px;height:14px;margin-left:2px}
+.rec{display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.5);border-radius:20px;padding:8px 13px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px}
+.rec .d{width:9px;height:9px;border-radius:50%;background:#E45D5D;animation:pulse 1.1s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.mid{flex:1;position:relative;z-index:3}
+
+/* recording bottom: stop */
+.stopwrap{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;padding-bottom:36px;gap:14px}
+.hintline{color:rgba(255,255,255,.7);font-size:12px;font-weight:600;background:rgba(0,0,0,.35);padding:5px 12px;border-radius:16px}
+.stop{width:78px;height:78px;border-radius:50%;border:5px solid rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25)}
+.stop i{width:28px;height:28px;border-radius:7px;background:#E45D5D;display:block}
+
+/* result classify */
+.scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,7,13,0) 30%,rgba(5,7,13,.82) 78%);z-index:3}
+.result{position:relative;z-index:4;margin-top:auto;padding:0 18px 34px}
 .q{text-align:center;font-weight:700;font-size:18px;margin-bottom:16px;text-shadow:0 2px 8px rgba(0,0,0,.6)}
 .btns{display:flex;gap:12px}
-.big{flex:1;height:96px;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:20px;border:none}
+.big{flex:1;height:100px;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:20px;border:none}
 .ok{background:#059669;color:#fff}
 .no{background:#DC2626;color:#fff}
 .big svg{width:30px;height:30px}
 .big small{font-weight:600;font-size:12px;opacity:.85}
-.shutter{position:relative;z-index:3;display:flex;justify-content:center;padding-bottom:28px}
-.sh{width:74px;height:74px;border-radius:50%;border:5px solid rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center}
-.sh i{width:30px;height:30px;border-radius:8px;background:#E45D5D;display:block}
-.hint{position:relative;z-index:3;text-align:center;color:rgba(255,255,255,.7);font-size:12px;padding-bottom:6px}
+
+/* camera preparing / error overlay */
+.center{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(5,7,13,.72);padding:0 40px;text-align:center}
+.spin{width:44px;height:44px;border-radius:50%;border:4px solid rgba(255,255,255,.16);border-top-color:#EA580C;animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.center .ct{font-weight:700;font-size:16px}
+.center .cs{font-size:13px;color:#94A3B8;line-height:1.5}
+.errb{width:58px;height:58px;border-radius:16px;background:rgba(220,38,38,.16);display:flex;align-items:center;justify-content:center}
+.errb svg{width:28px;height:28px}
+.cbtns{display:flex;gap:10px;margin-top:6px}
+.cbtn{height:46px;padding:0 18px;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:7px;font-weight:700;font-size:14px;border:none}
+.cbtn.re{background:#EA580C;color:#fff}
+.cbtn.gh{background:transparent;border:1px solid rgba(255,255,255,.2);color:#cbd5e1}
+.cbtn svg{width:16px;height:16px}
 </style></head>
-<body><div class="phone">
-  <div class="wall"></div>
-  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
-  <div class="hdr">
-    <div class="selc"><span class="sq"></span>파랑</div>
-    <div class="rec"><span class="d"></span>0:08</div>
-  </div>
-  <div class="mid"></div>
-  <div class="result">
-    <div class="q">방금 시도, 성공했나요?</div>
-    <div class="btns">
-      <button class="big no">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
-        실패<small>삭제 대기함으로</small>
-      </button>
-      <button class="big ok">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>
-        성공<small>트리밍하기</small>
-      </button>
+<body>
+<div class="pageh">
+  <h1>5 · 촬영 — <b>CameraX 프리뷰 위 오버레이</b></h1>
+  <p>전체 화면은 실제 카메라 프리뷰(CameraX PreviewView). 그 위에 선택 색상·녹화 상태·정지, 정지 후 성공/실패 분류를 오버레이. 카메라 준비 중과 오류 변형 포함.</p>
+</div>
+<div class="stage">
+
+  <!-- 녹화 중 -->
+  <div class="frame">
+    <div class="cap"><span class="n">A</span><span class="t">녹화 중</span><span class="d">선택 색 · REC · 정지</span></div>
+    <div class="phone">
+      <div class="preview"><div class="wall"></div><div class="climber"></div></div>
+      <div class="pvtag">CameraX PreviewView</div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hdr">
+        <div class="selc"><span class="sq"></span>파랑<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="rec"><span class="d"></span>0:08</div>
+      </div>
+      <div class="mid"></div>
+      <div class="stopwrap">
+        <div class="hintline">완등 순간까지 찍고 정지하세요</div>
+        <div class="stop"><i></i></div>
+      </div>
     </div>
   </div>
-</div></body></html>
+
+  <!-- 성공/실패 분류 -->
+  <div class="frame">
+    <div class="cap"><span class="n">B</span><span class="t">성공 / 실패 분류</span><span class="d">정지 직후 · 큰 두 버튼</span></div>
+    <div class="phone">
+      <div class="preview"><div class="wall"></div><div class="climber"></div></div>
+      <div class="pvtag">CameraX · 마지막 프레임 정지</div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hdr">
+        <div class="selc"><span class="sq"></span>파랑</div>
+        <div class="rec" style="background:rgba(0,0,0,.5)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" style="width:14px;height:14px"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>0:19</div>
+      </div>
+      <div class="mid"></div>
+      <div class="scrim"></div>
+      <div class="result">
+        <div class="q">방금 시도, 성공했나요?</div>
+        <div class="btns">
+          <button class="big no"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>실패<small>영상 삭제</small></button>
+          <button class="big ok"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>성공<small>영상 보관</small></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 카메라 준비 중 -->
+  <div class="frame">
+    <div class="cap"><span class="n">C</span><span class="t">카메라 준비 중</span><span class="d">CameraX 바인딩 대기</span></div>
+    <div class="phone">
+      <div class="preview" style="background:#0e1219"></div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hdr">
+        <div class="selc" style="opacity:.5"><span class="sq"></span>파랑</div>
+      </div>
+      <div class="center" style="background:rgba(5,7,13,.4)">
+        <div class="spin"></div>
+        <div class="ct">카메라를 준비하고 있어요</div>
+        <div class="cs">잠시만요, 곧 촬영할 수 있어요</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 카메라 오류 -->
+  <div class="frame">
+    <div class="cap"><span class="n">D</span><span class="t">카메라 오류</span><span class="d">바인딩 실패 · 재시도/설정</span></div>
+    <div class="phone">
+      <div class="preview" style="background:#0e1219"></div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="center">
+        <div class="errb"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="3"/><circle cx="12" cy="12.5" r="3.4"/><path d="M4 4l16 16"/></svg></div>
+        <div class="ct">카메라를 열 수 없어요</div>
+        <div class="cs">다른 앱이 카메라를 쓰고 있거나<br>일시적인 문제일 수 있어요</div>
+        <div class="cbtns">
+          <button class="cbtn re"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 11a8 8 0 10-2 5.3M20 5v6h-6"/></svg>다시 시도</button>
+          <button class="cbtn gh">설정 열기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body></html>

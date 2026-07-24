@@ -2,78 +2,159 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>1 · 온보딩 (오버행 벽 게이지)</title>
+<title>1 · 온보딩 (권한 요청)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#05070d;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px;font-family:'Barlow',system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
-.phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
-.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1}
+body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:30px 24px 56px}
 .cnd{font-family:'Barlow Condensed',sans-serif}
-.steps{display:flex;gap:6px;padding:4px 24px 0}
-.steps i{height:4px;flex:1;border-radius:2px;background:#1E2634}
-.steps i.on{background:#EA580C}
-.body{flex:1;padding:18px 24px 0;display:flex;flex-direction:column;align-items:center}
-.logo{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:#94A3B8;letter-spacing:.5px;align-self:flex-start}
+.pageh{max-width:1240px;margin:0 auto 26px}
+.pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
+.pageh h1 b{color:#EA580C}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:680px;line-height:1.55}
+.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1240px;margin:0 auto}
+.frame{width:390px}
+.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
+.cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
+.cap .d{font-size:12px;color:#64748B;font-weight:600}
+.phone{width:390px;height:780px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1;z-index:5}
+
+.hero{flex:1;display:flex;flex-direction:column;padding:18px 26px 0}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:#94A3B8;letter-spacing:.5px}
 .logo b{color:#EA580C}
-h1{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;margin:10px 0 4px;line-height:1.1;align-self:flex-start}
-.desc{color:#94A3B8;font-size:13px;line-height:1.5;margin-bottom:10px;align-self:flex-start}
-.gaugewrap{display:flex;align-items:stretch;gap:12px;margin-top:2px}
-.side{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:6px 0;color:#64748B;font-size:12px;font-weight:700}
-.side .hard{color:#cbd5e1}
-.hint{color:#64748B;font-size:12px;font-weight:600;margin-top:12px;text-align:center}
-.foot{padding:8px 24px 34px}
-.skip{text-align:center;color:#64748B;font-size:13px;font-weight:600;margin-bottom:12px}
+.art{margin:26px auto 22px;width:150px;height:150px;border-radius:34px;background:linear-gradient(150deg,#20140b,#141a26);border:1px solid rgba(234,88,12,.3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.art::after{content:"";position:absolute;inset:0;background:
+  radial-gradient(circle at 32% 30%,#E45D5D 0 8px,transparent 9px),
+  radial-gradient(circle at 68% 40%,#5A8FDB 0 7px,transparent 8px),
+  radial-gradient(circle at 46% 66%,#DDBB44 0 7px,transparent 8px);opacity:.7}
+.art svg{width:60px;height:60px;position:relative;z-index:2}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:27px;font-weight:700;line-height:1.15;margin-bottom:8px}
+.desc{color:#94A3B8;font-size:14px;line-height:1.6}
+.perms{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+.prow{display:flex;align-items:center;gap:13px;background:#141A26;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:13px 15px}
+.prow .pi{width:36px;height:36px;border-radius:11px;background:#1E2634;display:flex;align-items:center;justify-content:center;flex:none}
+.prow .pi svg{width:19px;height:19px}
+.prow .pt{font-weight:700;font-size:14px}
+.prow .ps{font-size:12px;color:#94A3B8;margin-top:1px}
+.prow .st{margin-left:auto;flex:none}
+.prow .st svg{width:22px;height:22px}
+.stat-wait{color:#64748B;font-size:12px;font-weight:700;margin-left:auto}
+.foot{flex:none;padding:14px 26px 34px}
+.note{text-align:center;color:#64748B;font-size:12px;font-weight:600;margin-bottom:14px;line-height:1.5}
+.note.warn{color:#f0a878}
 .btn{height:54px;border-radius:16px;background:#EA580C;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:16px;border:none;width:100%}
+.btn svg{width:19px;height:19px}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.16);color:#cbd5e1;height:48px;margin-top:10px;font-size:14px}
 </style></head>
-<body><div class="phone">
-  <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
-  <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i></div>
-  <div class="body">
-    <div class="logo">✦ WE-<b>CLIMB</b> · 시작하기</div>
-    <h1>평소 어디까지 푸세요?</h1>
-    <div class="desc">벽을 드래그해서 평소 완등하는 높이에 맞춰주세요.</div>
-    <div class="gaugewrap">
-      <div class="side"><span class="hard">어려움</span><span>쉬움</span></div>
-      <svg width="176" height="470" viewBox="0 0 176 470">
-        <defs>
-          <linearGradient id="grad" x1="0" y1="470" x2="0" y2="0" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#E45D5D"/><stop offset="0.12" stop-color="#E68A4C"/>
-            <stop offset="0.25" stop-color="#DDBB44"/><stop offset="0.38" stop-color="#46AE72"/>
-            <stop offset="0.52" stop-color="#5A8FDB"/><stop offset="0.66" stop-color="#7C7FDB"/>
-            <stop offset="0.80" stop-color="#A877D2"/><stop offset="0.90" stop-color="#AC7B52"/>
-            <stop offset="1" stop-color="#1E293B"/>
-          </linearGradient>
-          <clipPath id="wall">
-            <path d="M40 22 L150 22 C108 70 70 150 56 430 Q48 448 40 438 Z"/>
-          </clipPath>
-        </defs>
-        <g clip-path="url(#wall)">
-          <rect x="0" y="0" width="176" height="470" fill="url(#grad)" opacity="0.16"/>
-          <!-- climbed fill from rounded base up to handle y=235 -->
-          <rect x="0" y="235" width="176" height="235" fill="url(#grad)"/>
-          <!-- holds along the increasingly-leaning face -->
-          <circle cx="116" cy="60" r="5" fill="rgba(0,0,0,.22)"/>
-          <circle cx="88" cy="124" r="6" fill="rgba(0,0,0,.2)"/>
-          <circle cx="70" cy="206" r="5" fill="rgba(0,0,0,.18)"/>
-          <circle cx="58" cy="300" r="6" fill="rgba(255,255,255,.2)"/>
-          <circle cx="52" cy="366" r="5" fill="rgba(255,255,255,.18)"/>
-          <circle cx="49" cy="410" r="5" fill="rgba(255,255,255,.2)"/>
-        </g>
-        <path d="M40 22 L150 22 C108 70 70 150 56 430 Q48 448 40 438 Z" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5"/>
-        <!-- handle at the climbed height -->
-        <g>
-          <rect x="34" y="231" width="46" height="8" rx="4" fill="#fff"/>
-          <rect x="45" y="225" width="22" height="20" rx="6" fill="#fff"/>
-          <rect x="51" y="231" width="2" height="8" rx="1" fill="#94A3B8"/><rect x="55" y="231" width="2" height="8" rx="1" fill="#94A3B8"/><rect x="59" y="231" width="2" height="8" rx="1" fill="#94A3B8"/>
-        </g>
-      </svg>
+<body>
+<div class="pageh">
+  <h1>1 · 온보딩 — <b>카메라·마이크 권한</b></h1>
+  <p>같은 화면의 세 변형. 권한 요청 전(설명) → 시스템 창에서 거부 시(설정 이동 안내) → 설정에서 허용하고 돌아온 뒤(다음 단계). 시스템 권한 창 자체는 앱 시안에 포함하지 않는다.</p>
+</div>
+<div class="stage">
+
+  <!-- 권한 요청 전 -->
+  <div class="frame">
+    <div class="cap"><span class="n">A</span><span class="t">권한 요청 전</span><span class="d">설명 후 시스템 창 호출</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hero">
+        <div class="logo">✦ WE-<b>CLIMB</b></div>
+        <div class="art"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="1.6"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.6"/></svg></div>
+        <h1>붙는 순간을<br>바로 남겨요</h1>
+        <div class="desc">촬영부터 성공/실패 정리, 자르기, 공유까지 한 흐름으로. 시작하려면 카메라와 마이크 권한이 필요해요.</div>
+        <div class="perms">
+          <div class="prow">
+            <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="3"/><circle cx="12" cy="12.5" r="3.4"/></svg></div>
+            <div><div class="pt">카메라</div><div class="ps">클라이밍 영상 촬영</div></div>
+            <span class="stat-wait">필요</span>
+          </div>
+          <div class="prow">
+            <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><path d="M12 3a3 3 0 013 3v6a3 3 0 01-6 0V6a3 3 0 013-3z"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></div>
+            <div><div class="pt">마이크</div><div class="ps">현장 소리 함께 기록</div></div>
+            <span class="stat-wait">필요</span>
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <div class="note">권한은 촬영에만 쓰이고 기기에만 저장돼요</div>
+        <button class="btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+          카메라·마이크 허용하기
+        </button>
+      </div>
     </div>
-    <div class="hint">기록이 쌓이면 자동으로 더 정확해져요</div>
   </div>
-  <div class="foot">
-    <div class="skip">잘 모르겠어요 — 건너뛰기</div>
-    <button class="btn">시작하기</button>
+
+  <!-- 권한 거부 -->
+  <div class="frame">
+    <div class="cap"><span class="n">B</span><span class="t">권한 거부</span><span class="d">거부 후 설정으로 안내</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hero">
+        <div class="logo">✦ WE-<b>CLIMB</b></div>
+        <div class="art" style="border-color:rgba(220,38,38,.4)"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="1.6"><rect x="3" y="6" width="18" height="13" rx="3"/><circle cx="12" cy="12.5" r="3.6"/><path d="M4 4l16 16"/></svg></div>
+        <h1>권한이 꺼져 있어요</h1>
+        <div class="desc">카메라·마이크 권한을 거부해서 촬영을 시작할 수 없어요. 설정에서 직접 켜주시면 바로 이어갈 수 있어요.</div>
+        <div class="perms">
+          <div class="prow" style="border-color:rgba(220,38,38,.35)">
+            <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="3"/><circle cx="12" cy="12.5" r="3.4"/></svg></div>
+            <div><div class="pt">카메라</div><div class="ps">거부됨</div></div>
+            <span class="st"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></span>
+          </div>
+          <div class="prow" style="border-color:rgba(220,38,38,.35)">
+            <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M12 3a3 3 0 013 3v6a3 3 0 01-6 0V6a3 3 0 013-3z"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></div>
+            <div><div class="pt">마이크</div><div class="ps">거부됨</div></div>
+            <span class="st"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></span>
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <div class="note warn">설정 › 권한 › 카메라·마이크 › 허용</div>
+        <button class="btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
+          설정 열기
+        </button>
+        <button class="btn ghost">다시 요청하기</button>
+      </div>
+    </div>
   </div>
-</div></body></html>
+
+  <!-- 설정에서 허용 후 -->
+  <div class="frame">
+    <div class="cap"><span class="n">C</span><span class="t">설정에서 허용 후</span><span class="d">복귀 → 다음 단계 진입</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hero">
+        <div class="logo">✦ WE-<b>CLIMB</b></div>
+        <div class="art"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/></svg></div>
+        <h1>준비됐어요</h1>
+        <div class="desc">카메라·마이크가 모두 허용됐어요. 이제 암장을 고르고 첫 세션을 시작할 수 있어요.</div>
+        <div class="perms">
+          <div class="prow" style="border-color:rgba(5,150,105,.35)">
+            <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="3"/><circle cx="12" cy="12.5" r="3.4"/></svg></div>
+            <div><div class="pt">카메라</div><div class="ps">허용됨</div></div>
+            <span class="st"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg></span>
+          </div>
+          <div class="prow" style="border-color:rgba(5,150,105,.35)">
+            <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M12 3a3 3 0 013 3v6a3 3 0 01-6 0V6a3 3 0 013-3z"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></div>
+            <div><div class="pt">마이크</div><div class="ps">허용됨</div></div>
+            <span class="st"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg></span>
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <div class="note">기록이 쌓이면 리포트가 자동으로 채워져요</div>
+        <button class="btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          시작하기
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body></html>

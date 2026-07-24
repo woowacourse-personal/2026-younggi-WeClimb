@@ -1,0 +1,118 @@
+<!-- @dsCard group="Screens" -->
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>8 · 앱 내 재생 (전체화면 오버레이)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:30px 24px 56px}
+.cnd{font-family:'Barlow Condensed',sans-serif}
+.pageh{max-width:1240px;margin:0 auto 26px}
+.pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
+.pageh h1 b{color:#EA580C}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:680px;line-height:1.55}
+.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1240px;margin:0 auto}
+.frame{width:390px}
+.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
+.cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
+.cap .d{font-size:12px;color:#64748B;font-weight:600}
+.phone{width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06);background:#000}
+
+/* dimmed archive behind (context) */
+.behind{position:absolute;inset:0;background:#0B0F1A;opacity:.25}
+.behind .row{height:120px;margin:16px 20px;border-radius:16px;background:#141A26}
+
+/* video surface (Media3) fills */
+.video{position:absolute;inset:0;background:linear-gradient(180deg,#241d1a 0%,#12161d 50%,#0a0d13 100%);display:flex;align-items:center;justify-content:center}
+.video .wall{position:absolute;inset:0;opacity:.42;background:
+  radial-gradient(circle at 32% 28%,#E45D5D 0 13px,transparent 14px),
+  radial-gradient(circle at 64% 22%,#5A8FDB 0 11px,transparent 12px),
+  radial-gradient(circle at 46% 50%,#DDBB44 0 12px,transparent 13px),
+  radial-gradient(circle at 70% 62%,#46AE72 0 11px,transparent 12px)}
+.video .fig{width:64px;height:150px;background:rgba(255,255,255,.14);border-radius:32px;position:relative;z-index:2}
+.pvtag{position:absolute;left:50%;bottom:calc(50% + 100px);transform:translateX(-50%);z-index:6;font-size:10px;font-weight:700;color:rgba(255,255,255,.45);border:1px dashed rgba(255,255,255,.2);border-radius:8px;padding:3px 9px}
+
+.sb{position:relative;z-index:7;height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#fff}
+
+/* top control bar */
+.topbar{position:relative;z-index:7;display:flex;align-items:center;gap:12px;padding:6px 18px}
+.iconbtn{width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;flex:none}
+.iconbtn svg{width:20px;height:20px}
+.vinfo{min-width:0}
+.vinfo .g{font-weight:700;font-size:15px;display:flex;align-items:center;gap:7px}
+.vinfo .g .sw{width:13px;height:13px;border-radius:4px;background:#5A8FDB;flex:none}
+.vinfo .d{font-size:12px;color:rgba(255,255,255,.7);margin-top:1px}
+.topbar .share{margin-left:auto}
+
+.spacer{flex:1}
+
+/* center play/pause */
+.centerctl{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:7;width:74px;height:74px;border-radius:50%;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.centerctl svg{width:32px;height:32px}
+
+/* bottom scrubber */
+.bottom{position:relative;z-index:7;padding:0 20px 30px}
+.times{display:flex;justify-content:space-between;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:8px}
+.scrub{height:5px;border-radius:3px;background:rgba(255,255,255,.22);position:relative}
+.scrub .p{position:absolute;left:0;top:0;bottom:0;width:38%;background:#EA580C;border-radius:3px}
+.scrub .knob{position:absolute;left:38%;top:50%;transform:translate(-50%,-50%);width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.sharebar{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:20px;height:52px;border-radius:15px;background:#059669;color:#fff;font-weight:700;font-size:16px}
+.sharebar svg{width:19px;height:19px}
+
+/* immersive hint */
+.tint{position:absolute;inset:0;z-index:6;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,transparent 20% 78%,rgba(0,0,0,.45) 100%)}
+.tint.min{background:linear-gradient(180deg,rgba(0,0,0,.2) 0%,transparent 30%)}
+.taphint{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);z-index:7;font-size:12px;color:rgba(255,255,255,.6);font-weight:600;background:rgba(0,0,0,.35);padding:6px 13px;border-radius:16px}
+.mini-top{position:relative;z-index:7;display:flex;padding:6px 18px}
+</style></head>
+<body>
+<div class="pageh">
+  <h1>8 · 앱 내 재생 — <b>전체화면 오버레이</b> <span style="font-size:14px;color:#64748B;font-weight:600">독립 route 아님</span></h1>
+  <p>아카이브·트리밍 위에 뜨는 전체화면 재생 오버레이(Media3). 닫기·영상 정보·공유 진입점을 갖고, 탭하면 컨트롤이 숨는 몰입 상태로 전환. Android 공유 chooser는 앱 밖.</p>
+</div>
+<div class="stage">
+
+  <!-- 컨트롤 표시 -->
+  <div class="frame">
+    <div class="cap"><span class="n">A</span><span class="t">재생 · 컨트롤 표시</span><span class="d">닫기 · 정보 · 스크럽 · 공유</span></div>
+    <div class="phone">
+      <div class="behind"><div class="row"></div><div class="row"></div></div>
+      <div class="video"><div class="wall"></div><div class="fig"></div></div>
+      <div class="tint"></div>
+      <div class="pvtag">Media3 Player Surface</div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="topbar">
+        <div class="iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+        <div class="vinfo"><div class="g"><span class="sw"></span>닻 클라이밍 · 파랑</div><div class="d">7월 22일 · Lv.5 · 0:12</div></div>
+        <div class="iconbtn share"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 13.3l7.2 4.4M15.6 6.3l-7.2 4.4"/></svg></div>
+      </div>
+      <div class="spacer"></div>
+      <div class="centerctl"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="7" y="5" width="3.4" height="14" rx="1"/><rect x="13.6" y="5" width="3.4" height="14" rx="1"/></svg></div>
+      <div class="bottom">
+        <div class="times"><span>0:05</span><span>0:12</span></div>
+        <div class="scrub"><div class="p"></div><div class="knob"></div></div>
+        <div class="sharebar"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 13.3l7.2 4.4M15.6 6.3l-7.2 4.4"/></svg>영상 공유</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 몰입 / 컨트롤 숨김 -->
+  <div class="frame">
+    <div class="cap"><span class="n">B</span><span class="t">몰입 · 컨트롤 숨김</span><span class="d">탭으로 컨트롤 토글</span></div>
+    <div class="phone">
+      <div class="video"><div class="wall"></div><div class="fig"></div></div>
+      <div class="tint min"></div>
+      <div class="pvtag" style="bottom:auto;top:16px">Media3 Player Surface</div>
+      <div class="mini-top">
+        <div class="iconbtn" style="background:rgba(0,0,0,.3)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+      </div>
+      <div class="spacer"></div>
+      <div class="taphint">화면을 탭하면 컨트롤이 보여요</div>
+    </div>
+  </div>
+
+</div>
+</body></html>
