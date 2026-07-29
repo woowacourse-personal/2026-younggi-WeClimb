@@ -11,6 +11,24 @@ class AttemptServiceTest {
     private val activeSession = Session("session-1", "gym-1", 1L, status = SessionStatus.ACTIVE)
 
     @Test
+    fun recordsSuccessfulAttemptWithoutCreatingVideoMedia() {
+        val result = AttemptService(FailingMediaStore()).recordSuccessWithoutVideo(
+            session = activeSession,
+            color = "green",
+            recordedAtEpochMillis = 2L,
+            attemptId = "attempt-without-video",
+        )
+
+        assertEquals("attempt-without-video", result.attempt.id)
+        assertEquals(AttemptOutcome.SUCCESS, result.attempt.outcome)
+        assertEquals("green", result.attempt.color)
+        assertEquals(null, result.attempt.videoUri)
+        assertEquals(null, result.attempt.cachePath)
+        assertEquals(AttemptMediaState.NONE, result.attempt.media.state)
+        assertEquals(1, result.successCount)
+    }
+
+    @Test
     fun savesSuccessfulAttemptWithMediaStoreUriAndUpdatesCount() {
         val result = AttemptService(SuccessfulMediaStore()).recordSuccess(activeSession, "blue", "/cache/a.mp4", 2L)
 

@@ -13,8 +13,6 @@ import com.weclimb.session.Gym
 import com.weclimb.session.GymSource
 import com.weclimb.session.Session
 import com.weclimb.session.SessionStatus
-import java.text.DateFormat
-import java.util.Date
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -57,14 +55,17 @@ class ArchivePlaybackInstrumentationTest {
 
     @Test
     fun keepsUnreadableArchiveAttemptAndShowsItsPlaybackPlaceholder() {
-        text("영상 아카이브").click()
+        text("클라이밍 시작")
+        text("영상").click()
 
         text("테스트 암장")
-        text("blue 완등")
-        text(DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(1_700_000_000_000L)))
+        text("파랑 · Lv.5")
         text("재생").click()
-        text("재생 불가 · 기기에서 영상을 읽을 수 없습니다")
+        text("기기에서 삭제됨")
+        text("기록만 유지 · 재생 불가")
         text("테스트 암장")
+        val repository = RoomSessionLoopRepository(SessionLoopDatabase.create(context).sessionLoopDao())
+        check(repository.archiveAttempts().single().attempt.id == "missing-video")
     }
 
     private fun text(value: String) = device.wait(Until.findObject(By.text(value)), 15_000)

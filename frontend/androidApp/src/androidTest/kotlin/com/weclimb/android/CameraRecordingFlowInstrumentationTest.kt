@@ -9,8 +9,11 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import com.weclimb.media.AttemptMediaState
+import com.weclimb.session.AttemptOutcome
 import com.weclimb.session.displayVideoUri
 import com.weclimb.session.originalVideoUri
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.After
@@ -46,7 +49,19 @@ class CameraRecordingFlowInstrumentationTest {
 
         text("실패").click()
 
-        text("세션 진행 중")
+        text("●  클라이밍 중")
+        val repository = RoomSessionLoopRepository(SessionLoopDatabase.create(context).sessionLoopDao())
+        val session = requireNotNull(repository.activeSession())
+        val failure = repository.attempts(session.id).single()
+        assertEquals(AttemptOutcome.FAILURE, failure.outcome)
+        val failedCache = requireNotNull(failure.cachePath)
+        assertTrue(java.io.File(failedCache).exists())
+
+        text("클라이밍 종료").click()
+        text("종료하기").click()
+        text("클라이밍 시작")
+        assertFalse(java.io.File(failedCache).exists())
+        assertTrue(repository.attempts(session.id).isEmpty())
     }
 
     @Test
@@ -55,14 +70,18 @@ class CameraRecordingFlowInstrumentationTest {
 
         text("성공").click()
 
-        text("완등 1개")
-        text("blue 영상 자르기")
-        text("blue 나중에")
-        text("blue 원본 유지")
-        text("blue 영상 공유").click()
+        text("지금 자르기")
+        text("나중에")
+        text("원본 그대로").click()
+        text("●  클라이밍 중")
+        text("클라이밍 종료").click()
+        text("종료하기").click()
+        text("영상").click()
+        text("원본 유지")
+        text("공유").click()
         device.wait(Until.hasObject(By.pkg("com.android.intentresolver")), 15_000)
         device.pressBack()
-        text("blue 영상 재생").click()
+        text("재생").click()
         device.wait(Until.hasObject(By.clazz("androidx.media3.ui.PlayerView")), 15_000)
     }
 
@@ -71,35 +90,31 @@ class CameraRecordingFlowInstrumentationTest {
         recordVideo()
         text("성공").click()
 
-        text("blue 나중에").click()
-        scenario?.recreate()
-        text("blue 영상 자르기")
-        text("영상 아카이브").click()
-        text("클라이밍파크 성수점 · blue · 나중에 자르기")
-        text("자르기").click()
-        text("영상 자르기")
-        text("영상 공유").click()
-        device.wait(Until.hasObject(By.pkg("com.android.intentresolver")), 15_000)
-        device.pressBack()
+        text("나중에").click()
+        text("blue 영상은 아카이브에서 나중에 자를 수 있습니다")
+        text("클라이밍 종료").click()
+        text("종료하기").click()
+        text("영상").click()
+        text("파랑 · Lv.5")
+        text("이어서 자르기").click()
+        text("앞뒤 자르기")
         text("원본 유지").click()
-        text("세션 진행 중")
+        text("클라이밍 시작")
     }
 
     @Test
     fun trimsSuccessfulVideoThroughTheAppAndKeepsOriginalAttempt() {
         recordVideo()
         text("성공").click()
-        text("blue 영상 자르기").click()
+        text("지금 자르기").click()
 
-        val fields = device.wait(Until.findObjects(By.clazz("android.widget.EditText")), 15_000)
-        require(fields.size >= 2) { "트리밍 시간 입력칸을 찾을 수 없습니다" }
-        fields[0].text = "0"
-        fields[1].text = "500"
-        text("트리밍 완료").click()
+        text("자르고 저장").click()
 
-        text("트리밍 영상을 저장했습니다")
-        text("영상 아카이브").click()
-        text("클라이밍파크 성수점 · blue · 트리밍 완료")
+        text("트리밍 완료")
+        text("0:12로 저장했어요 · 아카이브에 추가됨")
+        text("공유")
+        text("아카이브로 이동").click()
+        text("파랑 · Lv.5")
 
         val repository = RoomSessionLoopRepository(SessionLoopDatabase.create(context).sessionLoopDao())
         val attempt = repository.archiveAttempts().single().attempt
@@ -109,39 +124,23 @@ class CameraRecordingFlowInstrumentationTest {
         assertTrue(attempt.media.state == AttemptMediaState.TRIMMED)
     }
 
-    @Test
-    fun keepsRetryAndOriginalActionsAfterAnInvalidTrimRange() {
-        recordVideo()
-        text("성공").click()
-        text("blue 영상 자르기").click()
-
-        val fields = device.wait(Until.findObjects(By.clazz("android.widget.EditText")), 15_000)
-        require(fields.size >= 2) { "트리밍 시간 입력칸을 찾을 수 없습니다" }
-        fields[0].text = "500"
-        fields[1].text = "0"
-        text("트리밍 완료").click()
-
-        text("트리밍 구간을 확인하세요")
-        text("트리밍 완료")
-        text("원본 유지")
-    }
-
     private fun completeOnboardingAndStartSession() {
-        text("권한 요청").click()
-        text("다음").click()
-        text("오늘 어디서 클라이밍할까요?")
-        text("암장 선택").click()
+        text("카메라·마이크 허용하기").click()
+        text("시작하기").click()
+        text("클라이밍 시작").click()
         text("클라이밍파크 성수점").click()
-        text("세션 진행 중")
+        text("클라이밍파크 성수점에서 시작").click()
+        text("●  클라이밍 중")
         Thread.sleep(2_000)
     }
 
     private fun recordVideo() {
-        text("촬영 시작").click()
-        text("녹화 중지")
+        text("▣  촬영하기").click()
+        description("녹화 시작").click()
+        description("녹화 중지")
         Thread.sleep(1_000)
-        text("녹화 중지").click()
-        text("성공 또는 실패를 선택하세요")
+        description("녹화 중지").click()
+        text("방금 시도, 성공했나요?")
     }
 
     private fun grantPermission(permission: String) {
@@ -153,8 +152,13 @@ class CameraRecordingFlowInstrumentationTest {
         val scrollable = device.findObject(By.scrollable(true))
         repeat(4) {
             scrollable?.scroll(Direction.DOWN, 0.8f)
+            device.swipe(device.displayWidth / 2, device.displayHeight * 3 / 4, device.displayWidth / 2, device.displayHeight / 3, 16)
             device.wait(Until.findObject(By.text(value)), 2_000)?.let { return it }
         }
         throw AssertionError("text not found: $value")
     }
+
+    private fun description(value: String): UiObject2 =
+        device.wait(Until.findObject(By.desc(value)), 15_000)
+            ?: throw AssertionError("content description not found: $value")
 }

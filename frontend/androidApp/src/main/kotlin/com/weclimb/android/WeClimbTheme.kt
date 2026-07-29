@@ -1,8 +1,12 @@
 package com.weclimb.android
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Color
 
 internal data class HoldColorTokens(
@@ -30,7 +34,45 @@ internal val WeClimbColorScheme = darkColorScheme(
     outline = Color(0x1AFFFFFF),
 )
 
+private val Barlow = FontFamily(
+    Font(R.font.barlow_regular, FontWeight.Normal),
+    Font(R.font.barlow_medium, FontWeight.Medium),
+    Font(R.font.barlow_semibold, FontWeight.SemiBold),
+    Font(R.font.barlow_bold, FontWeight.Bold),
+)
+
+private val BarlowCondensed = FontFamily(
+    Font(R.font.barlow_condensed_regular, FontWeight.Normal),
+    Font(R.font.barlow_condensed_medium, FontWeight.Medium),
+    Font(R.font.barlow_condensed_semibold, FontWeight.SemiBold),
+    Font(R.font.barlow_condensed_bold, FontWeight.Bold),
+)
+
+private val MaterialTypography = Typography()
+
+internal val WeClimbTypography = Typography(
+    displayLarge = MaterialTypography.displayLarge.copy(fontFamily = BarlowCondensed),
+    displayMedium = MaterialTypography.displayMedium.copy(fontFamily = BarlowCondensed),
+    displaySmall = MaterialTypography.displaySmall.copy(fontFamily = BarlowCondensed),
+    headlineLarge = MaterialTypography.headlineLarge.copy(fontFamily = BarlowCondensed),
+    headlineMedium = MaterialTypography.headlineMedium.copy(fontFamily = BarlowCondensed),
+    headlineSmall = MaterialTypography.headlineSmall.copy(fontFamily = BarlowCondensed),
+    titleLarge = MaterialTypography.titleLarge.copy(fontFamily = BarlowCondensed),
+    titleMedium = MaterialTypography.titleMedium.copy(fontFamily = Barlow),
+    titleSmall = MaterialTypography.titleSmall.copy(fontFamily = Barlow),
+    bodyLarge = MaterialTypography.bodyLarge.copy(fontFamily = Barlow),
+    bodyMedium = MaterialTypography.bodyMedium.copy(fontFamily = Barlow),
+    bodySmall = MaterialTypography.bodySmall.copy(fontFamily = Barlow),
+    labelLarge = MaterialTypography.labelLarge.copy(fontFamily = Barlow),
+    labelMedium = MaterialTypography.labelMedium.copy(fontFamily = Barlow),
+    labelSmall = MaterialTypography.labelSmall.copy(fontFamily = Barlow),
+)
+
 @Composable
 fun WeClimbTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colorScheme = WeClimbColorScheme, content = content)
+    MaterialTheme(
+        colorScheme = WeClimbColorScheme,
+        typography = WeClimbTypography,
+        content = content,
+    )
 }

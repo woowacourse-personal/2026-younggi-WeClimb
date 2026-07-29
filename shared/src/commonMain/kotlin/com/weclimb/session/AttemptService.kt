@@ -36,6 +36,28 @@ data class SuccessAttemptResult(
 class AttemptService(
     private val mediaStore: MediaStoreGateway,
 ) {
+    fun recordSuccessWithoutVideo(
+        session: Session,
+        color: String,
+        recordedAtEpochMillis: Long,
+        attemptId: String = "${session.id}-$recordedAtEpochMillis",
+    ): SuccessAttemptResult {
+        require(color.isNotBlank()) { "색상은 비어 있을 수 없습니다" }
+        return SuccessAttemptResult(
+            attempt = Attempt(
+                id = attemptId,
+                sessionId = session.id,
+                color = color,
+                recordedAtEpochMillis = recordedAtEpochMillis,
+                outcome = AttemptOutcome.SUCCESS,
+                videoUri = null,
+                cachePath = null,
+                media = AttemptMedia.none(),
+            ),
+            successCount = 1,
+        )
+    }
+
     fun recordSuccess(
         session: Session,
         color: String,

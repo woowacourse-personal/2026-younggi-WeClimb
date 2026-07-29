@@ -2,6 +2,8 @@ package com.weclimb.android
 
 import android.content.Context
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.Preview
+import androidx.camera.view.PreviewView
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.FileOutputOptions
 import androidx.camera.video.Quality
@@ -37,6 +39,33 @@ class CameraRecordingController(
                     providerFuture.get().apply {
                         unbindAll()
                         bindToLifecycle(lifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, capture)
+                    }
+                    videoCapture = capture
+                }.onSuccess {
+                    onReady()
+                }.onFailure {
+                    onError("카메라를 준비하지 못했습니다")
+                }
+            },
+            executor,
+        )
+    }
+
+    fun bindPreview(view: PreviewView, onReady: () -> Unit, onError: (String) -> Unit) {
+        val providerFuture = ProcessCameraProvider.getInstance(context)
+        providerFuture.addListener(
+            {
+                runCatching {
+                    val recorder = Recorder.Builder()
+                        .setQualitySelector(QualitySelector.from(Quality.HD))
+                        .build()
+                    val capture = VideoCapture.withOutput(recorder)
+                    val preview = Preview.Builder().build().apply {
+                        surfaceProvider = view.surfaceProvider
+                    }
+                    providerFuture.get().apply {
+                        unbindAll()
+                        bindToLifecycle(lifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, capture)
                     }
                     videoCapture = capture
                 }.onSuccess {

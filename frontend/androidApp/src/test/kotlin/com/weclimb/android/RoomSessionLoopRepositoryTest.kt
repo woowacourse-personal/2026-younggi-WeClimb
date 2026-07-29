@@ -54,6 +54,30 @@ class RoomSessionLoopRepositoryTest {
     }
 
     @Test
+    fun persistsVideoLessSuccessWithoutMediaReferences() {
+        val session = Session("session-1", "gym-1", 10L, status = SessionStatus.ACTIVE)
+        val attempt = Attempt(
+            id = "attempt-without-video",
+            sessionId = session.id,
+            color = "green",
+            recordedAtEpochMillis = 20L,
+            outcome = AttemptOutcome.SUCCESS,
+            videoUri = null,
+            cachePath = null,
+            media = AttemptMedia.none(),
+        )
+
+        repository.saveSession(session).getOrThrow()
+        repository.saveAttempt(attempt).getOrThrow()
+
+        val restored = repository.attempts(session.id).single()
+        assertEquals(AttemptOutcome.SUCCESS, restored.outcome)
+        assertEquals(null, restored.videoUri)
+        assertEquals(null, restored.cachePath)
+        assertEquals(AttemptMediaState.NONE, restored.media.state)
+    }
+
+    @Test
     fun deletesFailedAttemptsAndDoesNotRestoreEndedSession() {
         val session = Session("session-1", "gym-1", 10L, status = SessionStatus.ACTIVE)
         val failure = Attempt("attempt-1", session.id, "red", 20L, AttemptOutcome.FAILURE, null, "/cache/failure.mp4")
