@@ -46,6 +46,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
 .cname{font-size:13px;font-weight:700;color:#cbd5e1;width:38px;flex:none}
 .track{flex:1;height:22px;border-radius:8px;background:#0d111a;position:relative;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}
 .fill{position:absolute;left:0;top:0;bottom:0}
+/* 한 바퀴(5완등)를 다 채우면 다음 바퀴가 한 단계 진한 색으로 덧칠된다 */
+.over{position:absolute;left:0;top:0;bottom:0}
 .cnt{width:32px;text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
 .bump{animation:bump 220ms cubic-bezier(.2,0,0,1)}
 @keyframes bump{0%{transform:translateY(6px);opacity:.4}100%{transform:translateY(0);opacity:1}}
@@ -87,7 +89,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
 <body>
 <div class="pageh">
   <h1>4 · 세션 보드 — <b>런타임 카운트 · 실제 종료 요약</b></h1>
-  <p>색상 카운트 · 타이머 · 요약이 전부 런타임 값이다. v2에서 <b>고정 <code style="font-size:12px">26 완등</code>과 <code style="font-size:12px">최고 Lv.5</code> 타일을 제거</b>했다 — 레벨은 런타임 소스가 없다. 종료 요약은 <code style="font-size:12px">summarizeAttempts()</code>의 완등 · 전체 시도 · 정리 필요 세 값만 쓴다. <code style="font-size:12px">SAVE_PENDING</code>이 남아 있으면 종료가 보류된다.</p>
+  <p>색상 카운트 · 타이머 · 요약이 전부 런타임 값이다. v2에서 <b>고정 <code style="font-size:12px">26 완등</code>과 <code style="font-size:12px">최고 Lv.5</code> 타일을 제거</b>했다 — 레벨은 런타임 소스가 없다. 종료 요약은 <code style="font-size:12px">summarizeAttempts()</code>의 완등 · 전체 시도 · 정리 필요 세 값만 쓴다. <code style="font-size:12px">SAVE_PENDING</code>이 남아 있으면 종료가 보류된다. 진행 막대는 <b>한 바퀴 5완등</b>이고, 한 바퀴를 다 채우면 다음 바퀴가 <b>한 단계 진한 색으로 덧칠</b>된다 — 절대량을 나타내므로 다른 색이 늘어도 내 막대가 줄지 않는다.</p>
 </div>
 <div class="stage">
 
@@ -133,12 +135,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="top"><div class="gym">닻 클라이밍</div><div class="timer">01:12:44</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
       <div class="body">
-        <div class="hd"><span class="l">색을 탭해서 완등</span><span class="r">암장 등록 색 순서</span></div>
+        <div class="hd"><span class="l">색을 탭해서 완등</span><span class="r">한 바퀴 = 5완등</span></div>
         <div class="blvl"><span class="sw" style="background:#E45D5D"></span><span class="cname">빨강</span><div class="track"></div><div class="cnt" style="color:#334155">0</div></div>
-        <div class="blvl"><span class="sw" style="background:#5A8FDB"></span><span class="cname">파랑</span><div class="track"><div class="fill" style="width:58%;background:#5A8FDB"></div></div><div class="cnt bump">7</div></div>
-        <div class="blvl"><span class="sw" style="background:#46AE72"></span><span class="cname">초록</span><div class="track"><div class="fill" style="width:100%;background:#2E7A52"></div></div><div class="cnt">12</div></div>
-        <div class="blvl"><span class="sw" style="background:#DDBB44"></span><span class="cname">노랑</span><div class="track"><div class="fill" style="width:42%;background:#DDBB44"></div></div><div class="cnt">5</div></div>
-        <div class="blvl"><span class="sw" style="background:#E2E8F0"></span><span class="cname">하양</span><div class="track"><div class="fill" style="width:17%;background:#E2E8F0"></div></div><div class="cnt">2</div></div>
+        <div class="blvl"><span class="sw" style="background:#5A8FDB"></span><span class="cname">파랑</span><div class="track"><div class="fill" style="width:100%;background:#5A8FDB"></div><div class="over" style="width:40%;background:#3E6CB5"></div></div><div class="cnt bump">7</div></div>
+        <div class="blvl"><span class="sw" style="background:#46AE72"></span><span class="cname">초록</span><div class="track"><div class="fill" style="width:100%;background:#2E7A52"></div><div class="over" style="width:40%;background:#20573A"></div></div><div class="cnt">12</div></div>
+        <div class="blvl"><span class="sw" style="background:#DDBB44"></span><span class="cname">노랑</span><div class="track"><div class="fill" style="width:100%;background:#DDBB44"></div></div><div class="cnt">5</div></div>
+        <div class="blvl"><span class="sw" style="background:#E2E8F0"></span><span class="cname">하양</span><div class="track"><div class="fill" style="width:40%;background:#E2E8F0"></div></div><div class="cnt">2</div></div>
         <button class="cam"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.4"/></svg>촬영하기</button>
       </div>
       <div class="foot"><div class="sum"><b>26</b> 완등 · <b>31</b> 시도 · <b>2</b> 정리 필요</div><button class="end">클라이밍 종료</button></div>
@@ -152,10 +154,18 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <dt>오류</dt><dd>색 조회 실패 시 오류 배너 + 재시도</dd></dl></div>
       <div class="grp"><div class="vn">색별 완등 수</div><dl>
         <dt>소스</dt><dd><code>attempts.filter { outcome == SUCCESS &amp;&amp; color == c }.size</code></dd>
-        <dt>형식</dt><dd>정수, tabular-nums. 막대 폭 = 해당 색 / 최대 색 비율</dd>
+        <dt>형식</dt><dd>정수, tabular-nums</dd>
         <dt>빈</dt><dd><code>0</code>은 muted <code>#334155</code>로 표시하고 막대 없음</dd>
         <dt>로딩</dt><dd>탭 직후 낙관적 +1, 실패 시 되돌리고 오류 배너</dd>
         <dt>오류</dt><dd>Room 쓰기 실패 → 카운트 롤백 + 재시도 배너</dd></dl></div>
+      <div class="grp"><div class="vn">진행 막대 — 바퀴 덧칠</div><dl>
+        <dt>규칙</dt><dd><code>LAP = 5완등</code>. <code>lap = count / 5</code>, <code>rem = count % 5</code></dd>
+        <dt>lap 0</dt><dd>바탕 <code>rem/5 × 100%</code>, shade 0. 덧칠 없음</dd>
+        <dt>lap ≥1</dt><dd>바탕 <b>100%</b> shade <code>lap−1</code> + 덧칠 <code>rem/5 × 100%</code> shade <code>lap</code></dd>
+        <dt>예시</dt><dd><code>2</code>→40% shade0 · <code>5</code>→100% shade0 · <code>7</code>→100% shade0 + 40% shade1 · <code>12</code>→100% shade1 + 40% shade2</dd>
+        <dt>근거</dt><dd>막대가 <b>절대량</b>을 나타낸다. 최대 색 대비 비율로 그리면 다른 색이 늘 때마다 내 막대가 줄어 기록이 왜곡된다</dd>
+        <dt>shade</dt><dd>바퀴마다 <code>RGB × 0.70</code>. 표준 색 램프는 <code>spec-components.html</code> 참조. 검정은 어둡게 할 수 없어 slate 램프로 <b>밝게</b> 진행</dd>
+        <dt>대비</dt><dd>바탕과 덧칠의 대비 ≥1.5:1 유지. 색만으로 바퀴 수를 읽게 하지 않는다 — <b>숫자 카운트가 정본</b></dd></dl></div>
       <div class="grp"><div class="vn">하단 요약</div><dl>
         <dt>소스</dt><dd><code>summarizeAttempts()</code> → <code>successCount</code> · <code>totalCount</code> · <code>mediaActionCount</code></dd>
         <dt>형식</dt><dd><code>{완등} 완등 · {시도} 시도 · {정리} 정리 필요</code>. 정리 0이면 그 항목 생략</dd>
@@ -164,13 +174,22 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <dt>오류</dt><dd>집계 실패 시 요약 숨김, 종료 버튼은 유지</dd></dl></div>
       <div class="grp"><div class="vn">모션 · 숫자 증가</div><dl>
         <dt>트리거</dt><dd>색 행 탭 → 카운트 +1 확정</dd>
-        <dt>시작</dt><dd>새 숫자 Y +6dp, 불투명도 .4</dd>
-        <dt>종료</dt><dd>Y 0, 불투명도 1. 막대 폭은 이전 → 새 비율</dd>
+        <dt>시작</dt><dd>새 숫자 Y +6dp, 불투명도 .4. 덧칠 막대 폭 = 이전 <code>rem/5</code></dd>
+        <dt>종료</dt><dd>Y 0, 불투명도 1. 덧칠 막대 폭 = 새 <code>rem/5</code></dd>
         <dt>지속</dt><dd><code>--dur-standard 220ms</code></dd>
         <dt>이징</dt><dd><code>--ease-standard</code></dd>
         <dt>중단</dt><dd>연타 시 재시작하지 않고 <b>현재 값에서 이어서</b> 목표만 교체</dd>
         <dt>반복</dt><dd>1회. 오버슈트·바운스 금지</dd>
         <dt>축소</dt><dd>즉시 값 교체 + ripple만. TalkBack은 "파랑 완등 7개" 재공지</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 바퀴 넘김 (신규)</div><dl>
+        <dt>트리거</dt><dd><code>rem</code>이 <code>4 → 0</code>으로 넘어갈 때 (5의 배수 도달)</dd>
+        <dt>시작</dt><dd>덧칠 막대 폭 80% (shade <code>lap</code>), 바탕 shade <code>lap−1</code></dd>
+        <dt>종료</dt><dd>덧칠이 100%까지 차오른 뒤 <b>바탕으로 승격</b>(shade <code>lap</code> 100%), 덧칠 폭 0으로 리셋</dd>
+        <dt>지속</dt><dd>차오름 <code>--dur-standard 220ms</code> → 승격·리셋 <code>--dur-fast 150ms</code> (순차, 총 370ms)</dd>
+        <dt>이징</dt><dd>차오름 <code>--ease-standard</code> · 승격 <code>--ease-decelerate</code></dd>
+        <dt>중단</dt><dd>승격 도중 다시 탭하면 <b>승격을 먼저 즉시 확정</b>한 뒤 새 덧칠을 시작한다. 두 단계가 겹치면 폭이 튄다</dd>
+        <dt>반복</dt><dd>바퀴당 1회. 축하 연출·반짝임 금지 — 완등 자체가 이미 피드백이다</dd>
+        <dt>축소</dt><dd>차오름·승격 없이 새 상태를 즉시 적용. 바퀴 수는 숫자 카운트로 이미 읽힌다</dd></dl></div>
     </div>
   </div>
 
@@ -180,7 +199,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="top" style="opacity:.4"><div class="gym">닻 클라이밍</div><div class="timer">01:24:07</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
-      <div class="body" style="opacity:.4"><div class="blvl"><span class="sw" style="background:#5A8FDB"></span><span class="cname">파랑</span><div class="track"><div class="fill" style="width:58%;background:#5A8FDB"></div></div><div class="cnt">7</div></div></div>
+      <div class="body" style="opacity:.4"><div class="blvl"><span class="sw" style="background:#5A8FDB"></span><span class="cname">파랑</span><div class="track"><div class="fill" style="width:100%;background:#5A8FDB"></div><div class="over" style="width:40%;background:#3E6CB5"></div></div><div class="cnt">7</div></div></div>
       <div class="scrim"></div>
       <div class="dialog">
         <h2>클라이밍을 종료할까요?</h2>
@@ -231,7 +250,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="top" style="opacity:.4"><div class="gym">닻 클라이밍</div><div class="timer">01:24:07</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
-      <div class="body" style="opacity:.4"><div class="blvl"><span class="sw" style="background:#5A8FDB"></span><span class="cname">파랑</span><div class="track"><div class="fill" style="width:58%;background:#5A8FDB"></div></div><div class="cnt">7</div></div></div>
+      <div class="body" style="opacity:.4"><div class="blvl"><span class="sw" style="background:#5A8FDB"></span><span class="cname">파랑</span><div class="track"><div class="fill" style="width:100%;background:#5A8FDB"></div><div class="over" style="width:40%;background:#3E6CB5"></div></div><div class="cnt">7</div></div></div>
       <div class="scrim"></div>
       <div class="dialog">
         <h2>저장 못 한 영상이 있어요</h2>

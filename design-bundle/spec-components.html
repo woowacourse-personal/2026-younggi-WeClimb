@@ -71,6 +71,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 .colorrow .tr{flex:1;height:20px;border-radius:8px;background:#0d111a;position:relative;overflow:hidden}
 .colorrow .tr i{position:absolute;left:0;top:0;bottom:0;background:#5A8FDB;width:58%}
 .colorrow .ct{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;width:28px;text-align:right}
+.rp{display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:7px;vertical-align:-2px;box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}
 .tlbar{width:330px;height:52px;border-radius:12px;background:#1E2634;position:relative;overflow:hidden}
 .tlbar .fr{position:absolute;inset:0;display:flex}
 .tlbar .fr i{flex:1;border-right:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,#3a3330,#161a20)}
@@ -202,10 +203,35 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 
 <h2>8 · 색상 카운트 행 (세션 보드)</h2>
 <div class="demo" style="flex-direction:column;align-items:flex-start">
-  <div class="colorrow"><span class="sw" style="background:#5A8FDB"></span><span class="cn">파랑</span><span class="tr"><i></i></span><span class="ct">7</span></div>
   <div class="colorrow"><span class="sw" style="background:#E45D5D"></span><span class="cn">빨강</span><span class="tr"></span><span class="ct" style="color:#334155">0</span></div>
+  <div class="colorrow"><span class="sw" style="background:#E2E8F0"></span><span class="cn">하양</span><span class="tr"><i style="width:40%;background:#E2E8F0"></i></span><span class="ct">2</span></div>
+  <div class="colorrow"><span class="sw" style="background:#DDBB44"></span><span class="cn">노랑</span><span class="tr"><i style="width:100%;background:#DDBB44"></i></span><span class="ct">5</span></div>
+  <div class="colorrow"><span class="sw" style="background:#5A8FDB"></span><span class="cn">파랑</span><span class="tr"><i style="width:100%;background:#5A8FDB"></i><i style="width:40%;background:#3E6CB5"></i></span><span class="ct">7</span></div>
+  <div class="colorrow"><span class="sw" style="background:#46AE72"></span><span class="cn">초록</span><span class="tr"><i style="width:100%;background:#2E7A52"></i><i style="width:40%;background:#20573A"></i></span><span class="ct">12</span></div>
 </div>
-<div class="note"><b>v2 변경</b> — 색 스와치 옆에 <b>한글 색 이름</b>을 명시적으로 추가했다(<code>Gym.colors</code> 라벨). 이전에는 색만으로 구분해 TalkBack과 색각 이상 사용자에게 정보가 전달되지 않았다. 막대 폭은 <code>해당 색 완등 / 최다 색 완등</code>이며, 0건은 막대 없이 muted 숫자만.</div>
+<div class="note g"><b>바퀴 덧칠 (v1 규칙 유지)</b> — <code>LAP = 5완등</code>. <code>lap = count/5</code>, <code>rem = count%5</code>.
+<b>lap 0</b>이면 바탕만 <code>rem/5</code>. <b>lap ≥1</b>이면 바탕 100%를 shade <code>lap−1</code>로 깔고, 그 위에 <code>rem/5</code>만큼을 shade <code>lap</code>으로 <b>덧칠</b>한다.
+위 표본이 각각 <code>0 · 2 · 5 · 7 · 12</code>다.</div>
+<div class="note"><b>왜 비율 막대가 아닌가</b> — 막대 폭을 "최다 색 대비 비율"로 그리면 다른 색을 하나 올릴 때마다 내 막대가 <b>줄어든다</b>. 기록은 늘었는데 시각적으로 후퇴하는 셈이라 절대량 방식을 쓴다. 바퀴 수는 색으로만 읽지 않게 <b>숫자 카운트를 정본</b>으로 두고, 덧칠은 보조 신호다.</div>
+
+<h3>바퀴 shade 램프</h3>
+<div class="tw"><table>
+<thead><tr><th>색</th><th>lap 0</th><th>lap 1</th><th>lap 2</th><th>lap 3</th></tr></thead>
+<tbody>
+<tr><td class="k">하양</td><td><span class="rp" style="background:#E2E8F0"></span>#E2E8F0</td><td><span class="rp" style="background:#9EA2A8"></span>#9EA2A8</td><td><span class="rp" style="background:#6F7276"></span>#6F7276</td><td><span class="rp" style="background:#4E5052"></span>#4E5052</td></tr>
+<tr><td class="k">노랑</td><td><span class="rp" style="background:#DDBB44"></span>#DDBB44</td><td><span class="rp" style="background:#9B8330"></span>#9B8330</td><td><span class="rp" style="background:#6C5C21"></span>#6C5C21</td><td><span class="rp" style="background:#4C4017"></span>#4C4017</td></tr>
+<tr><td class="k">초록</td><td><span class="rp" style="background:#46AE72"></span>#46AE72</td><td><span class="rp" style="background:#2E7A52"></span>#2E7A52</td><td><span class="rp" style="background:#20573A"></span>#20573A</td><td><span class="rp" style="background:#183C27"></span>#183C27</td></tr>
+<tr><td class="k">파랑</td><td><span class="rp" style="background:#5A8FDB"></span>#5A8FDB</td><td><span class="rp" style="background:#3E6CB5"></span>#3E6CB5</td><td><span class="rp" style="background:#2C466B"></span>#2C466B</td><td><span class="rp" style="background:#1F314B"></span>#1F314B</td></tr>
+<tr><td class="k">빨강</td><td><span class="rp" style="background:#E45D5D"></span>#E45D5D</td><td><span class="rp" style="background:#A04141"></span>#A04141</td><td><span class="rp" style="background:#702E2E"></span>#702E2E</td><td><span class="rp" style="background:#4E2020"></span>#4E2020</td></tr>
+<tr><td class="k">보라</td><td><span class="rp" style="background:#A78BFA"></span>#A78BFA</td><td><span class="rp" style="background:#7561AF"></span>#7561AF</td><td><span class="rp" style="background:#52447A"></span>#52447A</td><td><span class="rp" style="background:#393056"></span>#393056</td></tr>
+<tr><td class="k">주황</td><td><span class="rp" style="background:#E68A4C"></span>#E68A4C</td><td><span class="rp" style="background:#A16135"></span>#A16135</td><td><span class="rp" style="background:#714425"></span>#714425</td><td><span class="rp" style="background:#4F2F1A"></span>#4F2F1A</td></tr>
+<tr><td class="k">남색</td><td><span class="rp" style="background:#7C7FDB"></span>#7C7FDB</td><td><span class="rp" style="background:#575999"></span>#575999</td><td><span class="rp" style="background:#3D3E6B"></span>#3D3E6B</td><td><span class="rp" style="background:#2B2C4B"></span>#2B2C4B</td></tr>
+<tr><td class="k">갈색</td><td><span class="rp" style="background:#AC7B52"></span>#AC7B52</td><td><span class="rp" style="background:#785639"></span>#785639</td><td><span class="rp" style="background:#543C28"></span>#543C28</td><td><span class="rp" style="background:#3B2A1C"></span>#3B2A1C</td></tr>
+<tr><td class="k">검정 <span style="color:#f0a878">예외</span></td><td><span class="rp" style="background:#1E293B"></span>#1E293B</td><td><span class="rp" style="background:#334155"></span>#334155</td><td><span class="rp" style="background:#475569"></span>#475569</td><td><span class="rp" style="background:#64748B"></span>#64748B</td></tr>
+</tbody></table></div>
+<div class="note">생성 규칙은 <b>바퀴마다 <code>RGB × 0.70</code></b>. 초록·파랑 lap1–2는 v1에서 승인된 값을 그대로 유지했다(규칙값과 채널당 3–5 차이, 육안 동일).
+<b>검정은 예외</b> — 배경(<code>#0B0F1A</code>)과 이미 가까워 더 어둡게 하면 막대가 사라진다. slate 램프로 <b>밝아지는</b> 방향으로 진행한다.
+암장이 추가한 커스텀 색은 표에 없으므로 <code>RGB × 0.70</code>을 적용하되, 결과 명도가 <code>#0B0F1A</code> 대비 1.5:1 미만이면 검정과 같이 밝아지는 램프로 전환한다.</div>
 
 <h2>9 · 타임라인 · 트리머</h2>
 <div class="demo" style="flex-direction:column;align-items:flex-start">

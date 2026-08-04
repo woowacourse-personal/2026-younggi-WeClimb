@@ -86,7 +86,7 @@ Figma MCP(`use_figma`, `generate_figma_design` 등)도 연결돼 있으나, 이 
 | `spec-interaction-matrix.html` | 도메인 상태 어휘 · 화면×상태×행동 · **뒤로가기/닫기 귀결표** · 파괴적 행동 목록 · 중복 실행 차단 지점 · 미리보기 표면 |
 | `spec-flow-map.html` | 세션 주 경로 · 아카이브 경로 · 미리보기 경로 · 화면 전환 모션 · 진입점 요약 |
 | `spec-components.html` | 12개 카테고리 컴포넌트·변형 전량 (라이브 표본 포함) + v2 신규 10종 요약 |
-| `spec-motion.html` | **23개 모션 × 8항목** (트리거·시작·종료·지속·이징·중단·반복·축소 모션) + 금지 목록 |
+| `spec-motion.html` | **24개 모션 × 8항목** (트리거·시작·종료·지속·이징·중단·반복·축소 모션) + 금지 목록 |
 | `spec-accessibility.html` | 대비 측정값 · 비색 신호 · 터치 타깃 · TalkBack 문구 · 포커스 순서 · 축소 모션/큰 글자 · 세이프 에어리어 · 인지 부하 · 20항목 체크리스트 |
 
 ---
@@ -116,7 +116,22 @@ Figma MCP(`use_figma`, `generate_figma_design` 등)도 연결돼 있으나, 이 
 
 레벨·리포트 예시 값은 미리보기 전용 블록(점선 보라 + 워터마크 + 배지) 안에만 남았다.
 
-### 3.3 안전 기본값
+### 3.3 세션 보드 진행 막대 — 바퀴 덧칠 (v1 규칙 복원)
+
+v2 1차 작업에서 진행 막대를 "최다 색 대비 비율"로 잘못 바꿨다가 **v1의 바퀴 덧칠
+규칙으로 되돌렸다.** `LAP = 5완등`, `lap = count/5`, `rem = count%5`.
+`lap ≥ 1`이면 바탕 100%를 shade `lap−1`로 깔고 그 위에 `rem/5`를 shade `lap`으로
+덧칠한다.
+
+비율 막대는 다른 색을 올릴 때마다 내 막대가 **줄어드는** 문제가 있었다 — 기록은
+늘었는데 시각적으로 후퇴한다. 절대량 방식이 맞다.
+
+바퀴 shade는 `RGB × 0.70`이며 표준 색 램프(lap 0~3)를 `spec-components.html`과
+MASTER.md에 표로 고정했다. 초록·파랑 lap1~2는 v1 승인값을 그대로 유지했고,
+검정은 배경과 가까워 어둡게 할 수 없으므로 slate 램프로 **밝아지는** 예외를 둔다.
+바퀴 넘김 모션(차오름 → 승격 → 리셋)은 `spec-motion.html` #12에 8항목으로 명세했다.
+
+### 3.4 안전 기본값
 
 모든 뒤로가기·닫기가 데이터를 삭제하지 않는다. 시트 닫기 → `TRIM_PENDING`,
 분류 전 이탈 → `UNCLASSIFIED`, 저장 대기 → 유지. 삭제는 명시적 파괴 버튼 +
@@ -204,7 +219,8 @@ docs/scenarios/**                     frozen 블록 보존
 
 - **두 축 분리** 절 신설 (결과 · `VideoAction` · `AttemptMediaState` 매핑)
 - 앱 레벨 색에 **기능 표면 `Lv.` 표기 금지** 제약 추가
-- **신규 컴포넌트** 절 신설 (v2 11종)
+- **신규 컴포넌트** 절 신설 (v2 11종) + **세션 보드 진행 막대 바퀴 덧칠 규칙과
+  10색 shade 램프 표**
 - **UI 폴리시** 전면 개정 (동적 값 5상태 · 가짜 값 금지 · 뒤로가기 불변 규칙 ·
   트리밍 백그라운드 문구 정정 · 오류 출구 2개)
 - **모션** 절 전면 개정 (토큰표 · Compose 매핑 · 중단 규칙 · 금지 목록 ·
@@ -217,7 +233,7 @@ docs/scenarios/**                     frozen 블록 보존
 
 1. §4.1 실패 영상 보관의 도메인·Room 변경 범위를 사용자와 확정한다.
 2. `spec-interaction-matrix.html`의 **결과 상태** 열을 계약으로 `AppState` 전이를 맞춘다.
-3. `spec-motion.html`의 23개 모션을 `MotionTokens` 객체로 구현한다
+3. `spec-motion.html`의 24개 모션을 `MotionTokens` 객체로 구현한다
    (중단 동작 — 현재 값에서 역방향 — 이 가장 틀리기 쉽다).
 4. `spec-accessibility.html`의 20항목 체크리스트로 Galaxy S23 실기기 검토를 수행한다.
 5. `ui-rebuild-contract.md` #9와 `phase-2-media-flow-and-ui.md` #10의 남은 scenario를
