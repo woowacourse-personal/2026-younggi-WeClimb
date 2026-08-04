@@ -3,6 +3,28 @@
   --bg:#0B0F1A; --surface:#141A26; --surface-2:#1E2634;
   --on:#FFFFFF; --muted:#94A3B8; --outline:rgba(255,255,255,.10);
   --brand:#EA580C; --success:#059669; --danger:#DC2626;
+  --deferred:#C084FC;
   --h-white:#F1F5F9; --h-yellow:#FACC15; --h-green:#22C55E;
   --h-blue:#60A5FA; --h-red:#F87171; --h-purple:#A78BFA;
+
+  /* Motion — Phase 2 Flow v2 (2026-08-04 확정) */
+  --dur-press:90ms;        /* ripple · 눌림 피드백 */
+  --dur-fast:150ms;        /* 색 · 불투명도 변화 */
+  --dur-standard:220ms;    /* 컨트롤 표시/숨김 · 배너 */
+  --dur-emphasized:320ms;  /* 시트 진입 · 화면 전환 */
+  --dur-exit:200ms;        /* 시트 · 오버레이 이탈 */
+  --dur-pulse:1200ms;      /* 녹화 인디케이터 1주기 */
+
+  --ease-standard:cubic-bezier(.2,0,0,1);
+  --ease-decelerate:cubic-bezier(0,0,0,1);
+  --ease-accelerate:cubic-bezier(.3,0,1,1);
+  --ease-pulse:cubic-bezier(.4,0,.6,1);
+}
+
+/* 축소 모션: 모든 지속 시간 0, 반복 펄스는 정적 표시로 대체 */
+@media (prefers-reduced-motion: reduce){
+  :root{
+    --dur-press:0ms; --dur-fast:0ms; --dur-standard:0ms;
+    --dur-emphasized:0ms; --dur-exit:0ms; --dur-pulse:0ms;
+  }
 }

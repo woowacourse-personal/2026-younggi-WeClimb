@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>5 · 촬영 (녹화 · 분류 · 처리 선택 · 준비 · 오류)</title>
+<title>5 · 촬영 (준비 · 대기 · 녹화 · 정지 · 분류 · 오류)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -12,14 +12,25 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .pageh{max-width:1240px;margin:0 auto 26px}
 .pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
 .pageh h1 b{color:#EA580C}
-.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:700px;line-height:1.55}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:780px;line-height:1.55}
 .stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1660px;margin:0 auto}
 .frame{width:390px}
-.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px;flex-wrap:wrap}
 .cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
 .cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
 .cap .d{font-size:12px;color:#64748B;font-weight:600}
 .phone{width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06);background:#05070a}
+
+.ann{width:390px;margin-top:12px;background:#0a0e18;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px 14px;font-size:11.5px;line-height:1.55}
+.ann h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:#EA580C;letter-spacing:.6px;margin-bottom:8px;text-transform:uppercase}
+.ann .grp{border-top:1px dashed rgba(255,255,255,.09);margin-top:9px;padding-top:9px}
+.ann .grp:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.ann .vn{font-weight:700;color:#fff;font-size:12px;margin-bottom:4px}
+.ann dl{display:grid;grid-template-columns:52px 1fr;gap:3px 9px}
+.ann dt{color:#64748B;font-weight:700}
+.ann dd{color:#cbd5e1}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;color:#f0a878;background:rgba(234,88,12,.1);padding:1px 5px;border-radius:5px}
+
 .preview{position:absolute;inset:0;background:linear-gradient(180deg,#2a2320 0%,#161a20 45%,#0e1219 100%)}
 .wall{position:absolute;inset:0;opacity:.5;background:
   radial-gradient(circle at 30% 26%,#E45D5D 0 14px,transparent 15px),
@@ -31,77 +42,147 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .climber{position:absolute;left:44%;top:38%;width:52px;height:120px;background:rgba(255,255,255,.12);border-radius:26px}
 .pvtag{position:absolute;left:50%;top:16px;transform:translateX(-50%);z-index:4;font-size:10px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.5px;border:1px dashed rgba(255,255,255,.25);border-radius:8px;padding:3px 9px}
 .sb{position:relative;z-index:3;height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#fff}
-.hdr{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:10px 20px 0}
-.selc{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:8px 14px;font-weight:700;font-size:14px}
+.hdr{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:10px 20px 0;gap:10px}
+.selc{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:9px 14px;font-weight:700;font-size:14px;min-height:44px}
 .selc .sq{width:16px;height:16px;border-radius:5px;background:#5A8FDB}
 .selc svg{width:14px;height:14px;margin-left:2px}
-.rec{display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.5);border-radius:20px;padding:8px 13px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px}
-.rec .d{width:9px;height:9px;border-radius:50%;background:#E45D5D;animation:pulse 1.1s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.back{width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;flex:none;border:none}
+.back svg{width:21px;height:21px}
+.rec{display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.55);border-radius:20px;padding:9px 13px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;font-variant-numeric:tabular-nums;min-height:44px}
+.rec .d{width:9px;height:9px;border-radius:50%;background:#E45D5D;animation:pulse var(--dur-pulse,1200ms) cubic-bezier(.4,0,.6,1) infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}
 .mid{flex:1;position:relative;z-index:3}
 
 .stopwrap{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;padding-bottom:36px;gap:14px}
-.hintline{color:rgba(255,255,255,.7);font-size:12px;font-weight:600;background:rgba(0,0,0,.35);padding:5px 12px;border-radius:16px}
+.hintline{color:rgba(255,255,255,.72);font-size:12px;font-weight:600;background:rgba(0,0,0,.4);padding:6px 13px;border-radius:16px}
 .stop{width:78px;height:78px;border-radius:50%;border:5px solid rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25)}
 .stop i{width:28px;height:28px;border-radius:7px;background:#E45D5D;display:block}
+.startbtn{width:78px;height:78px;border-radius:50%;border:5px solid rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25)}
+.startbtn i{width:56px;height:56px;border-radius:50%;background:#E45D5D;display:block}
+.startbtn.off{opacity:.42}
+.startbtn.off i{background:#64748B}
 
 .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,7,13,0) 30%,rgba(5,7,13,.82) 78%);z-index:3}
 .result{position:relative;z-index:4;margin-top:auto;padding:0 18px 34px}
-.q{text-align:center;font-weight:700;font-size:18px;margin-bottom:16px;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.q{text-align:center;font-weight:700;font-size:18px;margin-bottom:6px;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.qs{text-align:center;font-size:12.5px;color:rgba(255,255,255,.72);margin-bottom:16px;line-height:1.5}
 .btns{display:flex;gap:12px}
-.big{flex:1;height:100px;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:20px;border:none}
-.ok{background:#059669;color:#fff}
-.no{background:#DC2626;color:#fff}
+.big{flex:1;height:100px;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:20px;border:none;color:#fff}
+.ok{background:#059669}
+.no{background:#DC2626}
 .big svg{width:30px;height:30px}
-.big small{font-weight:600;font-size:12px;opacity:.85}
-
-/* success handling sheet */
-.dim{position:absolute;inset:0;background:rgba(5,7,13,.55);z-index:4}
-.sheet{position:absolute;left:0;right:0;bottom:0;z-index:5;background:#141A26;border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);padding:8px 22px 30px;box-shadow:0 -20px 50px rgba(0,0,0,.5)}
-.grab{width:40px;height:4px;border-radius:2px;background:#334155;margin:6px auto 14px}
-.badge2{display:inline-flex;align-items:center;gap:7px;background:rgba(5,150,105,.16);color:#34d399;font-weight:700;font-size:12px;padding:6px 12px;border-radius:20px;margin-bottom:12px}
-.badge2 .sq{width:11px;height:11px;border-radius:3px;background:#5A8FDB}
-.sheet h2{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:700;margin-bottom:4px}
-.sheet .sd{font-size:13px;color:#94A3B8;margin-bottom:16px}
-.opt{display:flex;align-items:center;gap:14px;background:#1E2634;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px;margin-bottom:10px}
-.opt.primary{border-color:#EA580C;background:linear-gradient(160deg,#20140b,#1e2634)}
-.opt .oi{width:40px;height:40px;border-radius:12px;background:#0d111a;display:flex;align-items:center;justify-content:center;flex:none}
-.opt.primary .oi{background:rgba(234,88,12,.18)}
-.opt .oi svg{width:20px;height:20px}
-.opt .ot{font-weight:700;font-size:15px}
-.opt .os{font-size:12px;color:#94A3B8;margin-top:1px}
-.opt .chev{margin-left:auto;color:#475569}
-.opt .chev svg{width:18px;height:18px}
+.big small{font-weight:600;font-size:12px;opacity:.88}
+.big.busy{background:#1E2634;color:#475569}
+.big.busy svg{stroke:#475569}
+.busyspin{width:26px;height:26px;border-radius:50%;border:3px solid rgba(255,255,255,.16);border-top-color:#EA580C;animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
 
 .center{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(5,7,13,.72);padding:0 40px;text-align:center}
 .spin{width:44px;height:44px;border-radius:50%;border:4px solid rgba(255,255,255,.16);border-top-color:#EA580C;animation:sp .9s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
 .center .ct{font-weight:700;font-size:16px}
 .center .cs{font-size:13px;color:#94A3B8;line-height:1.5}
 .errb{width:58px;height:58px;border-radius:16px;background:rgba(220,38,38,.16);display:flex;align-items:center;justify-content:center}
 .errb svg{width:28px;height:28px}
 .cbtns{display:flex;gap:10px;margin-top:6px}
-.cbtn{height:46px;padding:0 18px;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:7px;font-weight:700;font-size:14px;border:none}
+.cbtn{height:48px;padding:0 18px;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:7px;font-weight:700;font-size:14px;border:none}
 .cbtn.re{background:#EA580C;color:#fff}
 .cbtn.gh{background:transparent;border:1px solid rgba(255,255,255,.2);color:#cbd5e1}
 .cbtn svg{width:16px;height:16px}
+
+/* back → unclassified dialog */
+.dim{position:absolute;inset:0;background:rgba(5,7,13,.68);z-index:6}
+.dialog{position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);z-index:7;background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:24px 22px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.dialog .dic{width:52px;height:52px;border-radius:15px;background:rgba(192,132,252,.14);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.dialog .dic svg{width:26px;height:26px}
+.dialog h2{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:700;margin-bottom:8px;text-align:center}
+.dialog p{font-size:13px;color:#94A3B8;line-height:1.55;text-align:center;margin-bottom:18px}
+.dbtns{display:flex;flex-direction:column;gap:10px}
+.dbtn{height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:15px;border:none}
+.dbtn.pri{background:#EA580C;color:#fff}
+.dbtn.gh{background:transparent;border:1px solid rgba(255,255,255,.16);color:#cbd5e1}
+.frozen{position:absolute;inset:0;background:linear-gradient(180deg,#2a2320 0%,#161a20 45%,#0e1219 100%);filter:saturate(.55) brightness(.8)}
 </style></head>
 <body>
 <div class="pageh">
-  <h1>5 · 촬영 — <b>CameraX 프리뷰 위 오버레이</b></h1>
-  <p>전체 화면은 실제 카메라 프리뷰(CameraX PreviewView). 녹화·정지 후 성공/실패 분류, 성공을 고르면 바로 이 화면에서 처리 선택 시트(지금 자르기 · 나중에 · 원본 유지)가 뜬다. 카메라 준비 중·오류 변형 포함.</p>
+  <h1>5 · 촬영 — <b>카메라 표면 7상태</b></h1>
+  <p>전체 화면은 실제 CameraX <code style="font-size:12px">PreviewView</code>. 준비 중 → 대기 → 녹화(실시간 타이머 + 펄스) → 정지 → 분류 대기 → 분류 처리 중, 그리고 오류. <b>결과 확정 이후의 영상 처리 결정은 <code style="font-size:12px">05b</code>로 분리</b>됐다. 녹화 타이머는 실시간 경과 값이며 고정 <code style="font-size:12px">0:19</code> 같은 값은 쓰지 않는다.</p>
 </div>
 <div class="stage">
 
-  <!-- 녹화 중 -->
+  <!-- A 준비 중 -->
   <div class="frame">
-    <div class="cap"><span class="n">A</span><span class="t">녹화 중</span><span class="d">선택 색 · REC · 정지</span></div>
+    <div class="cap"><span class="n">A</span><span class="t">1 · 준비 중</span><span class="d">PREPARING · CameraX 바인딩</span></div>
+    <div class="phone">
+      <div class="preview" style="background:#0e1219"></div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hdr"><button class="back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button><div class="selc" style="opacity:.5"><span class="sq"></span>파랑</div></div>
+      <div class="center" style="background:rgba(5,7,13,.4)">
+        <div class="spin"></div>
+        <div class="ct">카메라를 준비하고 있어요</div>
+        <div class="cs">잠시만요, 곧 촬영할 수 있어요</div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">준비 상태</div><dl>
+        <dt>소스</dt><dd><code>AppState.cameraReady == false</code> (CameraX <code>bindToLifecycle</code> 완료 전)</dd>
+        <dt>형식</dt><dd>불확정 스피너 + 안내 2줄. 진행률 없음</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>이 상태 자체. 녹화 버튼은 <b>렌더하지 않는다</b>(비활성 버튼 노출 금지)</dd>
+        <dt>오류</dt><dd>바인딩 실패 → 프레임 H</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 카메라 준비</div><dl>
+        <dt>트리거</dt><dd>촬영 화면 진입</dd>
+        <dt>시작</dt><dd>스피너 회전 0°, 프리뷰 표면 불투명도 0</dd>
+        <dt>종료</dt><dd>바인딩 완료 시 프리뷰 불투명도 1, 스피너 제거</dd>
+        <dt>지속</dt><dd>스피너 900ms/회전 · 프리뷰 페이드인 <code>--dur-emphasized 320ms</code></dd>
+        <dt>이징</dt><dd>회전 <code>linear</code> · 페이드인 <code>--ease-decelerate</code></dd>
+        <dt>중단</dt><dd>중도 이탈 시 즉시 중단, 재진입은 처음부터</dd>
+        <dt>반복</dt><dd>스피너 무한, 바인딩 완료로만 종료</dd>
+        <dt>축소</dt><dd>회전 대신 정적 아이콘 + "준비 중" 텍스트, 페이드 없이 즉시 표시</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- B 준비 완료 -->
+  <div class="frame">
+    <div class="cap"><span class="n">B</span><span class="t">2 · 준비 완료</span><span class="d">READY · 녹화 시작 가능</span></div>
     <div class="phone">
       <div class="preview"><div class="wall"></div><div class="climber"></div></div>
       <div class="pvtag">CameraX PreviewView</div>
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="hdr">
+        <button class="back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
         <div class="selc"><span class="sq"></span>파랑<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      </div>
+      <div class="mid"></div>
+      <div class="stopwrap">
+        <div class="hintline">버튼을 눌러 녹화를 시작하세요</div>
+        <div class="startbtn"><i></i></div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">선택 색</div><dl>
+        <dt>소스</dt><dd>세션 보드에서 선택한 색 (<code>Gym.colors</code>의 한 값)</dd>
+        <dt>형식</dt><dd>색 스와치 + <b>한글 색 이름</b>. 레벨 표기 없음</dd>
+        <dt>빈</dt><dd>색 미선택이면 촬영 진입 시 색 선택 시트 선표시</dd>
+        <dt>로딩</dt><dd>해당 없음 (진입 전 확정)</dd>
+        <dt>오류</dt><dd>색 정보 유실 시 보드로 복귀</dd></dl></div>
+      <div class="grp"><div class="vn">녹화 버튼</div><dl>
+        <dt>소스</dt><dd><code>cameraReady == true &amp;&amp; recording == false</code></dd>
+        <dt>형식</dt><dd>78dp 원형(터치 타깃 ≥48dp 충족)</dd>
+        <dt>빈/로딩/오류</dt><dd>준비 전 = 프레임 A, 실패 = 프레임 H</dd></dl></div>
+      <div class="grp"><div class="vn">경로 · 뒤로가기</div><dl>
+        <dt>뒤로</dt><dd>녹화 전이므로 부수효과 없이 보드로 복귀</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- C 녹화 중 -->
+  <div class="frame">
+    <div class="cap"><span class="n">C</span><span class="t">3 · 녹화 중</span><span class="d">RECORDING · 실시간 타이머 + 펄스</span></div>
+    <div class="phone">
+      <div class="preview"><div class="wall"></div><div class="climber"></div></div>
+      <div class="pvtag">CameraX PreviewView · 녹화</div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hdr">
+        <div class="selc"><span class="sq"></span>파랑</div>
         <div class="rec"><span class="d"></span>0:08</div>
       </div>
       <div class="mid"></div>
@@ -110,88 +191,195 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
         <div class="stop"><i></i></div>
       </div>
     </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">녹화 경과 시간</div><dl>
+        <dt>소스</dt><dd><code>now − recordingStartedAtEpochMillis</code> (<code>CameraRecordingController</code>)</dd>
+        <dt>형식</dt><dd><code>m:ss</code>, 1시간 초과 시 <code>h:mm:ss</code>. tabular-nums 고정폭으로 폭 흔들림 방지</dd>
+        <dt>빈</dt><dd>시작 직후 <code>0:00</code></dd>
+        <dt>로딩</dt><dd>Recorder start 확인 전에는 타이머를 <b>표시하지 않는다</b> (0에서 튀는 것 방지)</dd>
+        <dt>오류</dt><dd><code>RECORDER_START_FAILED</code> → 프레임 H + 색·세션 유지</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 녹화 펄스</div><dl>
+        <dt>트리거</dt><dd>녹화 시작 확정 (<code>recording == true</code>)</dd>
+        <dt>시작</dt><dd>불투명도 1 · scale 1</dd>
+        <dt>종료</dt><dd>주기 중간 불투명도 .35 · scale .8 → 다시 1</dd>
+        <dt>지속</dt><dd><code>--dur-pulse 1200ms</code> / 1주기</dd>
+        <dt>이징</dt><dd><code>--ease-pulse cubic-bezier(.4,0,.6,1)</code></dd>
+        <dt>중단</dt><dd>정지 탭 즉시 종료, <b>현재 불투명도에서 1로 복귀 후 제거</b>(깜빡임 금지)</dd>
+        <dt>반복</dt><dd>녹화 중 무한. 그 외 상태에서는 절대 재생하지 않음</dd>
+        <dt>축소</dt><dd>펄스 정지 → 붉은 점 고정 + <b>"REC" 텍스트 라벨 병기</b>. 상태를 모션에만 싣지 않는다</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 타이머</div><dl>
+        <dt>트리거</dt><dd>1초 tick</dd>
+        <dt>시작/종료</dt><dd>값 교체만. <b>숫자 슬라이드·플립 금지</b> (초당 애니메이션은 시선 분산)</dd>
+        <dt>지속</dt><dd>0ms (즉시)</dd>
+        <dt>중단·반복</dt><dd>해당 없음 / 녹화 중 매초</dd>
+        <dt>축소</dt><dd>동일 (원래 모션 없음)</dd></dl></div>
+      <div class="grp"><div class="vn">경로 · 뒤로가기</div><dl>
+        <dt>뒤로</dt><dd>녹화 중 뒤로가기는 <b>차단</b>. "정지 후 결정할 수 있어요" 힌트 표시</dd></dl></div>
+    </div>
   </div>
 
-  <!-- 성공/실패 분류 -->
+  <!-- D 정지 직후 -->
   <div class="frame">
-    <div class="cap"><span class="n">B</span><span class="t">성공 / 실패 분류</span><span class="d">정지 직후 · 큰 두 버튼</span></div>
+    <div class="cap"><span class="n">D</span><span class="t">4 · 정지 직후</span><span class="d">RECORDED · 마지막 프레임 고정</span></div>
     <div class="phone">
-      <div class="preview"><div class="wall"></div><div class="climber"></div></div>
-      <div class="pvtag">CameraX · 마지막 프레임 정지</div>
+      <div class="frozen"></div>
+      <div class="wall" style="opacity:.32"></div>
+      <div class="climber" style="opacity:.7"></div>
+      <div class="pvtag">마지막 프레임 정지</div>
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="hdr">
         <div class="selc"><span class="sq"></span>파랑</div>
-        <div class="rec" style="background:rgba(0,0,0,.5)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" style="width:14px;height:14px"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>0:19</div>
+        <div class="rec" style="background:rgba(0,0,0,.55)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" style="width:14px;height:14px"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>0:19</div>
+      </div>
+      <div class="mid"></div>
+      <div class="center" style="background:transparent;justify-content:flex-end;padding-bottom:60px;gap:12px">
+        <div class="spin" style="width:34px;height:34px;border-width:3px"></div>
+        <div class="cs">영상을 마무리하는 중이에요</div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">최종 길이</div><dl>
+        <dt>소스</dt><dd><code>RecordingCoordinator</code> finalize 결과의 실제 녹화 길이</dd>
+        <dt>형식</dt><dd><code>m:ss</code>. 녹화 중 타이머의 마지막 값이 아니라 <b>파일 확정 길이</b></dd>
+        <dt>빈</dt><dd>확정 전에는 정지 아이콘만, 숫자 미표시</dd>
+        <dt>로딩</dt><dd>이 상태 자체 — 파일 flush 대기. 분류 버튼은 아직 없음</dd>
+        <dt>오류</dt><dd>파일 생성 실패 → 오류 배너 + 재촬영 유도, 세션·색 유지</dd></dl></div>
+      <div class="grp"><div class="vn">과도 상태 원칙</div><dl>
+        <dt>규칙</dt><dd>매우 짧은 상태지만 <b>건너뛰지 않는다</b>. 분류 버튼이 파일 확정 전에 나오면 잘못된 시도가 저장될 수 있다</dd>
+        <dt>모션</dt><dd>프리뷰 → 정지 프레임 전환은 채도 .55 · 밝기 .8로 <code>--dur-fast 150ms</code> 페이드. 이징 <code>--ease-standard</code>. 축소 모션에서는 즉시 전환</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- E 분류 대기 -->
+  <div class="frame">
+    <div class="cap"><span class="n">E</span><span class="t">5 · 분류 대기</span><span class="d">CLASSIFYING · 결과만 묻는다</span></div>
+    <div class="phone">
+      <div class="frozen"></div>
+      <div class="wall" style="opacity:.32"></div>
+      <div class="climber" style="opacity:.7"></div>
+      <div class="pvtag">마지막 프레임 정지</div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hdr">
+        <button class="back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div class="rec" style="background:rgba(0,0,0,.55)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" style="width:14px;height:14px"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>0:19</div>
       </div>
       <div class="mid"></div>
       <div class="scrim"></div>
       <div class="result">
         <div class="q">방금 시도, 성공했나요?</div>
+        <div class="qs">영상을 어떻게 할지는 <b>다음 단계</b>에서 따로 고릅니다</div>
         <div class="btns">
-          <button class="big no"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>실패<small>영상 삭제</small></button>
-          <button class="big ok"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>성공<small>영상 보관</small></button>
+          <button class="big no"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>실패<small>기록에 남김</small></button>
+          <button class="big ok"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>성공<small>완등 +1</small></button>
         </div>
       </div>
     </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">v2 핵심 변경</div><dl>
+        <dt>이전</dt><dd>실패 = "영상 삭제" / 성공 = "영상 보관" — 결과와 영상 처리가 묶여 있었다</dd>
+        <dt>v2</dt><dd>이 화면은 <code>AttemptOutcome</code>만 정한다. 영상 처리(<code>VideoAction</code>)는 <code>05b</code>에서 <b>성공·실패 모두</b> 선택한다</dd>
+        <dt>부제</dt><dd>버튼 소제목에서 영상 문구 제거 → <code>완등 +1</code> / <code>기록에 남김</code></dd></dl></div>
+      <div class="grp"><div class="vn">결과 선택</div><dl>
+        <dt>소스</dt><dd><code>AttemptService.recordSuccess()</code> / 실패 분기</dd>
+        <dt>형식</dt><dd>하단 절반 큰 두 버튼, 간격 12dp(≥8dp), 각 100dp 높이</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>탭 즉시 프레임 F로 전환</dd>
+        <dt>오류</dt><dd>MediaStore 저장 실패 → <code>SAVE_PENDING</code>, <code>05b</code> 프레임 F로 이동</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 결과 오버레이 진입</div><dl>
+        <dt>트리거</dt><dd>파일 확정 완료</dd>
+        <dt>시작</dt><dd>scrim 불투명도 0, 버튼 영역 Y +24dp · 불투명도 0</dd>
+        <dt>종료</dt><dd>scrim 도달, 버튼 Y 0 · 불투명도 1</dd>
+        <dt>지속</dt><dd><code>--dur-emphasized 320ms</code></dd>
+        <dt>이징</dt><dd><code>--ease-decelerate</code></dd>
+        <dt>중단</dt><dd>진입 중 뒤로가기 → 현재 위치에서 <code>--dur-exit</code>로 역방향 후 프레임 G</dd>
+        <dt>반복</dt><dd>없음</dd>
+        <dt>축소</dt><dd>즉시 표시</dd></dl></div>
+    </div>
   </div>
 
-  <!-- 성공 후 처리 선택 시트 -->
+  <!-- F 분류 처리 중 -->
   <div class="frame">
-    <div class="cap"><span class="n">C</span><span class="t">성공 후 처리 선택</span><span class="d">지금 자르기 · 나중에 · 원본</span></div>
+    <div class="cap"><span class="n">F</span><span class="t">6 · 분류 처리 중</span><span class="d">중복 입력 차단</span></div>
     <div class="phone">
-      <div class="preview"><div class="wall"></div><div class="climber"></div></div>
-      <div class="pvtag">CameraX · 마지막 프레임 정지</div>
+      <div class="frozen"></div>
+      <div class="wall" style="opacity:.25"></div>
+      <div class="climber" style="opacity:.55"></div>
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
-      <div class="hdr"><div class="selc" style="opacity:.5"><span class="sq"></span>파랑</div></div>
+      <div class="hdr"><div class="selc" style="opacity:.4"><span class="sq"></span>파랑</div></div>
+      <div class="mid"></div>
+      <div class="scrim"></div>
+      <div class="result">
+        <div class="q">저장하고 있어요</div>
+        <div class="qs">완료될 때까지 다시 누를 수 없어요</div>
+        <div class="btns">
+          <button class="big busy" disabled><svg viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>실패<small>대기</small></button>
+          <button class="big busy" disabled><div class="busyspin"></div>성공<small>저장 중</small></button>
+        </div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">중복 차단</div><dl>
+        <dt>소스</dt><dd><code>AppState.classificationInProgress == true</code> (<code>beginClassification()</code>이 최초 1회만 통과)</dd>
+        <dt>형식</dt><dd>두 버튼 모두 비활성 + 선택한 쪽에 스피너. <b>어느 쪽을 눌렀는지 유지</b></dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>이 상태 자체</dd>
+        <dt>오류</dt><dd>저장 실패 → <code>SAVE_PENDING</code> + 오류 배너, 버튼 재활성</dd></dl></div>
+      <div class="grp"><div class="vn">경로</div><dl>
+        <dt>뒤로</dt><dd>처리 중 뒤로가기 <b>차단</b>. 완료 후에만 이동</dd>
+        <dt>다음</dt><dd>성공/실패 확정 → <code>05b</code> 영상 처리 결정</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 버튼 비활성 전환</div><dl>
+        <dt>트리거</dt><dd>결과 버튼 탭</dd>
+        <dt>시작</dt><dd>원래 색(<code>#059669</code>/<code>#DC2626</code>), 불투명도 1</dd>
+        <dt>종료</dt><dd><code>#1E2634</code> + 라벨 <code>#475569</code></dd>
+        <dt>지속</dt><dd><code>--dur-fast 150ms</code></dd>
+        <dt>이징</dt><dd><code>--ease-standard</code></dd>
+        <dt>중단</dt><dd>실패 시 역방향 150ms로 원색 복귀</dd>
+        <dt>반복</dt><dd>스피너만 무한(900ms/회전)</dd>
+        <dt>축소</dt><dd>즉시 색 교체, 스피너 → 정적 "저장 중" 텍스트</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- G 분류 전 뒤로가기 -->
+  <div class="frame">
+    <div class="cap"><span class="n">G</span><span class="t">분류 전 뒤로가기</span><span class="d">→ UNCLASSIFIED 보관</span></div>
+    <div class="phone">
+      <div class="frozen"></div>
+      <div class="wall" style="opacity:.2"></div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="mid"></div>
       <div class="dim"></div>
-      <div class="sheet">
-        <div class="grab"></div>
-        <div class="badge2"><span class="sq"></span>파랑 완등 · 0:19</div>
-        <h2>이 영상, 어떻게 할까요?</h2>
-        <div class="sd">지금 자르면 바로 정리돼요. 나중에 해도 원본은 안전하게 보관돼요.</div>
-        <div class="opt primary">
-          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg></div>
-          <div><div class="ot">지금 자르기</div><div class="os">앞뒤 컷 편집 후 저장</div></div>
-          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
-        </div>
-        <div class="opt">
-          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-          <div><div class="ot">나중에</div><div class="os">트리밍 대기함에 보관 · 아카이브에서 이어서</div></div>
-          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
-        </div>
-        <div class="opt">
-          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg></div>
-          <div><div class="ot">원본 그대로</div><div class="os">자르지 않고 아카이브에</div></div>
-          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+      <div class="dialog">
+        <div class="dic"><svg viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16.2" r=".7" fill="#c084fc" stroke="none"/></svg></div>
+        <h2>분류하지 않고 나갈까요?</h2>
+        <p>영상은 <b>분류 필요</b> 상태로 보관돼요.<br>아카이브에서 나중에 성공·실패를 고르면 돼요.</p>
+        <div class="dbtns">
+          <button class="dbtn pri">보관하고 나가기</button>
+          <button class="dbtn gh">계속 분류하기</button>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- 카메라 준비 중 -->
-  <div class="frame">
-    <div class="cap"><span class="n">D</span><span class="t">카메라 준비 중</span><span class="d">CameraX 바인딩 대기</span></div>
-    <div class="phone">
-      <div class="preview" style="background:#0e1219"></div>
-      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
-      <div class="hdr">
-        <div class="selc" style="opacity:.5"><span class="sq"></span>파랑</div>
-      </div>
-      <div class="center" style="background:rgba(5,7,13,.4)">
-        <div class="spin"></div>
-        <div class="ct">카메라를 준비하고 있어요</div>
-        <div class="cs">잠시만요, 곧 촬영할 수 있어요</div>
-      </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">보관 경로</div><dl>
+        <dt>소스</dt><dd><code>AttemptService.recordUnclassified()</code> → <code>outcome = UNCLASSIFIED</code>, <code>cachePath</code> 유지</dd>
+        <dt>형식</dt><dd>확인 다이얼로그. <b>파괴적이지 않으므로</b> danger 색을 쓰지 않는다</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>보관 처리 중 두 버튼 비활성</dd>
+        <dt>오류</dt><dd>캐시 보관 실패 시 다이얼로그 유지 + 오류 문구, 영상 삭제 금지</dd></dl></div>
+      <div class="grp"><div class="vn">모든 이탈 경로 수렴</div><dl>
+        <dt>시스템 뒤로</dt><dd>이 다이얼로그</dd>
+        <dt>상단 ←</dt><dd>이 다이얼로그</dd>
+        <dt>앱 전환·종료</dt><dd>확인 없이 즉시 <code>UNCLASSIFIED</code> 보관 (데이터 유실 방지 우선)</dd>
+        <dt>재진입</dt><dd>아카이브 <code>분류 필요</code> 카드에서 재분류</dd></dl></div>
     </div>
   </div>
 
-  <!-- 카메라 오류 -->
+  <!-- H 카메라 오류 -->
   <div class="frame">
-    <div class="cap"><span class="n">E</span><span class="t">카메라 오류</span><span class="d">바인딩 실패 · 재시도/설정</span></div>
+    <div class="cap"><span class="n">H</span><span class="t">7 · 카메라 오류</span><span class="d">ERROR · 재시도 / 설정</span></div>
     <div class="phone">
       <div class="preview" style="background:#0e1219"></div>
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hdr"><button class="back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button></div>
       <div class="center">
         <div class="errb"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="3"/><circle cx="12" cy="12.5" r="3.4"/><path d="M4 4l16 16"/></svg></div>
         <div class="ct">카메라를 열 수 없어요</div>
@@ -201,6 +389,17 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
           <button class="cbtn gh">설정 열기</button>
         </div>
       </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">오류 원인</div><dl>
+        <dt>소스</dt><dd><code>RecordingError</code>: <code>CAMERA_PERMISSION_DENIED</code> · <code>MICROPHONE_PERMISSION_DENIED</code> · <code>CACHE_OUTPUT_UNAVAILABLE</code> · <code>RECORDER_START_FAILED</code></dd>
+        <dt>형식</dt><dd>원인별 문구 + 복구 행동 매핑. 권한 계열은 "설정 열기" 우선, 그 외는 "다시 시도" 우선</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>재시도 중 프레임 A 준비 상태로 전환</dd>
+        <dt>오류</dt><dd>연속 실패해도 세션·색·기존 Attempt를 삭제하지 않는다</dd></dl></div>
+      <div class="grp"><div class="vn">경로</div><dl>
+        <dt>뒤로</dt><dd>보드로 복귀. 세션 유지</dd>
+        <dt>설정</dt><dd>Android 앱 설정 Intent. 복귀 시 권한 재확인 후 프레임 A</dd></dl></div>
     </div>
   </div>
 

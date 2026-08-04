@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>4 · 세션 보드 (완등 기록 · 종료)</title>
+<title>4 · 세션 보드 (런타임 카운트 · 종료 요약 · 저장 대기 보류)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -12,99 +12,263 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .pageh{max-width:1240px;margin:0 auto 26px}
 .pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
 .pageh h1 b{color:#EA580C}
-.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:680px;line-height:1.55}
-.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1240px;margin:0 auto}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:780px;line-height:1.55}
+.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1660px;margin:0 auto}
 .frame{width:390px}
-.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px;flex-wrap:wrap}
 .cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
 .cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
 .cap .d{font-size:12px;color:#64748B;font-weight:600}
 .phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1;z-index:5}
+
+.ann{width:390px;margin-top:12px;background:#0a0e18;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px 14px;font-size:11.5px;line-height:1.55}
+.ann h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:#EA580C;letter-spacing:.6px;margin-bottom:8px;text-transform:uppercase}
+.ann .grp{border-top:1px dashed rgba(255,255,255,.09);margin-top:9px;padding-top:9px}
+.ann .grp:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.ann .vn{font-weight:700;color:#fff;font-size:12px;margin-bottom:4px}
+.ann dl{display:grid;grid-template-columns:52px 1fr;gap:3px 9px}
+.ann dt{color:#64748B;font-weight:700}
+.ann dd{color:#cbd5e1}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;color:#f0a878;background:rgba(234,88,12,.1);padding:1px 5px;border-radius:5px}
+
 .top{text-align:center;padding:8px 0 2px}
 .gym{font-size:14px;color:#94A3B8;font-weight:600}
-.timer{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:700;letter-spacing:2px;line-height:1}
+.timer{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:700;letter-spacing:2px;line-height:1;font-variant-numeric:tabular-nums}
 .rec{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#EA580C;font-weight:700;margin-top:1px}
 .rec .d{width:7px;height:7px;border-radius:50%;background:#EA580C}
 .body{flex:1;padding:8px 20px 0;display:flex;flex-direction:column;overflow-y:auto}
 .hd{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 12px}
 .hd .l{font-size:13px;color:#cbd5e1;font-weight:600}
 .hd .r{font-size:11px;color:#64748B;font-weight:700}
-.blvl{display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,#1c2434,#141a26);border:1px solid rgba(255,255,255,.11);border-radius:16px;padding:13px 16px;margin-bottom:13px;box-shadow:0 4px 0 rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.07)}
+.blvl{display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,#1c2434,#141a26);border:1px solid rgba(255,255,255,.11);border-radius:16px;padding:13px 16px;margin-bottom:13px;box-shadow:0 4px 0 rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.07);min-height:56px}
 .sw{width:30px;height:30px;border-radius:9px;flex:none;box-shadow:0 0 0 1px rgba(0,0,0,.25) inset,0 1px 2px rgba(0,0,0,.3)}
+.cname{font-size:13px;font-weight:700;color:#cbd5e1;width:38px;flex:none}
 .track{flex:1;height:22px;border-radius:8px;background:#0d111a;position:relative;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}
 .fill{position:absolute;left:0;top:0;bottom:0}
-.over{position:absolute;left:0;top:0;bottom:0}
-.cnt{width:32px;text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700}
-.cam{height:60px;border-radius:18px;background:#EA580C;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:17px;margin:6px 0 0;box-shadow:0 12px 30px rgba(234,88,12,.32)}
+.cnt{width:32px;text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.bump{animation:bump 220ms cubic-bezier(.2,0,0,1)}
+@keyframes bump{0%{transform:translateY(6px);opacity:.4}100%{transform:translateY(0);opacity:1}}
+.cam{height:60px;border-radius:18px;background:#EA580C;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:17px;margin:6px 0 0;box-shadow:0 12px 30px rgba(234,88,12,.32);border:none;color:#fff}
 .cam svg{width:24px;height:24px}
 .foot{flex:none;padding:12px 20px 22px;display:flex;align-items:center;gap:12px;border-top:1px solid rgba(255,255,255,.08)}
 .sum{flex:1;font-size:13px;color:#94A3B8;font-weight:600}
-.sum b{color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:18px}
-.end{padding:12px 18px;border-radius:14px;background:#1E2634;font-weight:700;font-size:14px}
+.sum b{color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-variant-numeric:tabular-nums}
+.end{padding:12px 18px;border-radius:14px;background:#1E2634;font-weight:700;font-size:14px;border:none;color:#fff;min-height:48px}
 
-/* end dialog */
+.boardempty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:11px;padding:0 30px}
+.boardempty .eic{width:64px;height:64px;border-radius:18px;background:#141A26;display:flex;align-items:center;justify-content:center}
+.boardempty .eic svg{width:30px;height:30px}
+.boardempty h3{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700}
+.boardempty p{font-size:13px;color:#94A3B8;line-height:1.55}
+
+/* dialog */
 .scrim{position:absolute;inset:0;background:rgba(0,0,0,.6);z-index:8}
 .dialog{position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);z-index:9;background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:24px 22px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
 .dialog h2{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;margin-bottom:8px;text-align:center}
 .dialog p{font-size:13px;color:#94A3B8;line-height:1.55;text-align:center;margin-bottom:16px}
 .recap{display:flex;gap:10px;margin-bottom:20px}
 .recap .rc{flex:1;background:#0d111a;border-radius:12px;padding:11px;text-align:center}
-.recap .rc .v{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700}
+.recap .rc .v{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
 .recap .rc .k{font-size:11px;color:#94A3B8;font-weight:600;margin-top:2px}
 .recap .rc.warn .v{color:#EA580C}
 .dbtns{display:flex;flex-direction:column;gap:10px}
-.dbtn{height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;border:none}
+.dbtn{height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:15px;border:none}
+.dbtn svg{width:17px;height:17px}
 .dbtn.end2{background:#EA580C;color:#fff}
 .dbtn.cont{background:transparent;border:1px solid rgba(255,255,255,.16);color:#cbd5e1}
+.dbtn.danger{background:transparent;border:1px solid rgba(220,38,38,.5);color:#fca5a5}
+.dbtn[disabled]{background:#1E2634;color:#475569;border:none}
+.warnbox{display:flex;gap:10px;background:rgba(234,88,12,.1);border:1px solid rgba(234,88,12,.38);border-radius:13px;padding:12px 13px;margin-bottom:16px;text-align:left}
+.warnbox svg{width:19px;height:19px;flex:none;margin-top:1px}
+.warnbox .wt{font-weight:700;font-size:13px;color:#f0a878}
+.warnbox .ws{font-size:12px;color:#cbd5e1;margin-top:3px;line-height:1.5}
 </style></head>
 <body>
 <div class="pageh">
-  <h1>4 · 세션 보드 — <b>완등 기록 · 종료</b></h1>
-  <p>색을 탭해 완등을 카운트하고, 촬영으로 진입한다. 성공 영상 처리 선택(지금/나중에/원본)은 촬영 직후 화면으로 이동했고, 보드에는 트리밍 재진입이 없다. 나중에 처리한 영상은 아카이브에서 이어서 정리한다.</p>
+  <h1>4 · 세션 보드 — <b>런타임 카운트 · 실제 종료 요약</b></h1>
+  <p>색상 카운트 · 타이머 · 요약이 전부 런타임 값이다. v2에서 <b>고정 <code style="font-size:12px">26 완등</code>과 <code style="font-size:12px">최고 Lv.5</code> 타일을 제거</b>했다 — 레벨은 런타임 소스가 없다. 종료 요약은 <code style="font-size:12px">summarizeAttempts()</code>의 완등 · 전체 시도 · 정리 필요 세 값만 쓴다. <code style="font-size:12px">SAVE_PENDING</code>이 남아 있으면 종료가 보류된다.</p>
 </div>
 <div class="stage">
 
-  <!-- 기본 보드 -->
+  <!-- A: 빈 보드 -->
   <div class="frame">
-    <div class="cap"><span class="n">A</span><span class="t">보드 기본</span><span class="d">색 탭 완등 · 촬영 CTA</span></div>
+    <div class="cap"><span class="n">A</span><span class="t">보드 · 시도 0건</span><span class="d">세션 직후 빈 상태</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="top"><div class="gym">닻 클라이밍</div><div class="timer">00:00:12</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
+      <div class="body">
+        <div class="boardempty">
+          <div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.7"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.4"/></svg></div>
+          <h3>아직 시도가 없어요</h3>
+          <p>촬영을 시작하면 색깔별 완등 수가<br>여기에 실시간으로 쌓여요</p>
+        </div>
+        <button class="cam"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.4"/></svg>촬영하기</button>
+      </div>
+      <div class="foot"><div class="sum"><b>0</b> 완등 · <b>0</b> 시도</div><button class="end">클라이밍 종료</button></div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">암장명</div><dl>
+        <dt>소스</dt><dd><code>AppState.activeSession.gymName</code></dd>
+        <dt>형식</dt><dd>1줄 말줄임</dd>
+        <dt>빈</dt><dd>세션 없으면 보드 진입 불가 (홈으로 되돌림)</dd>
+        <dt>로딩</dt><dd>세션 생성 중 CTA 비활성 + 진행 배너</dd>
+        <dt>오류</dt><dd>세션 생성 실패 → 오류 배너 + 암장 선택으로 복귀</dd></dl></div>
+      <div class="grp"><div class="vn">세션 타이머</div><dl>
+        <dt>소스</dt><dd><code>now − activeSession.startedAtEpochMillis</code></dd>
+        <dt>형식</dt><dd><code>HH:mm:ss</code>, tabular-nums 고정폭. 1초 주기 갱신</dd>
+        <dt>빈</dt><dd><code>00:00:00</code></dd>
+        <dt>로딩</dt><dd>세션 로드 전 <code>--:--:--</code></dd>
+        <dt>오류</dt><dd>시작 시각 누락 시 타이머 숨기고 "진행 중"만 표시</dd></dl></div>
+      <div class="grp"><div class="vn">빈 보드 분기</div><dl>
+        <dt>소스</dt><dd><code>attempts.isEmpty()</code></dd>
+        <dt>형식</dt><dd>색 행을 <b>0개짜리 행으로 위장하지 않는다</b> — 명시적 빈 상태</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- B: 진행 중 -->
+  <div class="frame">
+    <div class="cap"><span class="n">B</span><span class="t">보드 · 진행 중</span><span class="d">색별 런타임 카운트</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="top"><div class="gym">닻 클라이밍</div><div class="timer">01:12:44</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
       <div class="body">
-        <div class="hd"><span class="l">색을 탭해서 완등</span><span class="r">어려움 ↑</span></div>
-        <div class="blvl"><span class="sw" style="background:#E45D5D"></span><div class="track"></div><div class="cnt" style="color:#334155">0</div></div>
-        <div class="blvl"><span class="sw" style="background:#5A8FDB"></span><div class="track"><div class="fill" style="width:100%;background:#5A8FDB"></div><div class="over" style="width:40%;background:#3E6CB5"></div></div><div class="cnt">7</div></div>
-        <div class="blvl"><span class="sw" style="background:#46AE72"></span><div class="track"><div class="fill" style="width:100%;background:#2E7A52"></div><div class="over" style="width:40%;background:#20573A"></div></div><div class="cnt">12</div></div>
-        <div class="blvl"><span class="sw" style="background:#DDBB44"></span><div class="track"><div class="fill" style="width:100%;background:#DDBB44"></div></div><div class="cnt">5</div></div>
-        <div class="blvl"><span class="sw" style="background:#E2E8F0"></span><div class="track"><div class="fill" style="width:40%;background:#E2E8F0"></div></div><div class="cnt">2</div></div>
-        <div class="cam"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.4"/></svg>촬영하기</div>
+        <div class="hd"><span class="l">색을 탭해서 완등</span><span class="r">암장 등록 색 순서</span></div>
+        <div class="blvl"><span class="sw" style="background:#E45D5D"></span><span class="cname">빨강</span><div class="track"></div><div class="cnt" style="color:#334155">0</div></div>
+        <div class="blvl"><span class="sw" style="background:#5A8FDB"></span><span class="cname">파랑</span><div class="track"><div class="fill" style="width:58%;background:#5A8FDB"></div></div><div class="cnt bump">7</div></div>
+        <div class="blvl"><span class="sw" style="background:#46AE72"></span><span class="cname">초록</span><div class="track"><div class="fill" style="width:100%;background:#2E7A52"></div></div><div class="cnt">12</div></div>
+        <div class="blvl"><span class="sw" style="background:#DDBB44"></span><span class="cname">노랑</span><div class="track"><div class="fill" style="width:42%;background:#DDBB44"></div></div><div class="cnt">5</div></div>
+        <div class="blvl"><span class="sw" style="background:#E2E8F0"></span><span class="cname">하양</span><div class="track"><div class="fill" style="width:17%;background:#E2E8F0"></div></div><div class="cnt">2</div></div>
+        <button class="cam"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.4"/></svg>촬영하기</button>
       </div>
-      <div class="foot"><div class="sum"><b>26</b> 완등 · 최고 <b>Lv.5</b></div><div class="end">클라이밍 종료</div></div>
+      <div class="foot"><div class="sum"><b>26</b> 완등 · <b>31</b> 시도 · <b>2</b> 정리 필요</div><button class="end">클라이밍 종료</button></div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">색상 행 목록</div><dl>
+        <dt>소스</dt><dd>선택한 <code>Gym.colors</code> (암장 등록 색). 앱 레벨 스케일 아님</dd>
+        <dt>형식</dt><dd>색 스와치 + <b>한글 색 이름 병기</b> (색만으로 의미 전달 금지)</dd>
+        <dt>빈</dt><dd>등록 색이 없으면 암장 관리로 유도</dd>
+        <dt>로딩</dt><dd>행 높이 유지한 스켈레톤</dd>
+        <dt>오류</dt><dd>색 조회 실패 시 오류 배너 + 재시도</dd></dl></div>
+      <div class="grp"><div class="vn">색별 완등 수</div><dl>
+        <dt>소스</dt><dd><code>attempts.filter { outcome == SUCCESS &amp;&amp; color == c }.size</code></dd>
+        <dt>형식</dt><dd>정수, tabular-nums. 막대 폭 = 해당 색 / 최대 색 비율</dd>
+        <dt>빈</dt><dd><code>0</code>은 muted <code>#334155</code>로 표시하고 막대 없음</dd>
+        <dt>로딩</dt><dd>탭 직후 낙관적 +1, 실패 시 되돌리고 오류 배너</dd>
+        <dt>오류</dt><dd>Room 쓰기 실패 → 카운트 롤백 + 재시도 배너</dd></dl></div>
+      <div class="grp"><div class="vn">하단 요약</div><dl>
+        <dt>소스</dt><dd><code>summarizeAttempts()</code> → <code>successCount</code> · <code>totalCount</code> · <code>mediaActionCount</code></dd>
+        <dt>형식</dt><dd><code>{완등} 완등 · {시도} 시도 · {정리} 정리 필요</code>. 정리 0이면 그 항목 생략</dd>
+        <dt>빈</dt><dd>모두 0 → <code>0 완등 · 0 시도</code></dd>
+        <dt>로딩</dt><dd>값 자리 유지, 숫자만 <code>–</code></dd>
+        <dt>오류</dt><dd>집계 실패 시 요약 숨김, 종료 버튼은 유지</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 숫자 증가</div><dl>
+        <dt>트리거</dt><dd>색 행 탭 → 카운트 +1 확정</dd>
+        <dt>시작</dt><dd>새 숫자 Y +6dp, 불투명도 .4</dd>
+        <dt>종료</dt><dd>Y 0, 불투명도 1. 막대 폭은 이전 → 새 비율</dd>
+        <dt>지속</dt><dd><code>--dur-standard 220ms</code></dd>
+        <dt>이징</dt><dd><code>--ease-standard</code></dd>
+        <dt>중단</dt><dd>연타 시 재시작하지 않고 <b>현재 값에서 이어서</b> 목표만 교체</dd>
+        <dt>반복</dt><dd>1회. 오버슈트·바운스 금지</dd>
+        <dt>축소</dt><dd>즉시 값 교체 + ripple만. TalkBack은 "파랑 완등 7개" 재공지</dd></dl></div>
     </div>
   </div>
 
-  <!-- 세션 종료 확인 다이얼로그 -->
+  <!-- C: 종료 확인 -->
   <div class="frame">
-    <div class="cap"><span class="n">B</span><span class="t">세션 종료 확인</span><span class="d">다이얼로그 · 대기 영상 안내</span></div>
+    <div class="cap"><span class="n">C</span><span class="t">세션 종료 확인</span><span class="d">실제 요약 3값 · 레벨 타일 제거</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="top" style="opacity:.4"><div class="gym">닻 클라이밍</div><div class="timer">01:24:07</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
-      <div class="body" style="opacity:.4"><div class="blvl"><span class="sw" style="background:#5A8FDB"></span><div class="track"><div class="fill" style="width:100%;background:#5A8FDB"></div></div><div class="cnt">7</div></div></div>
+      <div class="body" style="opacity:.4"><div class="blvl"><span class="sw" style="background:#5A8FDB"></span><span class="cname">파랑</span><div class="track"><div class="fill" style="width:58%;background:#5A8FDB"></div></div><div class="cnt">7</div></div></div>
       <div class="scrim"></div>
       <div class="dialog">
         <h2>클라이밍을 종료할까요?</h2>
-        <p>종료하면 이번 세션 기록이 저장돼요.<br>나중에 처리한 영상은 아카이브에서 계속 정리할 수 있어요.</p>
+        <p>종료하면 이번 세션 기록이 저장돼요.<br>정리하지 않은 영상은 아카이브에서 이어서 할 수 있어요.</p>
         <div class="recap">
           <div class="rc"><div class="v">26</div><div class="k">완등</div></div>
-          <div class="rc"><div class="v" style="color:#5A8FDB">Lv.5</div><div class="k">최고</div></div>
-          <div class="rc warn"><div class="v">2</div><div class="k">트리밍 대기</div></div>
+          <div class="rc"><div class="v">31</div><div class="k">전체 시도</div></div>
+          <div class="rc warn"><div class="v">2</div><div class="k">정리 필요</div></div>
         </div>
         <div class="dbtns">
           <button class="dbtn end2">종료하기</button>
           <button class="dbtn cont">계속 클라이밍</button>
         </div>
       </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">요약 타일 3개 (고정)</div><dl>
+        <dt>소스</dt><dd><code>AttemptSummary.successCount</code> / <code>.totalCount</code> / <code>.mediaActionCount</code></dd>
+        <dt>형식</dt><dd>정수 3개. <b>이 세 값 외 타일 추가 금지</b></dd>
+        <dt>빈</dt><dd>정리 필요 0이면 타일 회색 처리, 숨기지는 않음(자리 유지)</dd>
+        <dt>로딩</dt><dd>집계 중 종료 버튼 비활성 + 타일 <code>–</code></dd>
+        <dt>오류</dt><dd>집계 실패 시 타일 숨기고 "요약을 계산하지 못했어요" + 종료는 계속 가능</dd></dl></div>
+      <div class="grp"><div class="vn">정리 필요 정의</div><dl>
+        <dt>포함</dt><dd><code>TRIM_PENDING</code> + <code>TRIM_FAILED</code> + <code>TRIM_PROCESSING</code></dd>
+        <dt>제외</dt><dd><code>TRIMMED</code> · <code>ORIGINAL_KEPT</code> · <code>NONE</code></dd></dl></div>
+      <div class="grp"><div class="vn">제거된 값 (v2)</div><dl>
+        <dt>삭제</dt><dd><code>최고 Lv.5</code> 타일 — 색→레벨 매핑 런타임 소스 없음</dd>
+        <dt>삭제</dt><dd>고정 <code>26 완등 · 최고 Lv.5</code> 하단 문구</dd></dl></div>
+      <div class="grp"><div class="vn">경로</div><dl>
+        <dt>뒤로</dt><dd>시스템 뒤로가기 = "계속 클라이밍". 세션 유지, 부수효과 없음</dd>
+        <dt>바깥</dt><dd>scrim 탭 = 동일하게 취소</dd>
+        <dt>확정</dt><dd>종료 → <code>SessionFinisher.finish()</code> → 홈</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 다이얼로그</div><dl>
+        <dt>트리거</dt><dd>"클라이밍 종료" 탭</dd>
+        <dt>시작</dt><dd>scrim 불투명도 0, 카드 scale .94 · 불투명도 0</dd>
+        <dt>종료</dt><dd>scrim .6, 카드 scale 1 · 불투명도 1</dd>
+        <dt>지속</dt><dd><code>--dur-emphasized 320ms</code> / 이탈 <code>--dur-exit 200ms</code></dd>
+        <dt>이징</dt><dd>진입 <code>decelerate</code> · 이탈 <code>accelerate</code></dd>
+        <dt>중단</dt><dd>진입 중 취소 시 현재 scale에서 역방향</dd>
+        <dt>반복</dt><dd>없음</dd>
+        <dt>축소</dt><dd>즉시 표시/제거. scrim 페이드 없음</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- D: 저장 대기 보류 -->
+  <div class="frame">
+    <div class="cap"><span class="n">D</span><span class="t">저장 대기로 종료 보류</span><span class="d">SAVE_PENDING · 재시도 / 영상만 폐기</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="top" style="opacity:.4"><div class="gym">닻 클라이밍</div><div class="timer">01:24:07</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
+      <div class="body" style="opacity:.4"><div class="blvl"><span class="sw" style="background:#5A8FDB"></span><span class="cname">파랑</span><div class="track"><div class="fill" style="width:58%;background:#5A8FDB"></div></div><div class="cnt">7</div></div></div>
+      <div class="scrim"></div>
+      <div class="dialog">
+        <h2>저장 못 한 영상이 있어요</h2>
+        <div class="warnbox">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#f0a878" stroke-width="2"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="#f0a878" stroke="none"/><path d="M12 3l9 16H3z"/></svg>
+          <div>
+            <div class="wt">영상 1개가 저장 대기 중</div>
+            <div class="ws">지금 종료하면 이 영상은 사라져요. 완등 기록은 어느 쪽을 골라도 남아요.</div>
+          </div>
+        </div>
+        <div class="recap">
+          <div class="rc"><div class="v">26</div><div class="k">완등</div></div>
+          <div class="rc"><div class="v">31</div><div class="k">전체 시도</div></div>
+          <div class="rc warn"><div class="v">2</div><div class="k">정리 필요</div></div>
+        </div>
+        <div class="dbtns">
+          <button class="dbtn end2"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 11a8 8 0 10-2 5.3M20 5v6h-6"/></svg>다시 저장하기</button>
+          <button class="dbtn danger"><svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg>영상만 폐기하고 기록 유지</button>
+          <button class="dbtn cont">계속 클라이밍</button>
+        </div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">보류 조건</div><dl>
+        <dt>소스</dt><dd><code>AppState.hasPendingSave</code> = <code>attempts.any { outcome == SAVE_PENDING }</code></dd>
+        <dt>형식</dt><dd>대기 개수를 문구에 삽입: <code>영상 {n}개가 저장 대기 중</code></dd>
+        <dt>빈</dt><dd>대기 0이면 프레임 C 일반 종료 다이얼로그</dd>
+        <dt>로딩</dt><dd>재저장 중 세 버튼 모두 비활성 + 진행 배너</dd>
+        <dt>오류</dt><dd>재저장 재실패 시 같은 다이얼로그 유지 + 오류 문구 교체</dd></dl></div>
+      <div class="grp"><div class="vn">행동 계약</div><dl>
+        <dt>재저장</dt><dd><code>AttemptService.retrySave()</code>. 성공하면 <code>SUCCESS</code> + <code>TRIM_PENDING</code></dd>
+        <dt>폐기</dt><dd><code>discardPendingVideo()</code> — <b>영상만</b> 삭제, Attempt는 <code>SUCCESS</code>로 유지</dd>
+        <dt>파괴적</dt><dd>폐기는 2차 확인 다이얼로그를 거친다 (<code>05b</code> 프레임 G)</dd>
+        <dt>종료 차단</dt><dd><code>SessionFinisher.finish()</code>가 <code>SAVE_PENDING</code> 존재 시 실패하므로 UI에서 선행 차단</dd></dl></div>
+      <div class="grp"><div class="vn">경로</div><dl>
+        <dt>뒤로</dt><dd>= "계속 클라이밍". 대기 상태 그대로 유지</dd>
+        <dt>바깥</dt><dd>scrim 탭도 동일. <b>실수로 폐기되지 않는다</b></dd></dl></div>
     </div>
   </div>
 

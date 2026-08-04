@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>2 · 홈 (시작 · 아카이브 · 스냅샷)</title>
+<title>2 · 홈 (실제 값 · 미리보기 전용 구분)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -12,19 +12,31 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .pageh{max-width:1240px;margin:0 auto 26px}
 .pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
 .pageh h1 b{color:#EA580C}
-.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:700px;line-height:1.55}
-.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1240px;margin:0 auto}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:780px;line-height:1.55}
+.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1660px;margin:0 auto}
 .frame{width:390px}
 .cap{display:flex;align-items:center;gap:9px;margin-bottom:11px;flex-wrap:wrap}
 .cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
 .cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
 .cap .d{font-size:12px;color:#64748B;font-weight:600}
 .p3tag{font-size:10px;font-weight:700;color:#c084fc;background:rgba(168,119,210,.14);border:1px solid rgba(168,119,210,.4);padding:3px 8px;border-radius:8px}
+.livetag{font-size:10px;font-weight:700;color:#6ee7b7;background:rgba(5,150,105,.16);border:1px solid rgba(5,150,105,.42);padding:3px 8px;border-radius:8px}
 .phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1;z-index:5}
 .body{flex:1;overflow-y:auto;padding:8px 20px 20px}
 .hi{font-size:15px;color:#94A3B8;font-weight:600}
 .name{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;margin-top:1px}
+
+/* annotation */
+.ann{width:390px;margin-top:12px;background:#0a0e18;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px 14px;font-size:11.5px;line-height:1.55}
+.ann h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:#EA580C;letter-spacing:.6px;margin-bottom:8px;text-transform:uppercase}
+.ann .grp{border-top:1px dashed rgba(255,255,255,.09);margin-top:9px;padding-top:9px}
+.ann .grp:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.ann .vn{font-weight:700;color:#fff;font-size:12px;margin-bottom:4px}
+.ann dl{display:grid;grid-template-columns:52px 1fr;gap:3px 9px}
+.ann dt{color:#64748B;font-weight:700}
+.ann dd{color:#cbd5e1}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;color:#f0a878;background:rgba(234,88,12,.1);padding:1px 5px;border-radius:5px}
 
 .start{height:104px;border-radius:22px;background:linear-gradient(140deg,#EA580C,#c2410c);display:flex;align-items:center;gap:16px;padding:0 22px;margin-top:14px;box-shadow:0 14px 34px rgba(234,88,12,.34);position:relative;overflow:hidden}
 .start::after{content:"";position:absolute;right:-20px;top:-20px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.08)}
@@ -36,11 +48,11 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .start .arw{margin-left:auto;position:relative;z-index:2}
 .start .arw svg{width:24px;height:24px}
 
-/* phase3 snapshot */
-.snap{position:relative;background:linear-gradient(160deg,#0f1830,#141a26);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:16px;margin-top:16px}
-.snap.off{opacity:.6}
-.snap .p3{position:absolute;top:10px;right:12px}
-.srow{display:flex;align-items:center;gap:16px}
+/* preview-only wrapper — 점선 보라 + 감쇠 + 워터마크 */
+.prevblock{position:relative;border:1.5px dashed rgba(192,132,252,.45);border-radius:20px;padding:16px;margin-top:16px;background:linear-gradient(160deg,rgba(192,132,252,.06),#141a26);opacity:.72}
+.prevblock .p3{position:absolute;top:10px;right:12px;z-index:3}
+.prevblock .wm{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-14deg);font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:700;color:rgba(192,132,252,.14);letter-spacing:4px;pointer-events:none;z-index:2;white-space:nowrap}
+.srow{display:flex;align-items:center;gap:16px;position:relative;z-index:1}
 .ring{width:82px;height:82px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;position:relative;background:conic-gradient(#5A8FDB 0 78%,rgba(255,255,255,.08) 78% 100%)}
 .ring::before{content:"";position:absolute;inset:6px;border-radius:50%;background:#141a26}
 .ring .in{position:relative;z-index:2;text-align:center}
@@ -50,13 +62,13 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .sinfo .big{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;margin:2px 0 3px;display:flex;align-items:center;gap:7px}
 .sinfo .big .sq{width:15px;height:15px;border-radius:5px;background:#5A8FDB}
 .sinfo .p{font-size:12px;color:#46AE72;font-weight:600}
-.chart{height:56px;border-radius:10px;background:#0f1420;margin-top:14px;display:flex;align-items:flex-end;gap:3px;padding:7px}
+.chart{height:56px;border-radius:10px;background:#0f1420;margin-top:14px;display:flex;align-items:flex-end;gap:3px;padding:7px;position:relative;z-index:1}
 .chart .bar{flex:1;border-radius:3px 3px 0 0;display:flex;flex-direction:column-reverse}
 .chart .bar i{display:block;width:100%}
 
 .sect{display:flex;align-items:center;justify-content:space-between;margin:22px 2px 12px}
-.sect .l{font-size:12px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
-.sect .more{font-size:12px;color:#EA580C;font-weight:700;display:flex;align-items:center;gap:3px}
+.sect .l{font-size:12px;color:#64748B;font-weight:700;letter-spacing:.6px;text-transform:uppercase;display:flex;align-items:center;gap:7px}
+.sect .more{font-size:12px;color:#EA580C;font-weight:700;display:flex;align-items:center;gap:3px;min-height:32px}
 .sect .more svg{width:14px;height:14px}
 .strip{display:flex;gap:11px;overflow-x:auto;padding-bottom:4px}
 .vc{width:118px;flex:none;border-radius:15px;overflow:hidden;background:#141A26;border:1px solid rgba(255,255,255,.08)}
@@ -65,14 +77,21 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .vc .th .badge .sq{width:9px;height:9px;border-radius:3px}
 .vc .th .play{position:absolute;right:8px;bottom:8px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
 .vc .th .play svg{width:12px;height:12px}
+.vc .th .noth{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:.3}
+.vc .th .noth svg{width:26px;height:26px}
 .vc .mt{padding:9px 11px}
 .vc .mt .g{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vc .mt .d{font-size:11px;color:#64748B;margin-top:1px}
+.vc .mt .stt{font-size:10px;font-weight:700;margin-top:5px;display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:7px}
+.st-done{background:rgba(5,150,105,.15);color:#6ee7b7}
+.st-wait{background:rgba(234,88,12,.15);color:#f0a878}
+.st-orig{background:#1E2634;color:#94A3B8}
+.st-unc{background:rgba(192,132,252,.14);color:#c084fc}
 
-/* phase3 report card */
-.rep{position:relative;background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:20px;overflow:hidden}
-.rep.off{opacity:.6}
-.rep .p3{position:absolute;top:10px;right:12px;z-index:2}
+/* preview report */
+.rep{position:relative;border-radius:20px;overflow:hidden;border:1.5px dashed rgba(192,132,252,.45);opacity:.72;background:linear-gradient(160deg,rgba(192,132,252,.05),#141A26)}
+.rep .p3{position:absolute;top:10px;right:12px;z-index:3}
+.rep .wm{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-14deg);font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;color:rgba(192,132,252,.15);letter-spacing:4px;z-index:2}
 .rep .img{height:120px;background:linear-gradient(160deg,#334155,#0f172a);display:flex;align-items:flex-end;padding:16px}
 .rep .big{font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:700;line-height:.9}
 .rep .metaline{font-size:12px;color:#cbd5e1;font-weight:600}
@@ -86,6 +105,14 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .empty h3{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;margin-bottom:5px}
 .empty p{font-size:13px;color:#94A3B8;line-height:1.5}
 
+.sk{height:150px;width:118px;flex:none;border-radius:15px;background:linear-gradient(100deg,#141A26 30%,#1c2434 50%,#141A26 70%);background-size:220% 100%;animation:shim 1.3s ease-in-out infinite}
+.skline{height:14px;border-radius:6px;background:linear-gradient(100deg,#141A26 30%,#1c2434 50%,#141A26 70%);background-size:220% 100%;animation:shim 1.3s ease-in-out infinite;margin-top:10px}
+@keyframes shim{0%{background-position:120% 0}100%{background-position:-20% 0}}
+.failbox{margin-top:2px;border:1px solid rgba(220,38,38,.34);background:rgba(220,38,38,.08);border-radius:18px;padding:22px;text-align:center}
+.failbox h3{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;margin-bottom:5px}
+.failbox p{font-size:12.5px;color:#94A3B8;line-height:1.5;margin-bottom:14px}
+.failbox button{height:44px;padding:0 20px;border-radius:13px;background:#EA580C;color:#fff;border:none;font-weight:700;font-size:14px}
+
 .tab{height:66px;flex:none;display:flex;border-top:1px solid rgba(255,255,255,.1);background:rgba(20,26,38,.95);padding-bottom:8px}
 .tab a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:#64748B;font-weight:700}
 .tab a.on{color:#fff}
@@ -94,27 +121,28 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 </style></head>
 <body>
 <div class="pageh">
-  <h1>2 · 홈 — <b>세션 시작 · 아카이브 · 스냅샷</b></h1>
-  <p>시작 CTA와 내 영상(아카이브)은 작동. 레벨 스냅샷·성장 차트·최근 리포트 카드는 <span style="color:#c084fc;font-weight:700">Phase 3 · 비활성</span>(표시만). 바텀탭 3개(홈/영상/기록).</p>
+  <h1>2 · 홈 — <b>실제 값 vs 미리보기 전용</b></h1>
+  <p>시작 CTA와 내 영상 목록은 <span class="livetag">실제 값</span> — Room에서 온다. 레벨 스냅샷 · 성장 차트 · 리포트 카드는 <span class="p3tag">Phase 3 · 비활성</span> — <b>점선 보라 테두리 + 감쇠 + 워터마크</b>로 격리한다. v2에서 <b>가짜 레벨(Lv.5 파랑) · 가짜 진행률(78%) · 가짜 완등 수(14)는 기능 표면에서 전부 제거</b>됐고, 미리보기 블록 안에만 남는다.</p>
 </div>
 <div class="stage">
 
-  <!-- 암장 선택 시작 -->
+  <!-- A: 데이터 있음 -->
   <div class="frame">
-    <div class="cap"><span class="n">A</span><span class="t">세션 시작</span><span class="d">클라이밍 시작 → 암장 선택</span></div>
+    <div class="cap"><span class="n">A</span><span class="t">데이터 있음</span><span class="d">시작 · 내 영상 · 미리보기 블록</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="body">
-        <div class="hi">오늘도 붙어볼까요,</div>
-        <div class="name">기영 님</div>
+        <div class="hi">오늘도 붙어볼까요</div>
+        <div class="name">클라이밍 기록</div>
         <div class="start">
           <div class="pl"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg></div>
           <div class="st"><div class="k">바로 촬영 시작</div><div class="v">클라이밍 시작</div></div>
           <div class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
         </div>
 
-        <div class="snap off">
+        <div class="prevblock">
           <span class="p3 p3tag">Phase 3 · 비활성</span>
+          <span class="wm">미리보기</span>
           <div class="srow">
             <div class="ring"><div class="in"><div class="lv">5</div><div class="lb">LEVEL</div></div></div>
             <div class="sinfo">
@@ -133,16 +161,17 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
           </div>
         </div>
 
-        <div class="sect"><span class="l">내 영상</span><span class="more">전체 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span></div>
+        <div class="sect"><span class="l">내 영상 · 12<span class="livetag">실제</span></span><span class="more">전체 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span></div>
         <div class="strip">
-          <div class="vc"><div class="th" style="background:linear-gradient(160deg,#2f3b52,#141a26)"><span class="badge"><span class="sq" style="background:#5A8FDB"></span>파랑</span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">닻 클라이밍</div><div class="d">7월 22일</div></div></div>
-          <div class="vc"><div class="th" style="background:linear-gradient(160deg,#3a3330,#161a20)"><span class="badge"><span class="sq" style="background:#46AE72"></span>초록</span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">닻 클라이밍</div><div class="d">7월 22일</div></div></div>
-          <div class="vc"><div class="th" style="background:linear-gradient(160deg,#40304a,#161a20)"><span class="badge"><span class="sq" style="background:#DDBB44"></span>노랑</span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">더클라임</div><div class="d">7월 19일</div></div></div>
+          <div class="vc"><div class="th" style="background:linear-gradient(160deg,#2f3b52,#141a26)"><span class="badge"><span class="sq" style="background:#5A8FDB"></span>파랑</span><span class="noth"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">닻 클라이밍</div><div class="d">7월 22일</div><span class="stt st-done">트리밍 완료</span></div></div>
+          <div class="vc"><div class="th" style="background:linear-gradient(160deg,#3a3330,#161a20)"><span class="badge"><span class="sq" style="background:#46AE72"></span>초록</span><span class="noth"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">닻 클라이밍</div><div class="d">7월 22일</div><span class="stt st-wait">트리밍 대기</span></div></div>
+          <div class="vc"><div class="th" style="background:linear-gradient(160deg,#40304a,#161a20)"><span class="badge"><span class="sq" style="background:#DDBB44"></span>노랑</span><span class="noth"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">더클라임 양재</div><div class="d">7월 19일</div><span class="stt st-unc">분류 필요</span></div></div>
         </div>
 
         <div class="sect"><span class="l">최근 리포트</span><span class="p3tag">Phase 3</span></div>
-        <div class="rep off">
+        <div class="rep">
           <span class="p3 p3tag">비활성</span>
+          <span class="wm">미리보기</span>
           <div class="img"><div><div class="big cnd">14</div><div class="metaline">닻 클라이밍 · 7월 22일</div></div></div>
           <div class="foot"><span>1시간 24분 · 최고 Lv.5 파랑</span><span class="mini"><i style="background:#DDBB44"></i><i style="background:#46AE72"></i><i style="background:#5A8FDB"></i></span></div>
         </div>
@@ -153,60 +182,61 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
         <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16M7 20v-6M12 20V8M17 20v-10"/></svg>기록</a>
       </div>
     </div>
-  </div>
-
-  <!-- 영상 아카이브 진입 -->
-  <div class="frame">
-    <div class="cap"><span class="n">B</span><span class="t">영상 아카이브 진입</span><span class="d">영상 탭 · 전체 보기</span></div>
-    <div class="phone">
-      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
-      <div class="body">
-        <div class="hi">오늘도 붙어볼까요,</div>
-        <div class="name">기영 님</div>
-        <div class="start">
-          <div class="pl"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg></div>
-          <div class="st"><div class="k">바로 촬영 시작</div><div class="v">클라이밍 시작</div></div>
-          <div class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
-        </div>
-        <div class="sect"><span class="l">내 영상 · 12</span><span class="more" style="background:rgba(234,88,12,.14);padding:5px 10px;border-radius:20px">전체 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span></div>
-        <div class="strip">
-          <div class="vc" style="outline:2px solid #EA580C;outline-offset:1px"><div class="th" style="background:linear-gradient(160deg,#2f3b52,#141a26)"><span class="badge"><span class="sq" style="background:#5A8FDB"></span>파랑</span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">닻 클라이밍</div><div class="d">7월 22일</div></div></div>
-          <div class="vc"><div class="th" style="background:linear-gradient(160deg,#3a3330,#161a20)"><span class="badge"><span class="sq" style="background:#46AE72"></span>초록</span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">닻 클라이밍</div><div class="d">7월 22일</div></div></div>
-          <div class="vc"><div class="th" style="background:linear-gradient(160deg,#40304a,#161a20)"><span class="badge"><span class="sq" style="background:#DDBB44"></span>노랑</span><span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div><div class="mt"><div class="g">더클라임</div><div class="d">7월 19일</div></div></div>
-        </div>
-        <div class="sect"><span class="l">최근 리포트</span><span class="p3tag">Phase 3</span></div>
-        <div class="rep off">
-          <span class="p3 p3tag">비활성</span>
-          <div class="img"><div><div class="big cnd">14</div><div class="metaline">닻 클라이밍 · 7월 22일</div></div></div>
-          <div class="foot"><span>1시간 24분 · 최고 Lv.5 파랑</span><span class="mini"><i style="background:#DDBB44"></i><i style="background:#46AE72"></i><i style="background:#5A8FDB"></i></span></div>
-        </div>
-      </div>
-      <div class="tab">
-        <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
-        <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg>영상</a>
-        <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16M7 20v-6M12 20V8M17 20v-10"/></svg>기록</a>
-      </div>
+    <div class="ann"><h4>런타임 주석 · 실제 값</h4>
+      <div class="grp"><div class="vn">인사말</div><dl>
+        <dt>소스</dt><dd>없음. Phase 2에 사용자 프로필 소스가 없어 <b>이름 표기를 제거</b>했다 (<code>guest_profiles</code>는 id만 보유)</dd>
+        <dt>형식</dt><dd>고정 문구 2줄. 개인화 없음</dd>
+        <dt>빈/로딩/오류</dt><dd>해당 없음 (정적 문구)</dd></dl></div>
+      <div class="grp"><div class="vn">내 영상 개수</div><dl>
+        <dt>소스</dt><dd><code>AppState.archive.size</code> ← <code>SessionLoopRoom.archiveAttempts()</code></dd>
+        <dt>형식</dt><dd>정수. <code>내 영상 · {n}</code></dd>
+        <dt>빈</dt><dd><code>0</code>이면 개수 숨기고 프레임 B 빈 상태</dd>
+        <dt>로딩</dt><dd>개수 자리 스켈레톤 (프레임 C)</dd>
+        <dt>오류</dt><dd>개수 숨김 + 프레임 D 실패 박스</dd></dl></div>
+      <div class="grp"><div class="vn">최근 영상 카드</div><dl>
+        <dt>소스</dt><dd><code>ArchiveAttempt.gymName</code> · <code>attempt.color</code> · <code>attempt.recordedAtEpochMillis</code> · <code>attempt.media.state</code></dd>
+        <dt>형식</dt><dd>암장명(1줄 말줄임) · <code>M월 d일</code> · 색 이름 배지 · 상태 pill</dd>
+        <dt>빈</dt><dd>목록 비면 카드 대신 점선 빈 박스</dd>
+        <dt>로딩</dt><dd>118×150 스켈레톤 3장</dd>
+        <dt>오류</dt><dd>스트립 숨김 + 실패 박스 + 다시 불러오기</dd></dl></div>
+      <div class="grp"><div class="vn">썸네일 · 길이 (v2 제거)</div><dl>
+        <dt>소스</dt><dd><b>없음</b>. <code>ArchiveAttempt</code>에 썸네일·duration 컬럼이 없다</dd>
+        <dt>형식</dt><dd>색 파생 그라데이션 + 중앙 비디오 아이콘 <b>플레이스홀더</b>. 가짜 길이 배지 삭제</dd>
+        <dt>빈</dt><dd>플레이스홀더가 곧 빈 상태</dd>
+        <dt>로딩</dt><dd>동일 플레이스홀더 유지 (깜빡임 금지)</dd>
+        <dt>오류</dt><dd>읽기 불가 URI는 <code>07</code> 읽기 불가 카드로 처리</dd></dl></div>
+      <div class="grp"><div class="vn">미리보기 전용 블록</div><dl>
+        <dt>소스</dt><dd><b>없음 — 정적 예시.</b> 레벨 매핑 · 성장 지표 · 리포트 엔터티 모두 미구현</dd>
+        <dt>형식</dt><dd>점선 보라 테두리 + 불투명도 .72 + 우상단 배지 + 워터마크</dd>
+        <dt>행동</dt><dd>탭 불가. 저장 · 조회 · 공유 어느 것도 연결하지 않는다</dd></dl></div>
     </div>
   </div>
 
-  <!-- 첫 기록 빈 상태 -->
+  <!-- B: 첫 진입 빈 상태 -->
   <div class="frame">
-    <div class="cap"><span class="n">C</span><span class="t">첫 기록 빈 상태</span><span class="d">아직 영상 없음</span></div>
+    <div class="cap"><span class="n">B</span><span class="t">첫 진입 · 빈 상태</span><span class="d">영상 0건</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="body">
-        <div class="hi">반가워요,</div>
-        <div class="name">기영 님</div>
+        <div class="hi">반가워요</div>
+        <div class="name">클라이밍 기록</div>
         <div class="start">
           <div class="pl"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg></div>
           <div class="st"><div class="k">첫 세션을 시작해요</div><div class="v">클라이밍 시작</div></div>
           <div class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
         </div>
-        <div class="sect"><span class="l">내 영상</span></div>
+        <div class="sect"><span class="l">내 영상<span class="livetag">실제</span></span></div>
         <div class="empty">
           <div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></div>
           <h3>아직 저장된 영상이 없어요</h3>
-          <p>첫 클라이밍을 촬영하면<br>성공 영상이 여기 쌓여요</p>
+          <p>첫 클라이밍을 촬영하면<br>영상이 여기 쌓여요</p>
+        </div>
+        <div class="sect"><span class="l">최근 리포트</span><span class="p3tag">Phase 3</span></div>
+        <div class="rep">
+          <span class="p3 p3tag">비활성</span>
+          <span class="wm">미리보기</span>
+          <div class="img"><div><div class="big cnd">14</div><div class="metaline">닻 클라이밍 · 7월 22일</div></div></div>
+          <div class="foot"><span>1시간 24분 · 최고 Lv.5 파랑</span><span class="mini"><i style="background:#DDBB44"></i><i style="background:#46AE72"></i><i style="background:#5A8FDB"></i></span></div>
         </div>
       </div>
       <div class="tab">
@@ -214,6 +244,87 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
         <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg>영상</a>
         <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16M7 20v-6M12 20V8M17 20v-10"/></svg>기록</a>
       </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">빈 상태 분기</div><dl>
+        <dt>소스</dt><dd>조회 성공 + <code>archive.isEmpty()</code></dd>
+        <dt>형식</dt><dd>레벨 스냅샷 블록은 <b>표시하지 않는다</b> — 첫 진입에서 미리보기가 실제로 오인될 위험이 가장 크다</dd>
+        <dt>빈</dt><dd>이 상태 자체</dd>
+        <dt>로딩</dt><dd>프레임 C 선행</dd>
+        <dt>오류</dt><dd>프레임 D. 빈과 오류를 합치지 않는다</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- C: 불러오는 중 -->
+  <div class="frame">
+    <div class="cap"><span class="n">C</span><span class="t">불러오는 중</span><span class="d">신규 · 스켈레톤</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="body">
+        <div class="hi">오늘도 붙어볼까요</div>
+        <div class="name">클라이밍 기록</div>
+        <div class="start">
+          <div class="pl"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg></div>
+          <div class="st"><div class="k">바로 촬영 시작</div><div class="v">클라이밍 시작</div></div>
+          <div class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        </div>
+        <div class="sect"><span class="l">내 영상</span></div>
+        <div class="strip"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+        <div class="skline" style="width:60%"></div>
+        <div class="skline" style="width:40%"></div>
+      </div>
+      <div class="tab">
+        <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
+        <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg>영상</a>
+        <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16M7 20v-6M12 20V8M17 20v-10"/></svg>기록</a>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">스켈레톤 범위</div><dl>
+        <dt>소스</dt><dd>archive Flow 첫 방출 전</dd>
+        <dt>형식</dt><dd>시작 CTA는 <b>즉시 활성</b> — 데이터에 의존하지 않는다. 목록만 스켈레톤</dd>
+        <dt>빈</dt><dd>방출 후 0건이면 프레임 B</dd>
+        <dt>로딩</dt><dd>이 상태 자체</dd>
+        <dt>오류</dt><dd>프레임 D</dd></dl></div>
+      <div class="grp"><div class="vn">모션</div><dl>
+        <dt>반복</dt><dd>shimmer 1300ms 무한 · <code>--ease-standard</code></dd>
+        <dt>축소</dt><dd>정적 단색 + "불러오는 중" 텍스트</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- D: 조회 실패 -->
+  <div class="frame">
+    <div class="cap"><span class="n">D</span><span class="t">조회 실패</span><span class="d">신규 · 재시도</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="body">
+        <div class="hi">오늘도 붙어볼까요</div>
+        <div class="name">클라이밍 기록</div>
+        <div class="start">
+          <div class="pl"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3l16 9-16 9V3z"/></svg></div>
+          <div class="st"><div class="k">바로 촬영 시작</div><div class="v">클라이밍 시작</div></div>
+          <div class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        </div>
+        <div class="sect"><span class="l">내 영상</span></div>
+        <div class="failbox">
+          <h3>영상 목록을 불러오지 못했어요</h3>
+          <p>저장된 기록은 그대로 있어요.<br>촬영은 지금도 시작할 수 있어요</p>
+          <button>다시 불러오기</button>
+        </div>
+      </div>
+      <div class="tab">
+        <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>홈</a>
+        <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg>영상</a>
+        <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16M7 20v-6M12 20V8M17 20v-10"/></svg>기록</a>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">부분 실패 원칙</div><dl>
+        <dt>소스</dt><dd>archive 조회 예외 → <code>statusIsError = true</code></dd>
+        <dt>형식</dt><dd>실패한 <b>섹션만</b> 오류로 대체. 시작 CTA는 계속 동작 — 촬영을 막지 않는다</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>재시도 시 해당 섹션만 프레임 C 스켈레톤</dd>
+        <dt>오류</dt><dd>연속 실패 시 문구 동일, 카운트 노출 없음</dd></dl></div>
     </div>
   </div>
 

@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>0 · 공통 상태 (로딩 · 배너 · 권한)</title>
+<title>0 · 공통 상태 (로딩 · 배너 · 권한 · 리스트 상태)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -12,15 +12,26 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .pageh{max-width:1240px;margin:0 auto 26px}
 .pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
 .pageh h1 b{color:#EA580C}
-.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:680px;line-height:1.55}
-.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1240px;margin:0 auto}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:760px;line-height:1.55}
+.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1660px;margin:0 auto}
 .frame{width:390px}
-.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px;flex-wrap:wrap}
 .cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
 .cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
 .cap .d{font-size:12px;color:#64748B;font-weight:600}
 .phone{width:390px;height:560px;background:#0B0F1A;border-radius:40px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1;z-index:5}
+
+/* runtime annotation block */
+.ann{width:390px;margin-top:12px;background:#0a0e18;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px 14px;font-size:11.5px;line-height:1.55}
+.ann h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:#EA580C;letter-spacing:.6px;margin-bottom:8px;text-transform:uppercase}
+.ann .grp{border-top:1px dashed rgba(255,255,255,.09);margin-top:9px;padding-top:9px}
+.ann .grp:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.ann .vn{font-weight:700;color:#fff;font-size:12px;margin-bottom:4px}
+.ann dl{display:grid;grid-template-columns:52px 1fr;gap:3px 9px}
+.ann dt{color:#64748B;font-weight:700}
+.ann dd{color:#cbd5e1}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;color:#f0a878;background:rgba(234,88,12,.1);padding:1px 5px;border-radius:5px}
 
 /* faux content behind banners */
 .faux{position:absolute;inset:44px 0 0;padding:16px 20px;opacity:.55}
@@ -44,7 +55,13 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .ok .ic{background:#059669}
 .err{background:#2a1315;border:1px solid rgba(220,38,38,.5)}
 .err .ic{background:#DC2626}
-.retry{margin-left:auto;background:#DC2626;color:#fff;border:none;font-weight:700;font-size:13px;padding:9px 14px;border-radius:10px}
+.busy{background:#1b1f2e;border:1px solid rgba(234,88,12,.42)}
+.busy .ic{background:rgba(234,88,12,.2)}
+.retry{margin-left:auto;background:#DC2626;color:#fff;border:none;font-weight:700;font-size:13px;padding:9px 14px;border-radius:10px;min-height:38px}
+.minispin{width:16px;height:16px;border-radius:50%;border:2.5px solid rgba(234,88,12,.25);border-top-color:#EA580C;animation:sp .9s linear infinite}
+.bprog{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(234,88,12,.16);border-radius:0 0 14px 14px;overflow:hidden}
+.bprog i{position:absolute;left:0;top:0;bottom:0;width:40%;background:#EA580C;animation:indet 1.4s cubic-bezier(.2,0,0,1) infinite}
+@keyframes indet{0%{left:-40%}100%{left:100%}}
 
 /* permission card */
 .permwrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 24px}
@@ -57,17 +74,32 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .path .sep{color:#64748B}
 .btn{height:50px;border-radius:14px;background:#EA580C;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:15px;border:none;width:100%}
 .btn svg{width:18px;height:18px}
+
+/* list states */
+.lhd{padding:8px 20px 10px}
+.lhd h1{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700}
+.lbody{flex:1;padding:0 20px}
+.sk{height:96px;border-radius:16px;background:linear-gradient(100deg,#141A26 30%,#1c2434 50%,#141A26 70%);background-size:220% 100%;animation:shim 1.3s ease-in-out infinite;margin-bottom:12px;border:1px solid rgba(255,255,255,.05)}
+@keyframes shim{0%{background-position:120% 0}100%{background-position:-20% 0}}
+.emptybox{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 40px;text-align:center;gap:13px}
+.emptybox .eic{width:70px;height:70px;border-radius:20px;background:#141A26;display:flex;align-items:center;justify-content:center}
+.emptybox .eic svg{width:32px;height:32px}
+.emptybox h3{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700}
+.emptybox p{font-size:13px;color:#94A3B8;line-height:1.55}
+.emptybox .cta{margin-top:4px;height:48px;padding:0 22px;border-radius:14px;background:#EA580C;color:#fff;display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;border:none}
+.emptybox.fail .eic{background:rgba(220,38,38,.12)}
+.emptybox .ghost{height:48px;padding:0 22px;border-radius:14px;background:transparent;border:1px solid rgba(255,255,255,.18);color:#cbd5e1;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
 </style></head>
 <body>
 <div class="pageh">
-  <h1>0 · 공통 상태 — <b>로딩 · 배너 · 권한 안내</b></h1>
-  <p>독립 화면이 아니라 모든 화면에서 재사용하는 공통 컴포넌트. 초기 로딩, 작업 성공/실패 인라인 배너, 권한 거부 후 시스템 설정으로 보내는 안내 카드.</p>
+  <h1>0 · 공통 상태 — <b>로딩 · 배너 · 권한 · 리스트 상태</b></h1>
+  <p>독립 화면이 아니라 모든 화면에서 재사용하는 공통 컴포넌트. 초기 로딩, 성공/처리 중/오류 인라인 배너, 권한 거부 후 시스템 설정 안내, 그리고 <b>모든 목록 화면이 공유하는 로딩 · 빈 · 오류 3종 상태</b>. 각 프레임 아래 블록은 <b>런타임 소스 · 형식 · 빈 · 로딩 · 오류</b> 주석이다.</p>
 </div>
 <div class="stage">
 
   <!-- 초기 로딩 -->
   <div class="frame">
-    <div class="cap"><span class="n">A</span><span class="t">초기 로딩</span><span class="d">앱 진입 · 데이터 조회</span></div>
+    <div class="cap"><span class="n">A</span><span class="t">초기 로딩</span><span class="d">앱 진입 · Room 조회</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="load">
@@ -76,11 +108,19 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
         <div class="lb">불러오는 중…</div>
       </div>
     </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">화면 상태</div><dl>
+        <dt>소스</dt><dd><code>AppState.screen == Screen.Loading</code></dd>
+        <dt>형식</dt><dd>로고 + 불확정 스피너 + 안내 문구</dd>
+        <dt>빈</dt><dd>해당 없음 (진입 시 항상 표시)</dd>
+        <dt>로딩</dt><dd>이 상태 자체가 로딩</dd>
+        <dt>오류</dt><dd>Room 초기화 실패 → 프레임 F 오류 상태로 전환</dd></dl></div>
+    </div>
   </div>
 
   <!-- 성공 배너 -->
   <div class="frame">
-    <div class="cap"><span class="n">B</span><span class="t">성공 배너</span><span class="d">저장·공유 완료 토스트</span></div>
+    <div class="cap"><span class="n">B</span><span class="t">성공 배너</span><span class="d">저장 · 공유 완료</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="faux"><div class="fx-row"></div><div class="fx-row"></div><div class="fx-row"></div></div>
@@ -89,11 +129,48 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
         <div><div class="tt">영상을 저장했어요</div><div class="ss">아카이브에서 다시 볼 수 있어요</div></div>
       </div>
     </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">배너 문구</div><dl>
+        <dt>소스</dt><dd><code>AppState.message</code> + <code>statusIsError == false</code></dd>
+        <dt>형식</dt><dd>제목 1줄 + 보조 1줄, 최대 2줄 말줄임</dd>
+        <dt>빈</dt><dd><code>message == null</code> → 배너 미표시(자리 차지 안 함)</dd>
+        <dt>로딩</dt><dd>처리 중에는 프레임 C(진행 배너) 사용</dd>
+        <dt>오류</dt><dd>프레임 D(오류 배너)로 전환</dd></dl></div>
+      <div class="grp"><div class="vn">모션</div><dl>
+        <dt>진입</dt><dd>Y −12dp → 0, 불투명도 0 → 1, <code>--dur-emphasized 320ms</code> / <code>decelerate</code></dd>
+        <dt>이탈</dt><dd>4초 후 자동, 역방향 <code>--dur-exit 200ms</code> / <code>accelerate</code></dd>
+        <dt>중단</dt><dd>새 message 도착 시 현재 값에서 이어서 교체(재시작 아님)</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- 진행 배너 -->
+  <div class="frame">
+    <div class="cap"><span class="n">C</span><span class="t">진행 배너</span><span class="d">신규 · 처리 중 · 중복 차단</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="faux"><div class="fx-row"></div><div class="fx-row"></div><div class="fx-row"></div></div>
+      <div class="banner busy">
+        <div class="ic"><div class="minispin"></div></div>
+        <div><div class="tt">영상을 저장하고 있어요</div><div class="ss">완료 전까지 같은 행동은 잠깁니다</div></div>
+        <div class="bprog"><i></i></div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">진행 상태</div><dl>
+        <dt>소스</dt><dd><code>AppState.trimInProgress</code> · <code>classificationInProgress</code></dd>
+        <dt>형식</dt><dd>불확정 진행(퍼센트 없음). 퍼센트가 있으면 <code>06</code> 진행 링 사용</dd>
+        <dt>빈</dt><dd>진행 플래그 false → 미표시</dd>
+        <dt>로딩</dt><dd>이 상태 자체가 로딩</dd>
+        <dt>오류</dt><dd>실패 시 프레임 D 오류 배너로 교체</dd></dl></div>
+      <div class="grp"><div class="vn">모션</div><dl>
+        <dt>반복</dt><dd>불확정 막대 좌→우 <code>1400ms</code> 무한, <code>--ease-standard</code></dd>
+        <dt>축소</dt><dd>막대 정지 + "처리 중" 텍스트 고정</dd></dl></div>
+    </div>
   </div>
 
   <!-- 오류 배너 -->
   <div class="frame">
-    <div class="cap"><span class="n">C</span><span class="t">오류 배너 + 재시도</span><span class="d">처리 실패 · 원본은 보존</span></div>
+    <div class="cap"><span class="n">D</span><span class="t">오류 배너 + 재시도</span><span class="d">원본 보존 · 복구 행동</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="faux"><div class="fx-row"></div><div class="fx-row"></div><div class="fx-row"></div></div>
@@ -103,11 +180,21 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
         <button class="retry">다시 시도</button>
       </div>
     </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">오류 문구 · 재시도</div><dl>
+        <dt>소스</dt><dd><code>AppState.message</code> + <code>statusIsError == true</code>, 재시도 대상 <code>statusRetryAttemptId</code></dd>
+        <dt>형식</dt><dd>원인 1줄 + <b>보존 사실</b> 1줄 + 복구 버튼. 스택 트레이스 노출 금지</dd>
+        <dt>빈</dt><dd><code>statusRetryAttemptId == null</code> → 재시도 버튼 없이 문구만</dd>
+        <dt>로딩</dt><dd>재시도 누르면 프레임 C 진행 배너로 교체, 버튼 비활성</dd>
+        <dt>오류</dt><dd>재시도 재실패 시 같은 배너 유지 + 횟수 누적 표기 없음</dd></dl></div>
+      <div class="grp"><div class="vn">불변</div><dl>
+        <dt>규칙</dt><dd>오류는 Attempt와 원본 URI를 삭제하지 않는다</dd></dl></div>
+    </div>
   </div>
 
   <!-- 권한 거부 → 설정 -->
   <div class="frame">
-    <div class="cap"><span class="n">D</span><span class="t">권한 거부 → 설정 이동</span><span class="d">시스템 권한 창은 앱 밖</span></div>
+    <div class="cap"><span class="n">E</span><span class="t">권한 거부 → 설정 이동</span><span class="d">시스템 권한 창은 앱 밖</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="permwrap">
@@ -122,6 +209,82 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
           </button>
         </div>
       </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">권한 상태</div><dl>
+        <dt>소스</dt><dd><code>AppState.permissionsGranted</code> · <code>permissionRequested</code> · <code>settingsRequired</code></dd>
+        <dt>형식</dt><dd>필요한 권한명 나열(<code>Permission</code> enum 라벨)</dd>
+        <dt>빈</dt><dd>권한 허용 시 이 카드 자체가 사라지고 촬영 진입</dd>
+        <dt>로딩</dt><dd>시스템 다이얼로그 대기 중에는 CTA 비활성</dd>
+        <dt>오류</dt><dd>설정 Intent 실패 시 오류 배너(D) + 경로 텍스트 유지</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- 리스트 로딩 -->
+  <div class="frame">
+    <div class="cap"><span class="n">F</span><span class="t">리스트 · 불러오는 중</span><span class="d">신규 · 스켈레톤</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="lhd"><h1>영상 아카이브</h1></div>
+      <div class="lbody"><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">스켈레톤</div><dl>
+        <dt>소스</dt><dd>목록 Flow 첫 방출 전 (<code>AppState.archive</code> 미초기화)</dd>
+        <dt>형식</dt><dd>실제 카드 높이와 동일한 96dp 블록 4개 — 레이아웃 점프 방지</dd>
+        <dt>빈</dt><dd>방출 결과가 빈 리스트면 프레임 G</dd>
+        <dt>로딩</dt><dd>이 상태 자체가 로딩</dd>
+        <dt>오류</dt><dd>조회 실패 시 프레임 H</dd></dl></div>
+      <div class="grp"><div class="vn">모션</div><dl>
+        <dt>반복</dt><dd>shimmer 1300ms 무한, <code>--ease-standard</code></dd>
+        <dt>축소</dt><dd>shimmer 정지, 단색 블록 + "불러오는 중" 텍스트</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- 리스트 빈 -->
+  <div class="frame">
+    <div class="cap"><span class="n">G</span><span class="t">리스트 · 빈 상태</span><span class="d">신규 · 다음 행동 제시</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="lhd"><h1>영상 아카이브</h1></div>
+      <div class="emptybox">
+        <div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></div>
+        <h3>아직 영상이 없어요</h3>
+        <p>클라이밍을 촬영하면<br>여기에 자동으로 쌓여요</p>
+        <button class="cta"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" style="width:18px;height:18px"><path d="M5 3l16 9-16 9V3z"/></svg>클라이밍 시작</button>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">빈 상태</div><dl>
+        <dt>소스</dt><dd><code>AppState.archive.isEmpty()</code> (조회 성공 후)</dd>
+        <dt>형식</dt><dd>원인 없는 안내 + 다음 행동 CTA 1개</dd>
+        <dt>빈</dt><dd>이 상태 자체가 빈 상태</dd>
+        <dt>로딩</dt><dd>프레임 F 스켈레톤이 선행</dd>
+        <dt>오류</dt><dd>빈과 오류를 절대 같은 화면으로 합치지 않는다</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- 리스트 오류 -->
+  <div class="frame">
+    <div class="cap"><span class="n">H</span><span class="t">리스트 · 조회 실패</span><span class="d">신규 · 재시도</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="lhd"><h1>영상 아카이브</h1></div>
+      <div class="emptybox fail">
+        <div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="1.8"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".7" fill="#DC2626" stroke="none"/><path d="M12 3l9 16H3z"/></svg></div>
+        <h3>목록을 불러오지 못했어요</h3>
+        <p>저장된 기록은 그대로 있어요.<br>잠시 후 다시 시도해 주세요</p>
+        <button class="cta"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" style="width:18px;height:18px"><path d="M20 11a8 8 0 10-2 5.3M20 5v6h-6"/></svg>다시 불러오기</button>
+        <button class="ghost">홈으로</button>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">오류 상태</div><dl>
+        <dt>소스</dt><dd>Room 조회 예외 → <code>statusIsError = true</code></dd>
+        <dt>형식</dt><dd>원인 1줄 + <b>데이터 보존 사실</b> 1줄 + 복구 2행동</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>재시도 시 프레임 F 스켈레톤으로 되돌아감</dd>
+        <dt>오류</dt><dd>연속 실패해도 문구 동일, 사용자 탓 표현 금지</dd></dl></div>
     </div>
   </div>
 

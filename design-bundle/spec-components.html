@@ -1,0 +1,263 @@
+<!-- @dsCard group="Specs" -->
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spec · 컴포넌트 · 변형 인벤토리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:32px 26px 64px}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:700;letter-spacing:.5px}
+h1 b{color:#EA580C}
+.sub{color:#94A3B8;margin:6px 0 30px;font-size:14.5px;line-height:1.6;max-width:860px}
+h2{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;color:#EA580C;text-transform:uppercase;letter-spacing:1px;margin:36px 0 15px;padding-bottom:8px;border-bottom:1px solid rgba(234,88,12,.24)}
+h3{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;margin:22px 0 10px;color:#e2e8f0}
+.demo{background:#0B0F1A;border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.tw{overflow-x:auto;border-radius:14px;border:1px solid rgba(255,255,255,.09)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:760px}
+th{background:#141A26;padding:10px 12px;text-align:left;font-weight:700;color:#94A3B8;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid rgba(255,255,255,.09)}
+td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06);color:#cbd5e1;line-height:1.5;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tbody tr:nth-child(2n){background:rgba(255,255,255,.017)}
+td.k{color:#fff;font-weight:700;white-space:nowrap}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:#f0a878;background:rgba(234,88,12,.1);padding:1.5px 5px;border-radius:5px}
+.new{font-size:9.5px;font-weight:700;color:#6ee7b7;background:rgba(5,150,105,.16);border:1px solid rgba(5,150,105,.42);padding:2px 7px;border-radius:6px;vertical-align:middle;margin-left:6px}
+.note{background:rgba(234,88,12,.07);border:1px solid rgba(234,88,12,.3);border-radius:12px;padding:13px 16px;font-size:13px;color:#f0a878;line-height:1.65;margin-top:14px}
+.note.g{background:rgba(5,150,105,.07);border-color:rgba(5,150,105,.3);color:#6ee7b7}
+.note b{color:#fff}
+
+/* live samples */
+.btn{height:50px;padding:0 22px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:15px;border:none;color:#fff}
+.btn.brand{background:#EA580C}
+.btn.ok{background:#059669}
+.btn.dan{background:#DC2626}
+.btn.gh{background:transparent;border:1px solid rgba(255,255,255,.16);color:#cbd5e1}
+.btn.dis{background:#1E2634;color:#475569}
+.btn.tonal{background:#1E2634;color:#cbd5e1}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px}
+.pill svg{width:12px;height:12px}
+.st-done{background:rgba(5,150,105,.15);color:#6ee7b7}
+.st-orig{background:#1E2634;color:#94A3B8}
+.st-wait{background:rgba(234,88,12,.15);color:#f0a878}
+.st-fail{background:rgba(220,38,38,.15);color:#fca5a5}
+.st-dead{background:rgba(148,163,184,.12);color:#94A3B8}
+.obadge{font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:7px;display:inline-flex;align-items:center;gap:5px}
+.obadge svg{width:11px;height:11px}
+.ob-ok{background:rgba(5,150,105,.16);color:#6ee7b7}
+.ob-no{background:rgba(220,38,38,.16);color:#fca5a5}
+.ob-unc{background:rgba(192,132,252,.15);color:#c084fc}
+.p3tag{font-size:10px;font-weight:700;color:#c084fc;background:rgba(168,119,210,.14);border:1px solid rgba(168,119,210,.4);padding:4px 9px;border-radius:8px}
+.chip{font-size:12px;font-weight:700;color:#94A3B8;background:#1E2634;border:1px solid transparent;padding:8px 13px;border-radius:20px}
+.chip.on{background:rgba(234,88,12,.16);color:#EA580C;border-color:rgba(234,88,12,.4)}
+.chip.prev{border:1px dashed rgba(192,132,252,.45);color:#c084fc;background:rgba(192,132,252,.07);opacity:.75}
+.bnr{border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:11px;width:330px}
+.bnr .ic{width:28px;height:28px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center}
+.bnr .ic svg{width:17px;height:17px}
+.bnr .tt{font-weight:700;font-size:13.5px}
+.bnr .ss{font-size:11.5px;color:rgba(255,255,255,.72);margin-top:1px}
+.b-ok{background:#0e2a20;border:1px solid rgba(5,150,105,.5)}
+.b-ok .ic{background:#059669}
+.b-err{background:#2a1315;border:1px solid rgba(220,38,38,.5)}
+.b-err .ic{background:#DC2626}
+.b-busy{background:#1b1f2e;border:1px solid rgba(234,88,12,.42)}
+.b-busy .ic{background:rgba(234,88,12,.2)}
+.mspin{width:15px;height:15px;border-radius:50%;border:2.5px solid rgba(234,88,12,.25);border-top-color:#EA580C;animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.sw{width:30px;height:30px;border-radius:9px}
+.colorrow{display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,#1c2434,#141a26);border:1px solid rgba(255,255,255,.11);border-radius:16px;padding:12px 15px;width:330px}
+.colorrow .cn{font-size:13px;font-weight:700;color:#cbd5e1;width:38px}
+.colorrow .tr{flex:1;height:20px;border-radius:8px;background:#0d111a;position:relative;overflow:hidden}
+.colorrow .tr i{position:absolute;left:0;top:0;bottom:0;background:#5A8FDB;width:58%}
+.colorrow .ct{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;width:28px;text-align:right}
+.tlbar{width:330px;height:52px;border-radius:12px;background:#1E2634;position:relative;overflow:hidden}
+.tlbar .fr{position:absolute;inset:0;display:flex}
+.tlbar .fr i{flex:1;border-right:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,#3a3330,#161a20)}
+.tlbar .sel{position:absolute;top:0;bottom:0;left:20%;right:16%;border:3px solid #EA580C;border-radius:10px;background:rgba(234,88,12,.12)}
+.tlbar .sel.bad{border-color:#DC2626;background:rgba(220,38,38,.16)}
+.tlbar .h{position:absolute;top:50%;transform:translateY(-50%);width:14px;height:34px;background:#EA580C;border-radius:5px}
+.tlbar .sel.bad .h{background:#DC2626}
+.tlbar .h.l{left:-8px}.tlbar .h.r{right:-8px}
+.prevblk{position:relative;width:250px;border:1.5px dashed rgba(192,132,252,.45);border-radius:18px;padding:16px;background:linear-gradient(160deg,rgba(192,132,252,.06),#141a26);opacity:.72}
+.prevblk .wm{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-14deg);font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;color:rgba(192,132,252,.16);letter-spacing:3px}
+.prevblk .t{font-size:13px;font-weight:700}
+.prevblk .s{font-size:12px;color:#94A3B8;margin-top:4px}
+.skl{width:330px;height:70px;border-radius:14px;background:linear-gradient(100deg,#141A26 30%,#1c2434 50%,#141A26 70%);background-size:220% 100%;animation:shim 1.3s ease-in-out infinite}
+@keyframes shim{0%{background-position:120% 0}100%{background-position:-20% 0}}
+.thumb{width:80px;height:104px;border-radius:12px;position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#2f3b52,#141a26)}
+.thumb .sq{position:absolute;left:6px;top:6px;width:11px;height:11px;border-radius:4px;background:#5A8FDB;box-shadow:0 0 0 2px rgba(0,0,0,.35)}
+.thumb .ph{opacity:.32}
+.thumb .ph svg{width:24px;height:24px}
+.thumb.dead{background:#0d111a;border:1px dashed rgba(255,255,255,.14)}
+</style></head>
+<body><div class="wrap">
+<h1>컴포넌트 · 변형 <b>인벤토리</b></h1>
+<div class="sub">Phase 2 Flow v2에서 쓰이는 컴포넌트 전량과 각 변형. <span class="new">신규</span>는 v2에서 플로우 변경 때문에 추가된 것이고, 나머지는 기존 시각 아이덴티티를 그대로 유지한다. Compose 대응 컴포넌트를 함께 적었다.</div>
+
+<h2>1 · 버튼</h2>
+<div class="demo">
+  <button class="btn brand">브랜드 · 주 행동</button>
+  <button class="btn ok">성공</button>
+  <button class="btn dan">파괴적</button>
+  <button class="btn tonal">토널 · 보조</button>
+  <button class="btn gh">아웃라인</button>
+  <button class="btn dis" disabled>비활성</button>
+</div>
+<div class="tw"><table>
+<thead><tr><th>변형</th><th>용도</th><th>Compose</th><th>규격</th></tr></thead>
+<tbody>
+<tr><td class="k">브랜드</td><td>주 행동 (촬영 · 저장 · 재시도 · 종료)</td><td><code>Button</code> + brand container</td><td>높이 50–60dp, radius 14–18dp</td></tr>
+<tr><td class="k">성공</td><td>완등 분류 버튼만</td><td><code>Button</code> + success container</td><td>결과 오버레이 100dp 높이</td></tr>
+<tr><td class="k">파괴적</td><td>영상 지우기 · 영상만 폐기 확정</td><td><code>Button</code> + error container</td><td>확인 다이얼로그 안에서만 채움</td></tr>
+<tr><td class="k">토널</td><td>원본 유지 · 다시 보기</td><td><code>FilledTonalButton</code></td><td><code>#1E2634</code> 표면</td></tr>
+<tr><td class="k">아웃라인</td><td>취소 · 계속 · 목록으로</td><td><code>OutlinedButton</code></td><td>테두리 <code>rgba(255,255,255,.16)</code></td></tr>
+<tr><td class="k">비활성</td><td>범위 무효 · 처리 중 · 버퍼링 중 공유</td><td><code>enabled = false</code></td><td><code>#1E2634</code> / 라벨 <code>#475569</code></td></tr>
+</tbody></table></div>
+<div class="note">모든 버튼 터치 타깃 <b>≥48dp</b>. 성공/실패 버튼 사이 간격 <b>≥8dp</b>(시안은 12dp). 눌림 피드백은 ripple만 — <b>레이아웃을 미는 translateY 금지</b>.</div>
+
+<h2>2 · 결과 배지 <span class="new">신규</span> · 미디어 상태 pill</h2>
+<div class="demo">
+  <span class="obadge ob-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.8"><path d="M5 13l4 4L19 7"/></svg>완등</span>
+  <span class="obadge ob-no"><svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2.8"><path d="M6 6l12 12M18 6L6 18"/></svg>실패</span>
+  <span class="obadge ob-unc"><svg viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/></svg>분류 필요</span>
+</div>
+<div class="demo">
+  <span class="pill st-done"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg>트리밍 완료</span>
+  <span class="pill st-orig"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg>원본 유지</span>
+  <span class="pill st-wait"><svg viewBox="0 0 24 24" fill="none" stroke="#f0a878" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>트리밍 대기</span>
+  <span class="pill st-fail"><svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2.2"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="#fca5a5" stroke="none"/><path d="M12 3l9 16H3z"/></svg>트리밍 실패</span>
+  <span class="pill st-dead"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>기기에서 삭제됨</span>
+</div>
+<div class="note g"><b>두 축을 절대 한 배지로 합치지 않는다.</b> 결과 배지(완등 · 실패 · 분류 필요)와 미디어 상태 pill은 카드에서 <b>서로 다른 위치</b>에 놓인다 — 배지는 상단, pill은 메타 하단. 색만으로 구분하지 않고 아이콘 + 한글 라벨을 항상 병기한다.</div>
+
+<h2>3 · 바텀 시트</h2>
+<div class="tw"><table>
+<thead><tr><th>변형</th><th>위치</th><th>구성</th><th>닫기 귀결</th></tr></thead>
+<tbody>
+<tr><td class="k">영상 처리 · 성공</td><td>05b</td><td>결과 배지 + 옵션 4개 (TRIM_NOW 강조)</td><td><code>TRIM_PENDING</code></td></tr>
+<tr><td class="k">영상 처리 · 실패 <span class="new">신규</span></td><td>05b</td><td>결과 배지 + 옵션 4개 (DISCARD 강조)</td><td><code>TRIM_PENDING</code></td></tr>
+<tr><td class="k">저장 대기 해소 <span class="new">신규</span></td><td>05b · 04</td><td>오류 배너 + 옵션 2–3개</td><td><code>SAVE_PENDING</code> 유지</td></tr>
+<tr><td class="k">미분류 재분류 <span class="new">신규</span></td><td>07</td><td>시도 식별 정보 + 성공/실패 큰 버튼</td><td><code>UNCLASSIFIED</code> 유지</td></tr>
+<tr><td class="k">개인 암장 추가 · 관리</td><td>03</td><td>기존 유지</td><td>변경 없음</td></tr>
+</tbody></table></div>
+<div class="note">모든 시트: 상단 grab 핸들 40×4dp, radius 24dp 상단만, 표면 <code>#141A26</code>, scrim <code>rgba(0,0,0,.55~.6)</code>. <b>닫기 결과를 시트 하단에 미리 문장으로 명시</b>한다 — 닫은 뒤 알리지 않는다. Compose: <code>ModalBottomSheet</code>.</div>
+
+<h2>4 · 다이얼로그</h2>
+<div class="tw"><table>
+<thead><tr><th>변형</th><th>위치</th><th>기본 포커스</th><th>구성</th></tr></thead>
+<tbody>
+<tr><td class="k">세션 종료 확인</td><td>04</td><td>계속 클라이밍</td><td>요약 타일 3개 + 버튼 2개</td></tr>
+<tr><td class="k">종료 보류 <span class="new">신규</span></td><td>04</td><td>계속 클라이밍</td><td>경고 박스 + 요약 타일 + 버튼 3개</td></tr>
+<tr><td class="k">영상 지우기 확인 <span class="new">신규</span></td><td>05b · 07</td><td>취소</td><td><b>남는 것 / 사라지는 것</b> 박스 + 버튼 2개</td></tr>
+<tr><td class="k">영상만 폐기 확인 <span class="new">신규</span></td><td>05b · 04</td><td>취소</td><td>동일 + <b>비파괴 대안</b> 버튼 추가</td></tr>
+<tr><td class="k">자르기 취소 확인 <span class="new">신규</span></td><td>06</td><td>계속 자르기</td><td>원본 보존 명시 + 버튼 2개</td></tr>
+<tr><td class="k">분류 전 이탈 확인</td><td>05</td><td>계속 분류하기</td><td>보라 아이콘(비파괴) + 버튼 2개</td></tr>
+</tbody></table></div>
+<div class="note">중앙 정렬, radius 22dp, 세로 버튼 스택. <b>파괴적 다이얼로그는 danger 아이콘 + 남는 것/사라지는 것 박스가 필수</b>이고, 비파괴 확인(분류 전 이탈 · 자르기 취소)은 brand/deferred 색을 쓴다.</div>
+
+<h2>5 · 배너 (인라인)</h2>
+<div class="demo" style="flex-direction:column;align-items:flex-start">
+  <div class="bnr b-ok"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg></div><div><div class="tt">영상을 저장했어요</div><div class="ss">아카이브에서 다시 볼 수 있어요</div></div></div>
+  <div class="bnr b-busy"><div class="ic"><div class="mspin"></div></div><div><div class="tt">영상을 저장하고 있어요</div><div class="ss">완료 전까지 같은 행동은 잠깁니다</div></div></div>
+  <div class="bnr b-err"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="#fff" stroke="none"/><path d="M12 3l9 16H3z"/></svg></div><div><div class="tt">저장에 실패했어요</div><div class="ss">원본은 그대로 있어요</div></div></div>
+</div>
+<div class="tw"><table>
+<thead><tr><th>변형</th><th>소스</th><th>지속</th><th>행동</th></tr></thead>
+<tbody>
+<tr><td class="k">성공</td><td><code>message</code> + <code>statusIsError == false</code></td><td>4초 후 자동 소멸</td><td>없음</td></tr>
+<tr><td class="k">진행 중 <span class="new">신규</span></td><td><code>trimInProgress</code> · <code>classificationInProgress</code></td><td>완료까지 유지</td><td>없음. 불확정 진행 막대 포함</td></tr>
+<tr><td class="k">오류</td><td><code>message</code> + <code>statusIsError == true</code></td><td>사용자 해소까지 유지</td><td><code>statusRetryAttemptId</code> 있으면 재시도 버튼</td></tr>
+</tbody></table></div>
+<div class="note">토스트가 아니라 <b>인라인 배너</b>다. 화면 상단에 삽입되고 콘텐츠를 밀지 않도록 오버레이 배치한다. 오류 배너 문구는 항상 <b>원인 + 보존 사실</b> 2줄 구조.</div>
+
+<h2>6 · 리스트 상태 3종 <span class="new">신규</span></h2>
+<div class="demo" style="flex-direction:column;align-items:flex-start">
+  <div class="skl"></div>
+  <div style="font-size:12px;color:#64748B;font-weight:600">↑ 스켈레톤 — 실제 카드와 <b style="color:#94A3B8">동일 높이</b>로 레이아웃 점프 방지</div>
+</div>
+<div class="tw"><table>
+<thead><tr><th>상태</th><th>조건</th><th>구성</th><th>금지</th></tr></thead>
+<tbody>
+<tr><td class="k">로딩</td><td>Flow 첫 방출 전</td><td>실제 카드 높이 스켈레톤 3–4장 + shimmer</td><td>스피너만 띄우고 레이아웃 비우기</td></tr>
+<tr><td class="k">빈</td><td>조회 성공 + 0건</td><td>아이콘 + 안내 + 다음 행동 CTA 1개</td><td>필터 칩 표시 (거를 것이 없다)</td></tr>
+<tr><td class="k">오류</td><td>조회 예외</td><td>danger 아이콘 + 원인 + <b>보존 사실</b> + 복구 2행동</td><td>빈 상태와 합치기</td></tr>
+</tbody></table></div>
+
+<h2>7 · 카드</h2>
+<div class="demo">
+  <div class="thumb"><span class="sq"></span><span class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span></div>
+  <div class="thumb dead"><span class="ph" style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 15l5-4 4 3 3-2 6 4"/><path d="M3 5l18 14"/></svg></span></div>
+  <div style="font-size:12px;color:#64748B;font-weight:600;max-width:300px;line-height:1.6">← <b style="color:#94A3B8">색 파생 플레이스홀더</b> <span class="new">신규</span><br><code>ArchiveAttempt</code>에 썸네일·duration 컬럼이 없다. 가짜 썸네일과 길이 배지를 제거하고 색 그라데이션 + 비디오 아이콘을 쓴다.<br><br>오른쪽은 읽기 불가 카드의 점선 플레이스홀더.</div>
+</div>
+<div class="tw"><table>
+<thead><tr><th>카드</th><th>위치</th><th>변형</th></tr></thead>
+<tbody>
+<tr><td class="k">아카이브 영상 카드</td><td>07</td><td>완등×{완료·대기·원본·실패} · 실패×{원본·대기·완료} <span class="new">신규</span> · 분류 필요 <span class="new">신규</span> · 읽기 불가</td></tr>
+<tr><td class="k">홈 최근 영상 카드</td><td>02</td><td>상태 pill 포함 <span class="new">신규</span> · 플레이스홀더 썸네일</td></tr>
+<tr><td class="k">색상 카운트 행</td><td>04</td><td>0건(muted) · 진행 중 · 최다</td></tr>
+<tr><td class="k">권한 안내 카드</td><td>00 · 01</td><td>기존 유지</td></tr>
+<tr><td class="k">미리보기 블록 <span class="new">신규</span></td><td>02</td><td>점선 보라 + 워터마크 + 배지</td></tr>
+</tbody></table></div>
+
+<h2>8 · 색상 카운트 행 (세션 보드)</h2>
+<div class="demo" style="flex-direction:column;align-items:flex-start">
+  <div class="colorrow"><span class="sw" style="background:#5A8FDB"></span><span class="cn">파랑</span><span class="tr"><i></i></span><span class="ct">7</span></div>
+  <div class="colorrow"><span class="sw" style="background:#E45D5D"></span><span class="cn">빨강</span><span class="tr"></span><span class="ct" style="color:#334155">0</span></div>
+</div>
+<div class="note"><b>v2 변경</b> — 색 스와치 옆에 <b>한글 색 이름</b>을 명시적으로 추가했다(<code>Gym.colors</code> 라벨). 이전에는 색만으로 구분해 TalkBack과 색각 이상 사용자에게 정보가 전달되지 않았다. 막대 폭은 <code>해당 색 완등 / 최다 색 완등</code>이며, 0건은 막대 없이 muted 숫자만.</div>
+
+<h2>9 · 타임라인 · 트리머</h2>
+<div class="demo" style="flex-direction:column;align-items:flex-start">
+  <div class="tlbar"><div class="fr"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="sel"><div class="h l"></div><div class="h r"></div></div></div>
+  <div class="tlbar"><div class="fr"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="sel bad" style="left:44%;right:52%"><div class="h l"></div><div class="h r"></div></div></div>
+</div>
+<div class="tw"><table>
+<thead><tr><th>요소</th><th>소스</th><th>변형</th></tr></thead>
+<tbody>
+<tr><td class="k">프레임 스트립</td><td>원본 URI 균등 추출 12장</td><td>로딩(회색) · 도착 · 추출 실패(회색 유지, 트리밍은 가능)</td></tr>
+<tr><td class="k">선택 영역</td><td><code>lastTrimStartMillis</code> / <code>lastTrimEndMillis</code></td><td>유효(brand) · 무효(danger)</td></tr>
+<tr><td class="k">핸들</td><td>드래그 입력</td><td>16×40dp — 터치 타깃 확장 영역 별도 ≥48dp</td></tr>
+<tr><td class="k">재생헤드 <span class="new">신규</span></td><td><code>Player.currentPosition</code></td><td>재생 중 선형 이동 · 정지 시 고정</td></tr>
+<tr><td class="k">범위 라벨</td><td>시작 · 끝 · 길이</td><td><code>선택 {시작} – {끝} · {길이}초</code>, 무효 시 danger</td></tr>
+</tbody></table></div>
+
+<h2>10 · 칩 · 배지</h2>
+<div class="demo">
+  <span class="chip on">전체</span>
+  <span class="chip">일반</span>
+  <span class="chip prev">완등 (미리보기)</span>
+  <span class="p3tag">Phase 3 · 비활성</span>
+</div>
+<div class="demo">
+  <div class="prevblk"><span class="wm">미리보기</span><div class="t">레벨 스냅샷</div><div class="s">런타임 소스 없음 · 정적 예시</div></div>
+  <div style="font-size:12px;color:#64748B;font-weight:600;max-width:300px;line-height:1.6">← <b style="color:#c084fc">미리보기 블록</b> <span class="new">신규</span><br>점선 보라 테두리 + 불투명도 .72 + 회전 워터마크 + 우상단 배지. 기능 표면과 시각적으로 절대 섞이지 않게 <b>네 가지 신호를 동시에</b> 준다.</div>
+</div>
+
+<h2>11 · 미디어 표면 (네이티브 뷰 자리)</h2>
+<div class="tw"><table>
+<thead><tr><th>표면</th><th>Android 뷰</th><th>위치</th><th>상태</th></tr></thead>
+<tbody>
+<tr><td class="k">카메라 프리뷰</td><td>CameraX <code>PreviewView</code></td><td>05 전체 화면</td><td>준비 중 · 활성 · 정지 프레임 · 오류</td></tr>
+<tr><td class="k">트리밍 프리뷰</td><td>Media3 Player Surface</td><td>06 상단 372dp</td><td>버퍼링 · 재생 · 결과</td></tr>
+<tr><td class="k">재생 오버레이</td><td>Media3 Player Surface</td><td>08 전체 화면</td><td>재생 · 일시정지 · 버퍼링 · 오류</td></tr>
+</tbody></table></div>
+<div class="note">시안에서는 점선 라벨로 표시하고, 구현 시 해당 네이티브 뷰로 교체한다. <b>가짜 기기 프레임과 가짜 상태바는 Compose에 재현하지 않는다.</b></div>
+
+<h2>12 · v2 신규 컴포넌트 요약</h2>
+<div class="tw"><table>
+<thead><tr><th>컴포넌트</th><th>왜 필요했나</th></tr></thead>
+<tbody>
+<tr><td class="k">결과 배지 (완등/실패/분류 필요)</td><td>결과와 영상 처리가 분리되면서 카드가 두 축을 각각 표시해야 함</td></tr>
+<tr><td class="k">실패 영상 처리 시트</td><td>실패 영상 보관·트리밍 지원 — v1에는 존재하지 않던 경로</td></tr>
+<tr><td class="k">저장 대기 해소 시트</td><td><code>SAVE_PENDING</code> 재시도 / 영상만 폐기의 전용 표면</td></tr>
+<tr><td class="k">파괴적 확인 다이얼로그 (남는 것/사라지는 것)</td><td><code>DISCARD</code>가 명시적 선택이 되면서 되돌릴 수 없는 결과를 사전 고지해야 함</td></tr>
+<tr><td class="k">미분류 재분류 시트</td><td>아카이브에서 결과를 확정하고 05b로 이어지는 진입점</td></tr>
+<tr><td class="k">진행 배너</td><td>중복 실행 차단 상태를 화면 전체를 덮지 않고 알리기 위해</td></tr>
+<tr><td class="k">리스트 로딩/빈/오류 3종</td><td>모든 동적 값에 로딩·빈·오류 상태를 명시하는 v2 규칙</td></tr>
+<tr><td class="k">미리보기 블록 래퍼</td><td>실제 값과 Phase 3 예시를 시각적으로 분리</td></tr>
+<tr><td class="k">색 파생 썸네일 플레이스홀더</td><td>썸네일 런타임 소스가 없어 가짜 이미지를 제거해야 함</td></tr>
+<tr><td class="k">타임라인 재생헤드</td><td>실제 재생 위치를 범위 선택과 함께 보여 주기 위해</td></tr>
+</tbody></table></div>
+
+</div></body></html>

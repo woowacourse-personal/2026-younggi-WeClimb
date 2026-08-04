@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>8 · 앱 내 재생 (전체화면 오버레이)</title>
+<title>8 · 앱 내 재생 (실제 길이 · 진행률 · 컨트롤 상태)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -12,20 +12,27 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .pageh{max-width:1240px;margin:0 auto 26px}
 .pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
 .pageh h1 b{color:#EA580C}
-.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:680px;line-height:1.55}
-.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1240px;margin:0 auto}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:800px;line-height:1.55}
+.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1660px;margin:0 auto}
 .frame{width:390px}
-.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px;flex-wrap:wrap}
 .cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
 .cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
 .cap .d{font-size:12px;color:#64748B;font-weight:600}
 .phone{width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06);background:#000}
 
-/* dimmed archive behind (context) */
+.ann{width:390px;margin-top:12px;background:#0a0e18;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px 14px;font-size:11.5px;line-height:1.55}
+.ann h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:#EA580C;letter-spacing:.6px;margin-bottom:8px;text-transform:uppercase}
+.ann .grp{border-top:1px dashed rgba(255,255,255,.09);margin-top:9px;padding-top:9px}
+.ann .grp:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.ann .vn{font-weight:700;color:#fff;font-size:12px;margin-bottom:4px}
+.ann dl{display:grid;grid-template-columns:52px 1fr;gap:3px 9px}
+.ann dt{color:#64748B;font-weight:700}
+.ann dd{color:#cbd5e1}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;color:#f0a878;background:rgba(234,88,12,.1);padding:1px 5px;border-radius:5px}
+
 .behind{position:absolute;inset:0;background:#0B0F1A;opacity:.25}
 .behind .row{height:120px;margin:16px 20px;border-radius:16px;background:#141A26}
-
-/* video surface (Media3) fills */
 .video{position:absolute;inset:0;background:linear-gradient(180deg,#241d1a 0%,#12161d 50%,#0a0d13 100%);display:flex;align-items:center;justify-content:center}
 .video .wall{position:absolute;inset:0;opacity:.42;background:
   radial-gradient(circle at 32% 28%,#E45D5D 0 13px,transparent 14px),
@@ -33,51 +40,57 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
   radial-gradient(circle at 46% 50%,#DDBB44 0 12px,transparent 13px),
   radial-gradient(circle at 70% 62%,#46AE72 0 11px,transparent 12px)}
 .video .fig{width:64px;height:150px;background:rgba(255,255,255,.14);border-radius:32px;position:relative;z-index:2}
-.pvtag{position:absolute;left:50%;bottom:calc(50% + 100px);transform:translateX(-50%);z-index:6;font-size:10px;font-weight:700;color:rgba(255,255,255,.45);border:1px dashed rgba(255,255,255,.2);border-radius:8px;padding:3px 9px}
-
+.pvtag{position:absolute;left:50%;bottom:calc(50% + 108px);transform:translateX(-50%);z-index:6;font-size:10px;font-weight:700;color:rgba(255,255,255,.45);border:1px dashed rgba(255,255,255,.2);border-radius:8px;padding:3px 9px}
 .sb{position:relative;z-index:7;height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#fff}
-
-/* top control bar */
 .topbar{position:relative;z-index:7;display:flex;align-items:center;gap:12px;padding:6px 18px}
-.iconbtn{width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;flex:none}
+.iconbtn{width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;flex:none;border:none}
 .iconbtn svg{width:20px;height:20px}
 .vinfo{min-width:0}
 .vinfo .g{font-weight:700;font-size:15px;display:flex;align-items:center;gap:7px}
 .vinfo .g .sw{width:13px;height:13px;border-radius:4px;background:#5A8FDB;flex:none}
-.vinfo .d{font-size:12px;color:rgba(255,255,255,.7);margin-top:1px}
+.vinfo .d{font-size:12px;color:rgba(255,255,255,.72);margin-top:2px;display:flex;align-items:center;gap:6px}
+.obadge{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:6px}
+.ob-ok{background:rgba(5,150,105,.24);color:#6ee7b7}
+.ob-no{background:rgba(220,38,38,.24);color:#fca5a5}
 .topbar .share{margin-left:auto}
-
 .spacer{flex:1}
-
-/* center play/pause */
-.centerctl{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:7;width:74px;height:74px;border-radius:50%;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.centerctl{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:7;width:74px;height:74px;border-radius:50%;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px);border:none}
 .centerctl svg{width:32px;height:32px}
-
-/* bottom scrubber */
+.bufspin{width:44px;height:44px;border-radius:50%;border:4px solid rgba(255,255,255,.2);border-top-color:#EA580C;animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
 .bottom{position:relative;z-index:7;padding:0 20px 30px}
-.times{display:flex;justify-content:space-between;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:8px}
-.scrub{height:5px;border-radius:3px;background:rgba(255,255,255,.22);position:relative}
-.scrub .p{position:absolute;left:0;top:0;bottom:0;width:38%;background:#EA580C;border-radius:3px}
-.scrub .knob{position:absolute;left:38%;top:50%;transform:translate(-50%,-50%);width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.5)}
-.sharebar{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:20px;height:52px;border-radius:15px;background:#059669;color:#fff;font-weight:700;font-size:16px}
+.times{display:flex;justify-content:space-between;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.scrub{height:6px;border-radius:3px;background:rgba(255,255,255,.22);position:relative}
+.scrub .buf{position:absolute;left:0;top:0;bottom:0;background:rgba(255,255,255,.34);border-radius:3px}
+.scrub .p{position:absolute;left:0;top:0;bottom:0;background:#EA580C;border-radius:3px}
+.scrub .knob{position:absolute;top:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.sharebar{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:20px;height:52px;border-radius:15px;background:#059669;color:#fff;font-weight:700;font-size:16px;border:none}
 .sharebar svg{width:19px;height:19px}
-
-/* immersive hint */
-.tint{position:absolute;inset:0;z-index:6;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,transparent 20% 78%,rgba(0,0,0,.45) 100%)}
+.tint{position:absolute;inset:0;z-index:6;background:linear-gradient(180deg,rgba(0,0,0,.4) 0%,transparent 20% 76%,rgba(0,0,0,.5) 100%)}
 .tint.min{background:linear-gradient(180deg,rgba(0,0,0,.2) 0%,transparent 30%)}
-.taphint{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);z-index:7;font-size:12px;color:rgba(255,255,255,.6);font-weight:600;background:rgba(0,0,0,.35);padding:6px 13px;border-radius:16px}
+.taphint{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);z-index:7;font-size:12px;color:rgba(255,255,255,.6);font-weight:600;background:rgba(0,0,0,.35);padding:7px 13px;border-radius:16px}
 .mini-top{position:relative;z-index:7;display:flex;padding:6px 18px}
+.errwrap{position:absolute;inset:0;z-index:7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;padding:0 40px;text-align:center;background:rgba(5,7,13,.86)}
+.errwrap .eic{width:64px;height:64px;border-radius:18px;background:rgba(220,38,38,.14);display:flex;align-items:center;justify-content:center}
+.errwrap .eic svg{width:30px;height:30px}
+.errwrap h3{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700}
+.errwrap p{font-size:13px;color:#94A3B8;line-height:1.55}
+.errbtns{display:flex;gap:10px;margin-top:4px}
+.eb{height:48px;padding:0 18px;border-radius:13px;display:flex;align-items:center;gap:7px;font-weight:700;font-size:14px;border:none}
+.eb.pri{background:#EA580C;color:#fff}
+.eb.gh{background:transparent;border:1px solid rgba(255,255,255,.2);color:#cbd5e1}
+.eb svg{width:16px;height:16px}
 </style></head>
 <body>
 <div class="pageh">
-  <h1>8 · 앱 내 재생 — <b>전체화면 오버레이</b> <span style="font-size:14px;color:#64748B;font-weight:600">독립 route 아님</span></h1>
-  <p>아카이브·트리밍 위에 뜨는 전체화면 재생 오버레이(Media3). 닫기·영상 정보·공유 진입점을 갖고, 탭하면 컨트롤이 숨는 몰입 상태로 전환. Android 공유 chooser는 앱 밖.</p>
+  <h1>8 · 앱 내 재생 — <b>실제 길이 · 진행률 · 컨트롤 상태</b> <span style="font-size:14px;color:#64748B;font-weight:600">독립 route 아님</span></h1>
+  <p>아카이브·트리밍 위에 뜨는 전체화면 오버레이(Media3). 길이와 진행률은 <code style="font-size:12px">Player.duration</code>·<code style="font-size:12px">currentPosition</code>에서 오고, 상단 정보는 실제 Attempt 메타데이터다. 컨트롤은 <b>재생 중 · 일시정지 · 버퍼링 · 숨김 · 오류</b> 다섯 상태를 갖는다.</p>
 </div>
 <div class="stage">
 
-  <!-- 컨트롤 표시 -->
+  <!-- A 재생 중 -->
   <div class="frame">
-    <div class="cap"><span class="n">A</span><span class="t">재생 · 컨트롤 표시</span><span class="d">닫기 · 정보 · 스크럽 · 공유</span></div>
+    <div class="cap"><span class="n">A</span><span class="t">재생 중 · 컨트롤 표시</span><span class="d">진행률 · 스크럽 · 공유</span></div>
     <div class="phone">
       <div class="behind"><div class="row"></div><div class="row"></div></div>
       <div class="video"><div class="wall"></div><div class="fig"></div></div>
@@ -85,32 +98,202 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
       <div class="pvtag">Media3 Player Surface</div>
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="topbar">
-        <div class="iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
-        <div class="vinfo"><div class="g"><span class="sw"></span>닻 클라이밍 · 파랑</div><div class="d">7월 22일 · Lv.5 · 0:12</div></div>
-        <div class="iconbtn share"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 13.3l7.2 4.4M15.6 6.3l-7.2 4.4"/></svg></div>
+        <button class="iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <div class="vinfo"><div class="g"><span class="sw"></span>닻 클라이밍 · 파랑</div><div class="d"><span class="obadge ob-ok">완등</span>7월 22일 오후 8:14</div></div>
+        <button class="iconbtn share"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 13.3l7.2 4.4M15.6 6.3l-7.2 4.4"/></svg></button>
       </div>
       <div class="spacer"></div>
-      <div class="centerctl"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="7" y="5" width="3.4" height="14" rx="1"/><rect x="13.6" y="5" width="3.4" height="14" rx="1"/></svg></div>
+      <button class="centerctl"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="7" y="5" width="3.4" height="14" rx="1"/><rect x="13.6" y="5" width="3.4" height="14" rx="1"/></svg></button>
       <div class="bottom">
-        <div class="times"><span>0:05</span><span>0:12</span></div>
-        <div class="scrub"><div class="p"></div><div class="knob"></div></div>
-        <div class="sharebar"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 13.3l7.2 4.4M15.6 6.3l-7.2 4.4"/></svg>영상 공유</div>
+        <div class="times"><span>0:05</span><span>0:15</span></div>
+        <div class="scrub"><div class="buf" style="width:72%"></div><div class="p" style="width:33%"></div><div class="knob" style="left:33%"></div></div>
+        <button class="sharebar"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 13.3l7.2 4.4M15.6 6.3l-7.2 4.4"/></svg>영상 공유</button>
       </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">전체 길이</div><dl>
+        <dt>소스</dt><dd>Media3 <code>Player.duration</code></dd>
+        <dt>형식</dt><dd><code>m:ss</code>, tabular-nums. <b>고정 <code>0:12</code> 제거</b></dd>
+        <dt>빈</dt><dd>메타데이터 로드 전 <code>--:--</code>, 스크러버 비활성</dd>
+        <dt>로딩</dt><dd><code>STATE_BUFFERING</code> → 프레임 C</dd>
+        <dt>오류</dt><dd><code>C.TIME_UNSET</code> → 프레임 E 재생 오류</dd></dl></div>
+      <div class="grp"><div class="vn">현재 위치 · 진행률</div><dl>
+        <dt>소스</dt><dd><code>Player.currentPosition</code>, 200ms 폴링. 버퍼는 <code>bufferedPosition</code></dd>
+        <dt>형식</dt><dd>진행 바 폭 = <code>position / duration</code>. 버퍼 바는 그 뒤에 반투명으로</dd>
+        <dt>빈</dt><dd><code>0:00</code>, 폭 0</dd>
+        <dt>로딩</dt><dd>탐색 중 knob는 손가락을 따라가고 시간 라벨은 목표 위치를 표시</dd>
+        <dt>오류</dt><dd>위치 조회 실패 시 마지막 값 유지, 튀지 않게</dd></dl></div>
+      <div class="grp"><div class="vn">영상 정보</div><dl>
+        <dt>소스</dt><dd><code>ArchiveAttempt.gymName</code> · <code>attempt.color</code> · <code>outcome</code> · <code>recordedAtEpochMillis</code></dd>
+        <dt>형식</dt><dd><code>{암장} · {색}</code> + 결과 배지 + <code>M월 d일 a h:mm</code>. <b>레벨·길이 표기 제거</b></dd>
+        <dt>빈</dt><dd>암장명 없으면 색만 표시</dd>
+        <dt>로딩</dt><dd>메타데이터는 목록에서 전달받으므로 즉시 표시</dd>
+        <dt>오류</dt><dd>해당 없음</dd></dl></div>
+      <div class="grp"><div class="vn">재생 소스 · 공유</div><dl>
+        <dt>소스</dt><dd><code>AttemptMedia.displayVideoUri</code> = <code>trimmedVideoUri ?: originalVideoUri</code></dd>
+        <dt>공유</dt><dd>같은 URI로 <code>ACTION_SEND</code>(<code>video/*</code> + 읽기 권한). chooser는 앱 밖</dd>
+        <dt>불가</dt><dd>읽기 불가 항목은 애초에 이 오버레이를 열지 않는다</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 오버레이 진입</div><dl>
+        <dt>트리거</dt><dd>아카이브 카드 재생 탭</dd>
+        <dt>시작</dt><dd>불투명도 0 · scale .96, 뒤 목록 그대로</dd>
+        <dt>종료</dt><dd>불투명도 1 · scale 1</dd>
+        <dt>지속</dt><dd><code>--dur-emphasized 320ms</code> / 이탈 <code>--dur-exit 200ms</code></dd>
+        <dt>이징</dt><dd>진입 <code>decelerate</code> · 이탈 <code>accelerate</code></dd>
+        <dt>중단</dt><dd>진입 중 닫기 → 현재 scale에서 역방향</dd>
+        <dt>반복</dt><dd>없음</dd>
+        <dt>축소</dt><dd>즉시 표시/제거</dd></dl></div>
     </div>
   </div>
 
-  <!-- 몰입 / 컨트롤 숨김 -->
+  <!-- B 일시정지 -->
   <div class="frame">
-    <div class="cap"><span class="n">B</span><span class="t">몰입 · 컨트롤 숨김</span><span class="d">탭으로 컨트롤 토글</span></div>
+    <div class="cap"><span class="n">B</span><span class="t">일시정지</span><span class="d">컨트롤 고정 표시</span></div>
+    <div class="phone">
+      <div class="video"><div class="wall"></div><div class="fig"></div></div>
+      <div class="tint"></div>
+      <div class="pvtag">Media3 Player Surface</div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="topbar">
+        <button class="iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <div class="vinfo"><div class="g"><span class="sw" style="background:#E45D5D"></span>닻 클라이밍 · 빨강</div><div class="d"><span class="obadge ob-no">실패</span>7월 22일 오후 8:31</div></div>
+        <button class="iconbtn share"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 13.3l7.2 4.4M15.6 6.3l-7.2 4.4"/></svg></button>
+      </div>
+      <div class="spacer"></div>
+      <button class="centerctl" style="background:rgba(234,88,12,.9)"><svg viewBox="0 0 24 24" fill="#fff" stroke="none"><path d="M7 4l13 8-13 8z"/></svg></button>
+      <div class="bottom">
+        <div class="times"><span>0:11</span><span>0:28</span></div>
+        <div class="scrub"><div class="buf" style="width:100%"></div><div class="p" style="width:39%"></div><div class="knob" style="left:39%"></div></div>
+        <button class="sharebar"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 13.3l7.2 4.4M15.6 6.3l-7.2 4.4"/></svg>영상 공유</button>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">일시정지</div><dl>
+        <dt>소스</dt><dd><code>Player.isPlaying == false &amp;&amp; playbackState == STATE_READY</code></dd>
+        <dt>형식</dt><dd>중앙 버튼이 재생 아이콘 + 브랜드 색으로 강조. 컨트롤 <b>자동 숨김 정지</b></dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>재생 재개 시 버퍼 필요하면 프레임 C</dd>
+        <dt>오류</dt><dd>재생 재개 실패 → 프레임 E</dd></dl></div>
+      <div class="grp"><div class="vn">실패 영상 재생 (v2)</div><dl>
+        <dt>소스</dt><dd><code>outcome == FAILURE</code>이어도 동일 오버레이</dd>
+        <dt>형식</dt><dd>결과 배지만 danger 색으로 바뀐다. <b>기능 차등 없음</b> — 실패 영상도 똑같이 보고 공유한다</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 재생/일시정지 토글</div><dl>
+        <dt>트리거</dt><dd>중앙 버튼 탭</dd>
+        <dt>시작</dt><dd>이전 아이콘 불투명도 1 · scale 1</dd>
+        <dt>종료</dt><dd>새 아이콘 불투명도 1 · scale 1 (크로스페이드 + scale .85→1)</dd>
+        <dt>지속</dt><dd><code>--dur-fast 150ms</code></dd>
+        <dt>이징</dt><dd><code>--ease-standard</code></dd>
+        <dt>중단</dt><dd>연타 시 현재 진행에서 반대 방향으로 이어간다</dd>
+        <dt>반복</dt><dd>없음</dd>
+        <dt>축소</dt><dd>즉시 아이콘 교체</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- C 버퍼링 -->
+  <div class="frame">
+    <div class="cap"><span class="n">C</span><span class="t">버퍼링</span><span class="d">STATE_BUFFERING</span></div>
+    <div class="phone">
+      <div class="video" style="opacity:.7"><div class="wall"></div><div class="fig"></div></div>
+      <div class="tint"></div>
+      <div class="pvtag">Media3 Player Surface</div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="topbar">
+        <button class="iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <div class="vinfo"><div class="g"><span class="sw"></span>닻 클라이밍 · 파랑</div><div class="d"><span class="obadge ob-ok">완등</span>7월 22일 오후 8:14</div></div>
+      </div>
+      <div class="spacer"></div>
+      <div class="centerctl" style="background:rgba(0,0,0,.35)"><div class="bufspin"></div></div>
+      <div class="bottom">
+        <div class="times"><span>0:05</span><span>0:15</span></div>
+        <div class="scrub"><div class="buf" style="width:36%"></div><div class="p" style="width:33%"></div><div class="knob" style="left:33%"></div></div>
+        <button class="sharebar" style="background:#1E2634;color:#475569"><svg viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 13.3l7.2 4.4M15.6 6.3l-7.2 4.4"/></svg>영상 공유</button>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">버퍼링</div><dl>
+        <dt>소스</dt><dd><code>Player.playbackState == STATE_BUFFERING</code></dd>
+        <dt>형식</dt><dd>중앙 스피너 + 버퍼 바가 진행 바보다 앞서 채워진다. 시간 라벨은 <b>유지</b>(사라지면 불안하다)</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>이 상태 자체. 공유 버튼은 비활성 — 준비 안 된 URI를 넘기지 않는다</dd>
+        <dt>오류</dt><dd>버퍼링이 지속되면 프레임 E로 전환하고 재시도 제공</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 버퍼 스피너</div><dl>
+        <dt>트리거</dt><dd><code>STATE_BUFFERING</code> 진입 후 <b>250ms 지연</b> — 짧은 버퍼에 깜빡이지 않게</dd>
+        <dt>시작·종료</dt><dd>회전 0° → 360°</dd>
+        <dt>지속</dt><dd>900ms / 1회전</dd>
+        <dt>이징</dt><dd><code>linear</code></dd>
+        <dt>중단</dt><dd>준비 완료 시 즉시 제거, 페이드아웃 <code>--dur-fast 150ms</code></dd>
+        <dt>반복</dt><dd>버퍼링 동안 무한</dd>
+        <dt>축소</dt><dd>회전 정지 + "불러오는 중" 텍스트 표시</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- D 컨트롤 숨김 -->
+  <div class="frame">
+    <div class="cap"><span class="n">D</span><span class="t">몰입 · 컨트롤 숨김</span><span class="d">탭으로 토글 · 3초 자동</span></div>
     <div class="phone">
       <div class="video"><div class="wall"></div><div class="fig"></div></div>
       <div class="tint min"></div>
       <div class="pvtag" style="bottom:auto;top:16px">Media3 Player Surface</div>
       <div class="mini-top">
-        <div class="iconbtn" style="background:rgba(0,0,0,.3)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+        <button class="iconbtn" style="background:rgba(0,0,0,.3)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
       <div class="spacer"></div>
       <div class="taphint">화면을 탭하면 컨트롤이 보여요</div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">숨김 규칙</div><dl>
+        <dt>소스</dt><dd>재생 중 + 마지막 터치 후 3초 경과, 또는 사용자 탭</dd>
+        <dt>형식</dt><dd>닫기 버튼만 남긴다 — <b>출구는 항상 보인다</b></dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>버퍼링 중에는 자동 숨김을 <b>중지</b></dd>
+        <dt>오류</dt><dd>오류 발생 시 컨트롤 강제 표시</dd></dl></div>
+      <div class="grp"><div class="vn">자동 숨김 정지 조건</div><dl>
+        <dt>정지</dt><dd>일시정지 · 버퍼링 · 스크럽 중 · 오류 · TalkBack 활성</dd>
+        <dt>이유</dt><dd>조작 중이거나 상태가 불확실할 때 컨트롤이 사라지면 통제감을 잃는다</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 컨트롤 토글</div><dl>
+        <dt>트리거</dt><dd>화면 탭 또는 3초 무입력</dd>
+        <dt>시작</dt><dd>상·하 바 불투명도 1 · Y 0, 그라데이션 tint 진함</dd>
+        <dt>종료</dt><dd>상단 바 Y −12dp · 하단 바 Y +12dp, 불투명도 0, tint 옅음</dd>
+        <dt>지속</dt><dd><code>--dur-standard 220ms</code></dd>
+        <dt>이징</dt><dd>표시 <code>decelerate</code> · 숨김 <code>accelerate</code></dd>
+        <dt>중단</dt><dd>숨는 도중 탭하면 <b>현재 불투명도에서</b> 다시 표시 (재시작 금지)</dd>
+        <dt>반복</dt><dd>없음. 힌트 텍스트도 정적</dd>
+        <dt>축소</dt><dd>즉시 표시/숨김. <b>자동 숨김 자체는 유지</b>(모션이 아니라 정책)</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- E 재생 오류 -->
+  <div class="frame">
+    <div class="cap"><span class="n">E</span><span class="t">재생 오류</span><span class="d">기록 보존 · 출구 제시</span></div>
+    <div class="phone">
+      <div class="behind"><div class="row"></div><div class="row"></div></div>
+      <div class="video" style="opacity:.25"><div class="wall"></div></div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="topbar">
+        <button class="iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <div class="vinfo"><div class="g"><span class="sw" style="background:#E45D5D"></span>닻 클라이밍 · 빨강</div><div class="d"><span class="obadge ob-ok">완등</span>7월 13일 오후 8:40</div></div>
+      </div>
+      <div class="errwrap">
+        <div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 15l5-4 4 3 3-2 6 4"/><path d="M3 5l18 14"/></svg></div>
+        <h3>영상을 재생할 수 없어요</h3>
+        <p>기기에서 파일이 삭제되었거나<br>읽을 수 없는 형식이에요.<br><b style="color:#cbd5e1">완등 기록은 그대로 남아 있어요.</b></p>
+        <div class="errbtns">
+          <button class="eb pri"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 11a8 8 0 10-2 5.3M20 5v6h-6"/></svg>다시 시도</button>
+          <button class="eb gh">목록으로</button>
+        </div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">재생 오류</div><dl>
+        <dt>소스</dt><dd><code>Player.Listener.onPlayerError</code> → <code>AppState.unavailableVideoAttemptId</code></dd>
+        <dt>형식</dt><dd>원인(삭제 / 형식) + <b>기록 보존 사실</b> + 출구 2개. 코덱명·예외 원문 노출 금지</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>재시도 중 프레임 C 버퍼링</dd>
+        <dt>오류</dt><dd>재시도 실패 시 카드가 <code>07</code> 읽기 불가 상태로 표시된다</dd></dl></div>
+      <div class="grp"><div class="vn">불변 규칙</div><dl>
+        <dt>규칙</dt><dd>재생 실패는 Attempt·원본 URI 레코드를 <b>삭제하지 않는다</b>. 공유 버튼은 숨긴다(넘길 것이 없다)</dd></dl></div>
+      <div class="grp"><div class="vn">경로</div><dl>
+        <dt>뒤로</dt><dd>= 목록으로. 오버레이만 닫힌다</dd>
+        <dt>바깥</dt><dd>오류 상태에서는 바깥 탭 닫기를 <b>막지 않는다</b></dd></dl></div>
     </div>
   </div>
 

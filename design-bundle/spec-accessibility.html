@@ -1,0 +1,190 @@
+<!-- @dsCard group="Specs" -->
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spec · 접근성 노트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:32px 26px 64px}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:700;letter-spacing:.5px}
+h1 b{color:#EA580C}
+.sub{color:#94A3B8;margin:6px 0 28px;font-size:14.5px;line-height:1.6;max-width:860px}
+h2{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;color:#EA580C;text-transform:uppercase;letter-spacing:1px;margin:36px 0 15px;padding-bottom:8px;border-bottom:1px solid rgba(234,88,12,.24)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:#f0a878;background:rgba(234,88,12,.1);padding:1.5px 5px;border-radius:5px}
+.tw{overflow-x:auto;border-radius:14px;border:1px solid rgba(255,255,255,.09);margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:720px}
+th{background:#141A26;padding:10px 12px;text-align:left;font-weight:700;color:#94A3B8;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid rgba(255,255,255,.09)}
+td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06);color:#cbd5e1;line-height:1.55;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tbody tr:nth-child(2n){background:rgba(255,255,255,.017)}
+td.k{color:#fff;font-weight:700;white-space:nowrap}
+.ok{color:#6ee7b7;font-weight:700}
+.no{color:#fca5a5;font-weight:700}
+.wa{color:#f0a878;font-weight:700}
+.note{background:rgba(234,88,12,.07);border:1px solid rgba(234,88,12,.3);border-radius:12px;padding:13px 16px;font-size:13px;color:#f0a878;line-height:1.65;margin-top:14px}
+.note.g{background:rgba(5,150,105,.07);border-color:rgba(5,150,105,.3);color:#6ee7b7}
+.note.d{background:rgba(220,38,38,.07);border-color:rgba(220,38,38,.3);color:#fca5a5}
+.note.p{background:rgba(192,132,252,.07);border-color:rgba(192,132,252,.3);color:#e9d5ff}
+.note b{color:#fff}
+.cd{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.cs{width:168px;border-radius:14px;border:1px solid rgba(255,255,255,.1);overflow:hidden;background:#141A26}
+.cs .band{height:52px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.cs .info{padding:9px 11px;font-size:11.5px;color:#94A3B8;line-height:1.5}
+.cs .info b{color:#fff;display:block;font-size:12.5px}
+.chk{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:9px}
+.chk li{background:#0a0e18;border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:11px 14px;font-size:12.5px;color:#cbd5e1;line-height:1.55;display:flex;gap:10px;align-items:flex-start}
+.chk li::before{content:"☐";color:#EA580C;font-weight:700;flex:none}
+.chk li b{color:#fff}
+</style></head>
+<body><div class="wrap">
+<h1>접근성 <b>노트</b></h1>
+<div class="sub">Phase 2 Flow v2. 이 앱은 <b>암장 홀드 색이 곧 데이터</b>이고 <b>영상 상태가 파괴적 결정과 연결</b>되어 있어, 색 의존과 모션 의존이 특히 위험하다. 다크 온리 · 390dp 기준.</div>
+
+<h2>1 · 색 대비</h2>
+<div class="cd">
+  <div class="cs"><div class="band" style="background:#0B0F1A;color:#FFFFFF">본문 텍스트</div><div class="info"><b>#FFFFFF / #0B0F1A</b>19.9:1 · AAA</div></div>
+  <div class="cs"><div class="band" style="background:#0B0F1A;color:#94A3B8">보조 텍스트</div><div class="info"><b>#94A3B8 / #0B0F1A</b>7.4:1 · AAA</div></div>
+  <div class="cs"><div class="band" style="background:#0B0F1A;color:#64748B">최하 muted</div><div class="info"><b>#64748B / #0B0F1A</b>3.9:1 · AA(대형/비본문만)</div></div>
+  <div class="cs"><div class="band" style="background:#EA580C;color:#FFFFFF">브랜드 CTA</div><div class="info"><b>#FFFFFF / #EA580C</b>3.6:1 · 18sp 이상 굵게만</div></div>
+  <div class="cs"><div class="band" style="background:#059669;color:#FFFFFF">성공</div><div class="info"><b>#FFFFFF / #059669</b>3.7:1 · 큰 버튼 라벨</div></div>
+  <div class="cs"><div class="band" style="background:#DC2626;color:#FFFFFF">파괴적</div><div class="info"><b>#FFFFFF / #DC2626</b>4.8:1 · AA</div></div>
+  <div class="cs"><div class="band" style="background:#141A26;color:#6ee7b7">성공 pill</div><div class="info"><b>#6ee7b7 / #141A26</b>9.6:1 · AAA</div></div>
+  <div class="cs"><div class="band" style="background:#141A26;color:#fca5a5">오류 pill</div><div class="info"><b>#fca5a5 / #141A26</b>7.6:1 · AAA</div></div>
+  <div class="cs"><div class="band" style="background:#141A26;color:#f0a878">대기 pill</div><div class="info"><b>#f0a878 / #141A26</b>7.9:1 · AAA</div></div>
+  <div class="cs"><div class="band" style="background:#141A26;color:#c084fc">미리보기</div><div class="info"><b>#c084fc / #141A26</b>6.5:1 · AAA</div></div>
+</div>
+<div class="note"><b>브랜드 오렌지와 성공 그린 위 흰 텍스트는 3.6–3.7:1</b>로 일반 본문 기준(4.5:1)에 미달한다. 따라서 두 색은 <b>18sp 이상 굵은 라벨의 큰 버튼에서만</b> 쓴다(WCAG 대형 텍스트 3:1 기준 충족). 작은 텍스트에는 <code>#f0a878</code>·<code>#6ee7b7</code> 같은 밝은 파생색을 표면 위에 쓴다 — 시안의 pill이 모두 그 방식이다.</div>
+
+<h2>2 · 색만으로 의미를 전달하지 않는다</h2>
+<div class="tw"><table>
+<thead><tr><th>표면</th><th>색 신호</th><th>병기하는 비색 신호</th></tr></thead>
+<tbody>
+<tr><td class="k">세션 보드 색 행</td><td>홀드 색 스와치</td><td class="ok"><b>한글 색 이름</b>(파랑 · 빨강 …) + 숫자 카운트</td></tr>
+<tr><td class="k">결과 배지</td><td>green / red / purple</td><td class="ok">체크 · X · 물음표 <b>아이콘</b> + "완등"·"실패"·"분류 필요" 텍스트</td></tr>
+<tr><td class="k">미디어 상태 pill</td><td>green / grey / orange / red</td><td class="ok">상태별 <b>아이콘</b> + 한글 라벨</td></tr>
+<tr><td class="k">트리밍 선택 범위</td><td>brand → danger</td><td class="ok">범위 라벨 색 변경 + <b>오류 문구 표시</b> + 저장 버튼 비활성</td></tr>
+<tr><td class="k">미리보기 전용</td><td>보라 계열</td><td class="ok">점선 테두리 + <b>워터마크</b> + "Phase 3 · 비활성" 텍스트 배지 (4중 신호)</td></tr>
+<tr><td class="k">읽기 불가 카드</td><td>muted</td><td class="ok">점선 테두리 + 깨진 미디어 아이콘 + "기기에서 삭제됨" 텍스트</td></tr>
+<tr><td class="k">녹화 중</td><td>붉은 점</td><td class="ok">타이머 숫자 + 축소 모션 시 "REC" 라벨</td></tr>
+<tr><td class="k">파괴적 버튼</td><td>danger 채움</td><td class="ok">휴지통 아이콘 + "지우기" 동사 + 확인 다이얼로그</td></tr>
+</tbody></table></div>
+<div class="note g">색각 이상 사용자에게 <b>초록 완등 홀드</b>와 <b>빨강 실패 홀드</b>가 구분되지 않을 수 있다. 세션 보드에 한글 색 이름을 추가한 것이 v2의 핵심 접근성 개선이다 — 홀드 색은 사용자가 <b>암장에서 직접 보는 것</b>과 대조해야 하므로 이름이 없으면 기록 자체가 불가능하다.</div>
+
+<h2>3 · 터치 타깃</h2>
+<div class="tw"><table>
+<thead><tr><th>요소</th><th>시각 크기</th><th>터치 영역</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td class="k">결과 버튼 (성공/실패)</td><td>100dp 높이</td><td class="ok">충분</td><td>간격 12dp (≥8dp 오탭 방지)</td></tr>
+<tr><td class="k">녹화 · 정지 버튼</td><td>78dp 원형</td><td class="ok">충분</td><td>화면 하단 중앙, 엄지 도달권</td></tr>
+<tr><td class="k">시트 옵션 행</td><td>64dp 높이</td><td class="ok">충분</td><td>행 전체가 탭 영역</td></tr>
+<tr><td class="k">다이얼로그 버튼</td><td>50dp 높이</td><td class="ok">충분</td><td>세로 스택, 간격 10dp</td></tr>
+<tr><td class="k">색 카운트 행</td><td>56dp 높이</td><td class="ok">충분</td><td>행 전체 탭 = 카운트 +1</td></tr>
+<tr><td class="k">아카이브 카드 액션</td><td>36dp 높이</td><td class="wa">확장 필요</td><td>수직 패딩으로 <b>≥48dp 확장</b> (<code>minimumInteractiveComponentSize</code>)</td></tr>
+<tr><td class="k">타임라인 핸들</td><td>16×40dp</td><td class="wa">확장 필요</td><td>좌우 <b>≥48dp 히트박스</b> 별도 지정. 시각 폭은 정밀도를 위해 유지</td></tr>
+<tr><td class="k">플레이어 아이콘 버튼</td><td>44dp 원형</td><td class="wa">확장 필요</td><td>48dp로 패딩 확장</td></tr>
+<tr><td class="k">필터 칩</td><td>36dp 높이</td><td class="wa">확장 필요</td><td>미리보기 상태이지만 활성화 시 확장 필요</td></tr>
+</tbody></table></div>
+<div class="note"><b>시각 크기 ≠ 터치 크기.</b> 타임라인 핸들처럼 정밀 조작을 위해 얇아야 하는 요소는 시각 폭을 유지하되 히트박스만 넓힌다. Compose에서는 <code>Modifier.minimumInteractiveComponentSize()</code> 또는 <code>Modifier.padding()</code> + <code>clickable</code> 순서로 확보한다.</div>
+
+<h2>4 · TalkBack</h2>
+<div class="tw"><table>
+<thead><tr><th>요소</th><th>contentDescription / 읽히는 내용</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td class="k">색 카운트 행</td><td>"파랑 완등 7개, 두 번 탭하면 하나 추가"</td><td>탭 후 <code>liveRegion</code>으로 "파랑 완등 8개" 재공지</td></tr>
+<tr><td class="k">녹화 버튼</td><td>"녹화 시작" / "녹화 정지, 8초 경과"</td><td>타이머 값을 라벨에 포함</td></tr>
+<tr><td class="k">녹화 인디케이터</td><td>"녹화 중"</td><td>펄스 애니메이션과 무관하게 항상 읽힌다</td></tr>
+<tr><td class="k">결과 버튼</td><td>"성공, 완등으로 기록" / "실패, 시도로 기록"</td><td>처리 중에는 "저장 중, 사용할 수 없음"</td></tr>
+<tr><td class="k">아카이브 카드</td><td>"완등, 닻 클라이밍, 파랑, 7월 22일 오후 8시 14분, 트리밍 완료"</td><td>카드 전체를 <code>mergeDescendants</code>로 한 노드</td></tr>
+<tr><td class="k">읽기 불가 카드</td><td>"…, 기기에서 삭제됨, 재생할 수 없음"</td><td>액션 노드 없음</td></tr>
+<tr><td class="k">타임라인 핸들</td><td>"시작 지점 5초" / "끝 지점 20초"</td><td><code>ProgressBarRangeInfo</code> + 좌우 스와이프 조정 액션</td></tr>
+<tr><td class="k">진행 링</td><td>"영상 자르는 중 45퍼센트"</td><td><code>liveRegion = Polite</code>, 10% 단위로만 공지</td></tr>
+<tr><td class="k">오류 배너</td><td>"오류: 저장에 실패했어요. 원본은 그대로 있어요"</td><td><code>liveRegion = Assertive</code> — 즉시 공지</td></tr>
+<tr><td class="k">성공 배너</td><td>"영상을 저장했어요"</td><td><code>liveRegion = Polite</code></td></tr>
+<tr><td class="k">파괴적 확인</td><td>제목 → 남는 것 → 사라지는 것 → 버튼 순</td><td>다이얼로그 진입 시 <b>제목에 포커스</b></td></tr>
+<tr><td class="k">미리보기 블록</td><td>"미리보기, Phase 3 비활성. 사용할 수 없음"</td><td>내부 요소는 <code>clearAndSetSemantics</code>로 숨김 — 가짜 값을 읽히지 않는다</td></tr>
+<tr><td class="k">플레이어 진행 바</td><td>"재생 위치 5초, 전체 15초"</td><td>탐색 액션 제공</td></tr>
+<tr><td class="k">플레이스홀더 썸네일</td><td class="no">읽지 않음 (장식)</td><td><code>contentDescription = null</code></td></tr>
+</tbody></table></div>
+<div class="note d"><b>미리보기 블록의 가짜 값을 TalkBack이 읽으면 안 된다.</b> "Lv.5 파랑", "78%", "14 완등" 같은 정적 예시가 음성으로 읽히면 시각 신호(점선·워터마크·감쇠)가 전혀 전달되지 않아 <b>실제 데이터로 오인</b>된다. 블록 전체를 하나의 비활성 노드로 병합하고 내부를 <code>clearAndSetSemantics {}</code>로 비운다.</div>
+
+<h2>5 · 포커스 순서</h2>
+<div class="tw"><table>
+<thead><tr><th>화면</th><th>포커스 순서</th><th>초기 포커스</th></tr></thead>
+<tbody>
+<tr><td class="k">05 분류 대기</td><td>뒤로 → 녹화 정보 → 실패 → 성공</td><td>질문 텍스트</td></tr>
+<tr><td class="k">05b 영상 처리 시트</td><td>결과 배지 → 제목 → 옵션 1..4 → 닫기 안내</td><td>제목 (시트 진입 시)</td></tr>
+<tr><td class="k">05b 폐기 확인</td><td>제목 → 남는 것 → 사라지는 것 → 파괴 → 취소</td><td class="ok">제목. <b>파괴 버튼에 자동 포커스 금지</b></td></tr>
+<tr><td class="k">06 트리밍</td><td>닫기 → 정보 → 프리뷰 → 재생 → 시작 핸들 → 끝 핸들 → 범위 라벨 → 원본 유지 → 저장 → 나중에</td><td>제목</td></tr>
+<tr><td class="k">06 처리 중</td><td>진행 상태 → 취소</td><td class="ok">진행 상태 (<code>liveRegion</code>). 다른 노드는 <b>포커스 불가</b></td></tr>
+<tr><td class="k">07 아카이브</td><td>제목 → 개수 → (필터) → 카드 1..n → 탭 바</td><td>제목</td></tr>
+<tr><td class="k">08 재생</td><td>닫기 → 영상 정보 → 공유 → 재생/일시정지 → 진행 바 → 공유 바</td><td>영상 정보</td></tr>
+<tr><td class="k">04 종료 보류</td><td>제목 → 경고 → 요약 → 재저장 → 폐기 → 계속</td><td class="ok">제목. 폐기가 첫 포커스가 되지 않게</td></tr>
+</tbody></table></div>
+<div class="note g"><b>모달 포커스 트랩</b> — 시트·다이얼로그·처리 오버레이가 떠 있는 동안 뒤 화면 노드는 접근성 트리에서 제외한다. Compose: 뒤 컨테이너에 <code>Modifier.semantics { invisibleToUser() }</code>.</div>
+
+<h2>6 · 축소 모션 · 큰 글자</h2>
+<div class="tw"><table>
+<thead><tr><th>설정</th><th>대응</th></tr></thead>
+<tbody>
+<tr><td class="k">축소 모션</td><td>모든 <code>--dur-*</code> → 0ms. 무한 반복(펄스 · 스피너 · shimmer)은 <b>정적 표시 + 텍스트 라벨</b>로 대체. 드래그·스크럽 추종은 유지</td></tr>
+<tr><td class="k">큰 글자 (200%)</td><td>결과 버튼 라벨 2줄 허용, 소제목 말줄임. 카드 높이는 <code>wrapContent</code>. <b>고정 높이 금지</b> — 시안의 dp 값은 100% 기준</td></tr>
+<tr><td class="k">굵은 텍스트</td><td>시스템 설정 존중. 시안의 weight 600/700 유지</td></tr>
+<tr><td class="k">375dp 소형 폰</td><td>결과 버튼 간격 12dp → 8dp까지 축소 허용. 시트 옵션은 아이콘 유지, 부제 2줄 허용</td></tr>
+<tr><td class="k">고대비</td><td>Outline <code>rgba(255,255,255,.10)</code> → <code>.24</code>로 강화. pill 테두리 추가</td></tr>
+</tbody></table></div>
+<div class="note p"><b>축소 모션에서도 정보 손실이 없어야 한다.</b> 녹화 중 · 처리 중 · 버퍼링 · 로딩 네 상태는 모션이 유일한 신호가 되기 쉽다. 모두 <b>텍스트 라벨을 상시 병기</b>하도록 시안에 고정했다.</div>
+
+<h2>7 · 세이프 에어리어 · 레이아웃</h2>
+<div class="tw"><table>
+<thead><tr><th>항목</th><th>규칙</th></tr></thead>
+<tbody>
+<tr><td class="k">상단 상태바</td><td>44dp 확보. 촬영·재생의 전체 화면 오버레이도 컨트롤을 그 아래 배치</td></tr>
+<tr><td class="k">하단 제스처 인디케이터</td><td>바텀 탭 <code>padding-bottom: 8dp</code>, 시트 <code>padding-bottom: 30dp</code></td></tr>
+<tr><td class="k">스크롤 콘텐츠</td><td>고정 바텀 탭에 가리지 않도록 <code>contentPadding</code> 적용</td></tr>
+<tr><td class="k">시트 최대 높이</td><td>화면의 80%. 초과 시 시트 내부 스크롤, grab 핸들은 고정</td></tr>
+<tr><td class="k">배너</td><td>콘텐츠를 밀지 않는 오버레이 배치 — 레이아웃 점프 방지</td></tr>
+<tr><td class="k">스켈레톤</td><td>실제 카드와 <b>동일 높이</b>. 도착 시 점프 없음</td></tr>
+<tr><td class="k">오류 문구 자리</td><td>범위 무효 문구는 자리를 미리 예약해 나타날 때 밀리지 않게</td></tr>
+</tbody></table></div>
+
+<h2>8 · 인지 부하 · 문구</h2>
+<div class="tw"><table>
+<thead><tr><th>규칙</th><th>적용</th></tr></thead>
+<tbody>
+<tr><td class="k">파괴적 결과를 사전 고지</td><td>확인 다이얼로그에 <b>남는 것 / 사라지는 것</b>을 분리 나열. "정말?" 금지</td></tr>
+<tr><td class="k">닫기 결과를 사전 고지</td><td>시트 하단에 "닫으면 나중에와 같아요" 문장 상시 표시</td></tr>
+<tr><td class="k">오류에 보존 사실 병기</td><td>모든 오류 문구는 <b>원인 + 무엇이 남았는지</b> 2줄 구조</td></tr>
+<tr><td class="k">사용자 탓 표현 금지</td><td>"잘못된 입력" → "끝 지점이 시작보다 뒤여야 해요"</td></tr>
+<tr><td class="k">기술 용어 노출 금지</td><td>예외 원문 · 코덱명 · 실패 횟수를 화면에 쓰지 않는다</td></tr>
+<tr><td class="k">막다른 길 금지</td><td>모든 오류 상태에 <b>최소 2개의 출구</b>(재시도 + 대안)</td></tr>
+<tr><td class="k">한 번에 한 결정</td><td>결과 확정과 영상 처리를 <b>두 단계로 분리</b>한 v2의 근거</td></tr>
+</tbody></table></div>
+
+<h2>9 · 인수 전 체크리스트</h2>
+<ul class="chk">
+  <li>본문 대비 <b>≥4.5:1</b>, 보조 <b>≥3:1</b>, 구분선 다크에서 가시</li>
+  <li>브랜드·성공 색 위 흰 텍스트는 <b>18sp 이상 굵게</b>만</li>
+  <li>홀드 색 스와치에 <b>한글 색 이름</b> 병기</li>
+  <li>결과 배지와 미디어 pill에 <b>아이콘 + 라벨</b> 병기</li>
+  <li>터치 타깃 <b>≥48×48dp</b>, 성공/실패 간격 <b>≥8dp</b></li>
+  <li>타임라인 핸들 히트박스 <b>≥48dp</b>로 확장</li>
+  <li>모든 색 칩·버튼에 <b>contentDescription</b></li>
+  <li>미리보기 블록은 <b>clearAndSetSemantics</b>로 내부 값 숨김</li>
+  <li>오류 배너 <b>liveRegion = Assertive</b>, 진행 <b>Polite</b></li>
+  <li>파괴적 다이얼로그 초기 포커스는 <b>제목</b> (파괴 버튼 아님)</li>
+  <li>모달 뒤 화면 <b>invisibleToUser</b> 포커스 트랩</li>
+  <li>축소 모션에서 <b>정보 손실 없음</b> (텍스트 라벨 상시)</li>
+  <li>큰 글자 200%에서 레이아웃 미파손, <b>고정 높이 없음</b></li>
+  <li>375dp 소형 폰 세로에서 확인</li>
+  <li>세이프 에어리어 침범 없음, <b>탭 바 뒤 콘텐츠 가림 없음</b></li>
+  <li>스켈레톤 = 실제 카드 높이, <b>레이아웃 점프 없음</b></li>
+  <li>눌림이 레이아웃을 밀지 않음 (ripple만)</li>
+  <li>모든 오류 상태에 <b>출구 2개 이상</b></li>
+  <li>아이콘은 벡터, <b>이모지 금지</b></li>
+  <li>기능 표면에 <b>가짜 값 없음</b> (레벨·길이·개수·타임스탬프)</li>
+</ul>
+
+</div></body></html>

@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>6 · 트리밍 (편집 · 처리 · 오류 · 완료)</title>
+<title>6 · 트리밍 (실제 길이 · 범위 · 무효 · 처리 · 실패 · 완료)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -12,91 +12,124 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
 .pageh{max-width:1240px;margin:0 auto 26px}
 .pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
 .pageh h1 b{color:#EA580C}
-.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:680px;line-height:1.55}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:800px;line-height:1.55}
 .stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1660px;margin:0 auto}
 .frame{width:390px}
-.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px;flex-wrap:wrap}
 .cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
 .cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
 .cap .d{font-size:12px;color:#64748B;font-weight:600}
 .phone{width:390px;height:844px;background:#0B0F1A;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
 .sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#cbd5e1;z-index:5}
+
+.ann{width:390px;margin-top:12px;background:#0a0e18;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px 14px;font-size:11.5px;line-height:1.55}
+.ann h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:#EA580C;letter-spacing:.6px;margin-bottom:8px;text-transform:uppercase}
+.ann .grp{border-top:1px dashed rgba(255,255,255,.09);margin-top:9px;padding-top:9px}
+.ann .grp:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.ann .vn{font-weight:700;color:#fff;font-size:12px;margin-bottom:4px}
+.ann dl{display:grid;grid-template-columns:52px 1fr;gap:3px 9px}
+.ann dt{color:#64748B;font-weight:700}
+.ann dd{color:#cbd5e1}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;color:#f0a878;background:rgba(234,88,12,.1);padding:1px 5px;border-radius:5px}
+
 .hd{display:flex;align-items:center;gap:12px;padding:6px 20px 10px}
-.hd .x{width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+.hd .x{width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex:none;border:none;background:transparent}
 .hd .x svg{width:22px;height:22px}
-.hd .sq{width:15px;height:15px;border-radius:5px;background:#5A8FDB}
+.hd .sq{width:15px;height:15px;border-radius:5px;background:#5A8FDB;flex:none}
 .hd h1{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700}
 .hd .r{margin-left:auto;font-size:12px;color:#94A3B8;font-weight:600}
+.obadge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:7px}
+.ob-ok{background:rgba(5,150,105,.16);color:#6ee7b7}
+.ob-no{background:rgba(220,38,38,.16);color:#fca5a5}
 
-.prev{margin:6px 20px 0;border-radius:20px;height:396px;background:linear-gradient(180deg,#2a2320,#0e1219);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.08)}
+.prev{margin:6px 20px 0;border-radius:20px;height:372px;background:linear-gradient(180deg,#2a2320,#0e1219);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.08)}
 .prev .fig{width:56px;height:118px;background:rgba(255,255,255,.14);border-radius:28px}
 .pvtag{position:absolute;left:50%;top:12px;transform:translateX(-50%);font-size:10px;font-weight:700;color:rgba(255,255,255,.5);border:1px dashed rgba(255,255,255,.22);border-radius:8px;padding:3px 9px}
-.play{position:absolute;bottom:14px;left:14px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+.play{position:absolute;bottom:14px;left:14px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;border:none}
 .play svg{width:18px;height:18px}
-.time{position:absolute;bottom:22px;right:16px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:#fff}
+.time{position:absolute;bottom:24px;right:16px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:#fff;font-variant-numeric:tabular-nums}
 
-.tl{margin:20px 20px 0}
-.tlbar{height:56px;border-radius:12px;background:#1E2634;position:relative;display:flex;align-items:center;overflow:hidden}
+.tl{margin:18px 20px 0}
+.tlbar{height:58px;border-radius:12px;background:#1E2634;position:relative;display:flex;align-items:center;overflow:hidden}
 .frames{position:absolute;inset:0;display:flex}
-.frames i{flex:1;border-right:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,#3a3330,#161a20)}
+.frames i{flex:1;border-right:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,#3a3330,#161a20);position:relative}
+.frames i:nth-child(2n){background:linear-gradient(180deg,#332e3a,#161a20)}
+.frames i:nth-child(3n){background:linear-gradient(180deg,#2c3540,#161a20)}
 .sel{position:absolute;top:0;bottom:0;left:22%;right:14%;border:3px solid #EA580C;border-radius:10px;background:rgba(234,88,12,.12)}
-.sel.error{border-color:#DC2626;background:rgba(220,38,38,.14)}
-.handle{position:absolute;top:50%;transform:translateY(-50%);width:14px;height:34px;background:#EA580C;border-radius:5px}
+.sel.error{border-color:#DC2626;background:rgba(220,38,38,.16)}
+.handle{position:absolute;top:50%;transform:translateY(-50%);width:16px;height:40px;background:#EA580C;border-radius:5px;box-shadow:0 1px 4px rgba(0,0,0,.5)}
 .sel.error .handle{background:#DC2626}
-.handle.l{left:-8px}.handle.r{right:-8px}
-.tllab{display:flex;justify-content:space-between;color:#64748B;font-size:12px;font-family:'Barlow Condensed',sans-serif;margin-top:8px}
-.rangeerr{margin:12px 20px 0;display:flex;align-items:center;gap:8px;background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.35);border-radius:11px;padding:9px 12px;font-size:12px;color:#fca5a5;font-weight:600}
-.rangeerr svg{width:16px;height:16px;flex:none}
+.handle.l{left:-9px}.handle.r{right:-9px}
+.playhead{position:absolute;top:-3px;bottom:-3px;width:2px;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.7);left:38%}
+.tllab{display:flex;justify-content:space-between;color:#64748B;font-size:12px;font-family:'Barlow Condensed',sans-serif;margin-top:8px;font-variant-numeric:tabular-nums}
+.tllab .selv{color:#EA580C;font-weight:700}
+.tllab .selv.bad{color:#fca5a5}
+.rangeerr{margin:12px 20px 0;display:flex;align-items:flex-start;gap:9px;background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.35);border-radius:11px;padding:10px 12px;font-size:12px;color:#fca5a5;font-weight:600;line-height:1.5}
+.rangeerr svg{width:16px;height:16px;flex:none;margin-top:1px}
 
 .foot{margin-top:auto;padding:16px 20px 26px}
 .acts{display:flex;gap:10px}
-.b{flex:1;height:54px;border-radius:15px;display:flex;align-items:center;justify-content:center;gap:7px;font-weight:700;font-size:15px;border:none}
+.b{flex:1;height:54px;border-radius:15px;display:flex;align-items:center;justify-content:center;gap:7px;font-weight:700;font-size:15px;border:none;color:#fff}
 .b svg{width:18px;height:18px}
 .ghost{background:transparent;color:#94A3B8;border:1px solid rgba(255,255,255,.15)}
-.save{background:#EA580C;color:#fff}
+.save{background:#EA580C}
 .save.disabled{background:#1E2634;color:#475569}
 .keep{background:#1E2634;color:#cbd5e1}
-.share{background:#059669;color:#fff}
+.share{background:#059669}
 .subrow{display:flex;justify-content:center;gap:20px;margin-top:14px}
-.subrow a{font-size:13px;color:#94A3B8;font-weight:600}
+.subrow a{font-size:13px;color:#94A3B8;font-weight:600;min-height:32px;display:flex;align-items:center}
 
 /* processing overlay */
-.scrim{position:absolute;inset:0;background:rgba(5,7,13,.78);z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 44px;text-align:center;gap:16px}
+.scrim{position:absolute;inset:0;background:rgba(5,7,13,.8);z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 44px;text-align:center;gap:16px}
 .ring{width:96px;height:96px;border-radius:50%;background:conic-gradient(#EA580C 0 45%,rgba(255,255,255,.1) 45% 100%);display:flex;align-items:center;justify-content:center;position:relative}
 .ring::before{content:"";position:absolute;inset:9px;border-radius:50%;background:#0B0F1A}
-.ring .pct{position:relative;z-index:2;font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700}
+.ring .pct{position:relative;z-index:2;font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;font-variant-numeric:tabular-nums}
 .scrim .pt{font-weight:700;font-size:17px}
 .scrim .ps{font-size:13px;color:#94A3B8;line-height:1.5}
-.scrim .cancel{margin-top:6px;font-size:13px;color:#94A3B8;font-weight:700;border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:11px 20px;background:transparent}
+.scrim .cancel{margin-top:6px;font-size:13px;color:#94A3B8;font-weight:700;border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:12px 20px;background:transparent;min-height:48px}
 
-/* error / done banners inside frame */
-.statusbar{margin:6px 20px 0;display:flex;align-items:center;gap:9px;border-radius:12px;padding:11px 13px;font-size:13px;font-weight:600}
-.statusbar svg{width:18px;height:18px;flex:none}
+.statusbar{margin:6px 20px 0;display:flex;align-items:flex-start;gap:9px;border-radius:12px;padding:11px 13px;font-size:13px;font-weight:600;line-height:1.5}
+.statusbar svg{width:18px;height:18px;flex:none;margin-top:1px}
 .statusbar.err{background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.35);color:#fca5a5}
 .statusbar.done{background:rgba(5,150,105,.12);border:1px solid rgba(5,150,105,.4);color:#6ee7b7}
+
+.dim{position:absolute;inset:0;background:rgba(5,7,13,.74);z-index:9}
+.dialog{position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);z-index:10;background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:24px 22px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.dialog .dic{width:54px;height:54px;border-radius:16px;background:rgba(234,88,12,.16);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.dialog .dic svg{width:26px;height:26px}
+.dialog h2{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:700;margin-bottom:8px;text-align:center}
+.dialog p{font-size:13px;color:#94A3B8;line-height:1.55;text-align:center;margin-bottom:18px}
+.dbtns{display:flex;flex-direction:column;gap:10px}
+.dbtn{height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:15px;border:none}
+.dbtn.pri{background:#EA580C;color:#fff}
+.dbtn.gh{background:transparent;border:1px solid rgba(255,255,255,.16);color:#cbd5e1}
 </style></head>
 <body>
 <div class="pageh">
-  <h1>6 · 트리밍 — <b>Media3 프리뷰 · 범위 편집</b></h1>
-  <p>프리뷰는 실제 앱 내 플레이어(Media3). 편집(대기) → 저장 시 처리 중(Transformer) → 실패 시 오류·재시도 → 완료 시 재생/공유. 범위 오류·나중에·원본 유지 포함.</p>
+  <h1>6 · 트리밍 — <b>실제 길이 · 실제 범위 · 프레임 타임라인</b></h1>
+  <p>프리뷰는 실제 Media3 Player. 길이와 선택 범위는 전부 런타임 값이며, <b>고정 <code style="font-size:12px">19_000L</code> 기본값과 고정 <code style="font-size:12px">0:04–0:16</code> 표기를 제거</b>했다. 타임라인은 실제 프레임 썸네일 스트립이다. 성공·실패 어느 결과의 영상이든 같은 화면으로 들어온다.</p>
 </div>
 <div class="stage">
 
-  <!-- 편집 (대기) -->
+  <!-- A 편집 대기 -->
   <div class="frame">
-    <div class="cap"><span class="n">A</span><span class="t">편집 (대기)</span><span class="d">범위 선택 · 저장/나중에/원본</span></div>
+    <div class="cap"><span class="n">A</span><span class="t">편집 (대기)</span><span class="d">TRIM_PENDING · 유효 범위</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
-      <div class="hd"><div class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div><span class="sq"></span><h1>앞뒤 자르기</h1><span class="r">파랑 · 8트</span></div>
+      <div class="hd"><button class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><span class="sq"></span><h1>앞뒤 자르기</h1><span class="obadge ob-ok">완등</span><span class="r">파랑</span></div>
       <div class="prev">
-        <div class="pvtag">Media3 Player</div>
+        <div class="pvtag">Media3 Player Surface</div>
         <div class="fig"></div>
-        <div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></div>
-        <div class="time">0:06 / 0:19</div>
+        <button class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></button>
+        <div class="time">0:06 / 0:23</div>
       </div>
       <div class="tl">
-        <div class="tlbar"><div class="frames"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="sel"><div class="handle l"></div><div class="handle r"></div></div></div>
-        <div class="tllab"><span>0:00</span><span style="color:#EA580C">선택 0:04 – 0:16</span><span>0:19</span></div>
+        <div class="tlbar">
+          <div class="frames"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="playhead"></div>
+          <div class="sel"><div class="handle l"></div><div class="handle r"></div></div>
+        </div>
+        <div class="tllab"><span>0:00</span><span class="selv">선택 0:05 – 0:20 · 15초</span><span>0:23</span></div>
       </div>
       <div class="foot">
         <div class="acts">
@@ -106,38 +139,198 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
         <div class="subrow"><a>나중에 할래요</a></div>
       </div>
     </div>
-  </div>
-
-  <!-- 처리 중 -->
-  <div class="frame">
-    <div class="cap"><span class="n">B</span><span class="t">처리 중</span><span class="d">Transformer 진행 · 중복 방지</span></div>
-    <div class="phone">
-      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
-      <div class="hd"><div class="x" style="opacity:.4"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div><span class="sq"></span><h1>앞뒤 자르기</h1></div>
-      <div class="prev" style="opacity:.35"><div class="fig"></div></div>
-      <div class="scrim">
-        <div class="ring"><span class="pct">45%</span></div>
-        <div class="pt">영상을 저장하고 있어요</div>
-        <div class="ps">잠시만요. 완료 전까지 화면을<br>벗어나도 백그라운드에서 이어져요</div>
-        <button class="cancel">취소</button>
-      </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">전체 길이</div><dl>
+        <dt>소스</dt><dd>Media3 <code>Player.duration</code> → <code>AppState.selectedVideoDurationMillis</code></dd>
+        <dt>형식</dt><dd><code>m:ss</code> (1시간 이상 <code>h:mm:ss</code>), tabular-nums</dd>
+        <dt>빈</dt><dd>메타데이터 로드 전 <code>--:--</code>, 타임라인·핸들 비활성</dd>
+        <dt>로딩</dt><dd><code>STATE_BUFFERING</code> 동안 프레임 스트립 스켈레톤, 저장 버튼 비활성</dd>
+        <dt>오류</dt><dd><code>duration == C.TIME_UNSET</code> → 프레임 E 실패 상태로 전환, 원본 보존</dd></dl></div>
+      <div class="grp"><div class="vn">현재 재생 위치</div><dl>
+        <dt>소스</dt><dd><code>Player.currentPosition</code>, 200ms 폴링</dd>
+        <dt>형식</dt><dd><code>{현재} / {전체}</code>. 재생헤드는 타임라인에 동기</dd>
+        <dt>빈</dt><dd><code>0:00</code></dd>
+        <dt>로딩</dt><dd>버퍼링 중 재생헤드 정지, 위치 유지</dd>
+        <dt>오류</dt><dd>재생 실패해도 범위 선택은 계속 가능</dd></dl></div>
+      <div class="grp"><div class="vn">선택 범위</div><dl>
+        <dt>소스</dt><dd><code>AppState.lastTrimStartMillis</code> / <code>lastTrimEndMillis</code></dd>
+        <dt>형식</dt><dd><code>선택 {시작} – {끝} · {길이}초</code>. 핸들 위치 = 밀리초 / 전체 길이</dd>
+        <dt>빈</dt><dd>최초 진입 시 전체 구간 선택(<code>0 – duration</code>)</dd>
+        <dt>로딩</dt><dd>드래그 중 실시간 갱신(커밋은 손 뗄 때)</dd>
+        <dt>오류</dt><dd>무효 범위 → 프레임 B</dd></dl></div>
+      <div class="grp"><div class="vn">프레임 타임라인</div><dl>
+        <dt>소스</dt><dd>원본 URI에서 균등 간격 추출한 프레임 썸네일 12장</dd>
+        <dt>형식</dt><dd>스트립 전체가 <code>0 – duration</code>에 선형 대응</dd>
+        <dt>빈</dt><dd>추출 전 균일 회색 블록 (레이아웃 동일)</dd>
+        <dt>로딩</dt><dd>도착한 프레임부터 순차 교체, 페이드 <code>--dur-fast 150ms</code></dd>
+        <dt>오류</dt><dd>추출 실패 시 회색 스트립 유지 — <b>트리밍 자체는 계속 가능</b></dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 핸들 드래그</div><dl>
+        <dt>트리거</dt><dd>좌/우 핸들 터치 드래그</dd>
+        <dt>시작·종료</dt><dd>손가락 X를 1:1 추종. <b>보간·관성 없음</b> — 정밀 조작이 우선</dd>
+        <dt>지속</dt><dd>0ms(직접 조작). 손 뗄 때 스냅만 <code>--dur-fast 150ms</code></dd>
+        <dt>이징</dt><dd>스냅 <code>--ease-standard</code></dd>
+        <dt>중단</dt><dd>두 번째 손가락 시작 시 첫 드래그 유지, 새 포인터 무시</dd>
+        <dt>반복</dt><dd>없음</dd>
+        <dt>축소</dt><dd>동일(직접 조작은 모션 축소 대상 아님). 스냅만 즉시</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 재생헤드</div><dl>
+        <dt>트리거</dt><dd>재생 중 위치 갱신</dd>
+        <dt>시작·종료</dt><dd>이전 위치 → 새 위치를 <b>선형 보간</b>으로 이동(끊김 방지)</dd>
+        <dt>지속</dt><dd>폴링 간격 200ms에 맞춘 선형 트윈</dd>
+        <dt>이징</dt><dd><code>linear</code> — 등속 재생에 가속 곡선을 쓰면 어긋나 보인다</dd>
+        <dt>중단</dt><dd>탐색(seek) 시 트윈 취소하고 목표 위치로 즉시 이동</dd>
+        <dt>반복</dt><dd>재생 중 지속</dd>
+        <dt>축소</dt><dd>보간 없이 200ms마다 계단식 이동</dd></dl></div>
     </div>
   </div>
 
-  <!-- 오류 -->
+  <!-- B 범위 무효 -->
   <div class="frame">
-    <div class="cap"><span class="n">C</span><span class="t">오류 (재시도)</span><span class="d">실패 · 원본/시도 기록 보존</span></div>
+    <div class="cap"><span class="n">B</span><span class="t">범위 무효</span><span class="d">INVALID_RANGE · OUT_OF_BOUNDS</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
-      <div class="hd"><div class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div><span class="sq"></span><h1>앞뒤 자르기</h1><span class="r">파랑 · 8트</span></div>
-      <div class="statusbar err"><svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="#fca5a5" stroke="none"/><path d="M12 3l9 16H3z"/></svg>저장에 실패했어요 — 원본은 그대로 있어요</div>
+      <div class="hd"><button class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><span class="sq"></span><h1>앞뒤 자르기</h1><span class="obadge ob-ok">완등</span><span class="r">파랑</span></div>
       <div class="prev">
-        <div class="pvtag">Media3 Player</div>
+        <div class="pvtag">Media3 Player Surface</div>
         <div class="fig"></div>
-        <div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></div>
-        <div class="time">0:06 / 0:19</div>
+        <button class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></button>
+        <div class="time">0:06 / 0:23</div>
       </div>
-      <div class="rangeerr" style="visibility:hidden">placeholder</div>
+      <div class="tl">
+        <div class="tlbar">
+          <div class="frames"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="sel error" style="left:44%;right:52%"><div class="handle l"></div><div class="handle r"></div></div>
+        </div>
+        <div class="tllab"><span>0:00</span><span class="selv bad">선택 0:10 – 0:10 · 0초</span><span>0:23</span></div>
+      </div>
+      <div class="rangeerr">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="#fca5a5" stroke="none"/><path d="M12 3l9 16H3z"/></svg>
+        끝 지점이 시작보다 뒤여야 해요 · 최소 1초 이상 선택해 주세요
+      </div>
+      <div class="foot">
+        <div class="acts">
+          <button class="b keep">원본 유지</button>
+          <button class="b save disabled">자르고 저장</button>
+        </div>
+        <div class="subrow"><a>나중에 할래요</a></div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">검증 규칙</div><dl>
+        <dt>소스</dt><dd><code>isValidTrimRange()</code> · <code>TrimService.validationError()</code></dd>
+        <dt>형식</dt><dd><code>INVALID_RANGE</code>(끝 ≤ 시작) / <code>OUT_OF_BOUNDS</code>(시작 &lt; 0 또는 끝 &gt; 길이)별 문구 분리</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>해당 없음 — 검증은 동기</dd>
+        <dt>오류</dt><dd>이 상태 자체. <b>제출 전에 차단</b>하고 실패로 보내지 않는다</dd></dl></div>
+      <div class="grp"><div class="vn">시각 처리</div><dl>
+        <dt>선택 영역</dt><dd>brand → danger 색으로 전환, 핸들도 동일</dd>
+        <dt>저장 버튼</dt><dd>비활성(<code>#1E2634</code> / <code>#475569</code>). <b>누를 수 있게 두고 오류를 띄우지 않는다</b></dd>
+        <dt>대안</dt><dd>원본 유지 · 나중에는 계속 활성 — 막다른 길을 만들지 않는다</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 무효 전환</div><dl>
+        <dt>트리거</dt><dd>드래그 결과가 검증 실패</dd>
+        <dt>시작</dt><dd>테두리 <code>#EA580C</code>, 배경 <code>rgba(234,88,12,.12)</code></dd>
+        <dt>종료</dt><dd>테두리 <code>#DC2626</code>, 배경 <code>rgba(220,38,38,.16)</code>, 오류 문구 높이 0 → auto</dd>
+        <dt>지속</dt><dd><code>--dur-fast 150ms</code></dd>
+        <dt>이징</dt><dd><code>--ease-standard</code></dd>
+        <dt>중단</dt><dd>유효로 되돌아가면 현재 색에서 역방향 150ms</dd>
+        <dt>반복</dt><dd>없음. <b>흔들림 금지</b></dd>
+        <dt>축소</dt><dd>즉시 색 교체, 문구 즉시 삽입(레이아웃 점프 방지 위해 자리 예약)</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- C 처리 중 -->
+  <div class="frame">
+    <div class="cap"><span class="n">C</span><span class="t">처리 중</span><span class="d">TRIM_PROCESSING · 중복 차단</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hd"><div class="x" style="opacity:.35"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div><span class="sq"></span><h1>앞뒤 자르기</h1></div>
+      <div class="prev" style="opacity:.35"><div class="fig"></div></div>
+      <div class="scrim">
+        <div class="ring"><span class="pct">45%</span></div>
+        <div class="pt">영상을 자르고 있어요</div>
+        <div class="ps">15초로 저장 중이에요.<br>완료될 때까지 이 화면을 유지해 주세요</div>
+        <button class="cancel">취소</button>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">진행률</div><dl>
+        <dt>소스</dt><dd>Media3 <code>Transformer.getProgress()</code> (<code>TrimExportCoordinator</code>)</dd>
+        <dt>형식</dt><dd>정수 퍼센트 + 링. 목표 길이를 문구에 삽입(<code>{선택 길이}초로 저장 중</code>)</dd>
+        <dt>빈</dt><dd>진행률 미제공 시 링 대신 <b>불확정 회전</b> + 퍼센트 숨김</dd>
+        <dt>로딩</dt><dd>이 상태 자체. 뒤로가기·저장 버튼 모두 잠금</dd>
+        <dt>오류</dt><dd>Transformer 실패 → 프레임 E. 부분 출력 파일은 MediaStore에 남기지 않는다</dd></dl></div>
+      <div class="grp"><div class="vn">v2 문구 수정</div><dl>
+        <dt>삭제</dt><dd>"화면을 벗어나도 백그라운드에서 이어져요" — <b>사실이 아니다</b>. 백그라운드 보장은 미구현이며 중단 시 <code>recoverInterrupted()</code>가 <code>TRIM_FAILED</code>로 되돌린다</dd>
+        <dt>대체</dt><dd>"완료될 때까지 이 화면을 유지해 주세요"</dd></dl></div>
+      <div class="grp"><div class="vn">중단 복구</div><dl>
+        <dt>취소</dt><dd><code>cancelTrim()</code> → <code>TRIM_PENDING</code> 복귀. 원본 보존</dd>
+        <dt>앱 종료</dt><dd>재진입 시 <code>recoverInterrupted()</code> → <code>TRIM_FAILED</code> + 재시도 안내</dd>
+        <dt>뒤로</dt><dd>차단. 취소 버튼만이 유일한 출구</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 진행 링</div><dl>
+        <dt>트리거</dt><dd>진행률 갱신</dd>
+        <dt>시작</dt><dd>이전 각도 (0% = 0°)</dd>
+        <dt>종료</dt><dd>새 각도 (100% = 360°)</dd>
+        <dt>지속</dt><dd><code>--dur-standard 220ms</code> 트윈. 갱신마다 부드럽게 따라간다</dd>
+        <dt>이징</dt><dd><code>--ease-standard</code></dd>
+        <dt>중단</dt><dd>새 값 도착 시 <b>현재 각도에서</b> 새 목표로 (0으로 되돌리지 않음)</dd>
+        <dt>반복</dt><dd>없음. 진행률 미제공 시에만 무한 회전 900ms/linear</dd>
+        <dt>축소</dt><dd>링 트윈 없이 즉시 각도 반영. 퍼센트 숫자가 주 정보원</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- D 취소 확인 -->
+  <div class="frame">
+    <div class="cap"><span class="n">D</span><span class="t">처리 취소 확인</span><span class="d">진행 폐기 · 원본 보존</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hd" style="opacity:.4"><div class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div><span class="sq"></span><h1>앞뒤 자르기</h1></div>
+      <div class="prev" style="opacity:.2"><div class="fig"></div></div>
+      <div class="dim"></div>
+      <div class="dialog">
+        <div class="dic"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h2>자르기를 취소할까요?</h2>
+        <p>지금까지 진행한 작업은 사라지지만<br><b>원본 영상은 그대로</b> 남아요.<br>대기함에서 언제든 다시 자를 수 있어요.</p>
+        <div class="dbtns">
+          <button class="dbtn pri">계속 자르기</button>
+          <button class="dbtn gh">취소하고 나중에</button>
+        </div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">취소 계약</div><dl>
+        <dt>소스</dt><dd><code>AttemptMediaService.cancelTrim()</code></dd>
+        <dt>형식</dt><dd>기본 버튼은 <b>계속 자르기</b> — 취소가 실수일 확률이 더 높다</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>취소 처리 중 두 버튼 비활성</dd>
+        <dt>오류</dt><dd>취소 실패 시 처리 중 화면 유지</dd></dl></div>
+      <div class="grp"><div class="vn">결과 상태</div><dl>
+        <dt>취소</dt><dd><code>TRIM_PROCESSING</code> → <code>TRIM_PENDING</code>. 부분 출력 삭제</dd>
+        <dt>보존</dt><dd>원본 URI와 Attempt는 어떤 경우에도 삭제하지 않는다</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- E 실패 -->
+  <div class="frame">
+    <div class="cap"><span class="n">E</span><span class="t">실패 (재시도 가능)</span><span class="d">TRIM_FAILED · 원본 보존</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hd"><button class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><span class="sq"></span><h1>앞뒤 자르기</h1><span class="obadge ob-ok">완등</span><span class="r">파랑</span></div>
+      <div class="statusbar err">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="#fca5a5" stroke="none"/><path d="M12 3l9 16H3z"/></svg>
+        자르기에 실패했어요 — 원본 영상과 완등 기록은 그대로 있어요
+      </div>
+      <div class="prev">
+        <div class="pvtag">Media3 Player Surface</div>
+        <div class="fig"></div>
+        <button class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></button>
+        <div class="time">0:06 / 0:23</div>
+      </div>
+      <div class="tl">
+        <div class="tlbar">
+          <div class="frames"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="sel"><div class="handle l"></div><div class="handle r"></div></div>
+        </div>
+        <div class="tllab"><span>0:00</span><span class="selv">선택 0:05 – 0:20 · 15초</span><span>0:23</span></div>
+      </div>
       <div class="foot">
         <div class="acts">
           <button class="b keep">원본 유지</button>
@@ -146,20 +339,35 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
         <div class="subrow"><a>나중에 할래요</a></div>
       </div>
     </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">실패 상태</div><dl>
+        <dt>소스</dt><dd><code>AttemptMediaState.TRIM_FAILED</code> + <code>media.errorMessage</code></dd>
+        <dt>형식</dt><dd>원인 + <b>보존 사실</b>을 한 문장에. 선택 범위는 <b>그대로 복원</b>해 다시 고르게 하지 않는다</dd>
+        <dt>빈</dt><dd><code>errorMessage</code> 없으면 기본 문구 "자르기에 실패했어요"</dd>
+        <dt>로딩</dt><dd>재시도 시 프레임 C 처리 중으로</dd>
+        <dt>오류</dt><dd>중단 복구도 같은 상태로 들어온다("트리밍이 중단되었습니다")</dd></dl></div>
+      <div class="grp"><div class="vn">출구 3개</div><dl>
+        <dt>재시도</dt><dd><code>startTrim()</code> → <code>TRIM_PROCESSING</code></dd>
+        <dt>원본 유지</dt><dd><code>keepOriginal()</code> → <code>ORIGINAL_KEPT</code>. 자르기를 포기해도 영상은 남는다</dd>
+        <dt>나중에</dt><dd><code>cancelTrim()</code> → <code>TRIM_PENDING</code></dd></dl></div>
+    </div>
   </div>
 
-  <!-- 완료 -->
+  <!-- F 완료 -->
   <div class="frame">
-    <div class="cap"><span class="n">D</span><span class="t">완료</span><span class="d">트리밍 저장 · 재생/공유</span></div>
+    <div class="cap"><span class="n">F</span><span class="t">완료</span><span class="d">TRIMMED · 재생 / 공유</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
-      <div class="hd"><div class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div><span class="sq"></span><h1>트리밍 완료</h1><span class="r">파랑 · 8트</span></div>
-      <div class="statusbar done"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>0:12로 저장했어요 · 아카이브에 추가됨</div>
+      <div class="hd"><button class="x"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><span class="sq"></span><h1>자르기 완료</h1><span class="obadge ob-ok">완등</span><span class="r">파랑</span></div>
+      <div class="statusbar done">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>
+        23초에서 15초로 저장했어요 · 아카이브에 추가됨
+      </div>
       <div class="prev">
         <div class="pvtag">Media3 Player · 결과</div>
         <div class="fig"></div>
-        <div class="play" style="width:52px;height:52px;background:rgba(234,88,12,.9);left:50%;top:50%;transform:translate(-50%,-50%);bottom:auto"><svg viewBox="0 0 24 24" fill="#fff" style="width:22px;height:22px"><path d="M7 4l13 8-13 8z"/></svg></div>
-        <div class="time">0:00 / 0:12</div>
+        <button class="play" style="width:56px;height:56px;background:rgba(234,88,12,.92);left:50%;top:50%;transform:translate(-50%,-50%);bottom:auto"><svg viewBox="0 0 24 24" fill="#fff" style="width:22px;height:22px"><path d="M7 4l13 8-13 8z"/></svg></button>
+        <div class="time">0:00 / 0:15</div>
       </div>
       <div class="foot">
         <div class="acts">
@@ -168,6 +376,26 @@ body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-we
         </div>
         <div class="subrow"><a>아카이브로 이동</a></div>
       </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">완료 요약</div><dl>
+        <dt>소스</dt><dd>원본 <code>duration</code> → 결과 길이 (<code>endMillis − startMillis</code>)</dd>
+        <dt>형식</dt><dd><code>{원본}초에서 {결과}초로 저장했어요</code>. 두 값 모두 실제 값</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>결과 URI 로드 중 프리뷰 버퍼링, 공유 버튼 비활성</dd>
+        <dt>오류</dt><dd>결과 URI 재생 불가 시 배너를 오류로 교체 + 원본 재생 대안 제시</dd></dl></div>
+      <div class="grp"><div class="vn">결과 재생 소스</div><dl>
+        <dt>소스</dt><dd><code>AttemptMedia.displayVideoUri</code> = <code>trimmedVideoUri ?: originalVideoUri</code></dd>
+        <dt>공유</dt><dd>같은 URI로 <code>ACTION_SEND</code> (<code>video/*</code> + 읽기 권한). chooser 자체는 앱 밖</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 완료 피드백</div><dl>
+        <dt>트리거</dt><dd><code>completeTrim()</code> 반영</dd>
+        <dt>시작</dt><dd>처리 오버레이 불투명도 1 · 링 100% / 완료 배너 높이 0</dd>
+        <dt>종료</dt><dd>오버레이 제거, 배너 높이 auto + 체크 아이콘 scale .7 → 1</dd>
+        <dt>지속</dt><dd>오버레이 이탈 <code>--dur-exit 200ms</code> → 배너 진입 <code>--dur-emphasized 320ms</code> (순차)</dd>
+        <dt>이징</dt><dd>이탈 <code>accelerate</code> · 진입 <code>decelerate</code></dd>
+        <dt>중단</dt><dd>전환 중 닫기 → 배너 생략하고 즉시 이탈</dd>
+        <dt>반복</dt><dd>없음. 컨페티·반짝임 금지</dd>
+        <dt>축소</dt><dd>오버레이 즉시 제거, 배너 즉시 표시</dd></dl></div>
     </div>
   </div>
 
