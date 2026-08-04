@@ -1,6 +1,8 @@
 package com.weclimb.android
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.view.PreviewView
@@ -79,6 +81,13 @@ class CameraRecordingController(
     }
 
     fun start(output: File, onFinalized: (File) -> Unit, onError: (String) -> Unit): Boolean {
+        val hasCamera = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        val hasAudio = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        if (!hasCamera || !hasAudio) {
+            output.delete()
+            onError("카메라와 마이크 권한이 필요합니다")
+            return false
+        }
         val capture = videoCapture
         if (capture == null) {
             onError("카메라가 아직 준비되지 않았습니다")

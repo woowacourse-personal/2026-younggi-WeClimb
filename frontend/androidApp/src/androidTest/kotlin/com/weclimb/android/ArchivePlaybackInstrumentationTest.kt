@@ -13,6 +13,9 @@ import com.weclimb.session.Gym
 import com.weclimb.session.GymSource
 import com.weclimb.session.Session
 import com.weclimb.session.SessionStatus
+import java.io.File
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -65,7 +68,37 @@ class ArchivePlaybackInstrumentationTest {
         text("기록만 유지 · 재생 불가")
         text("테스트 암장")
         val repository = RoomSessionLoopRepository(SessionLoopDatabase.create(context).sessionLoopDao())
-        check(repository.archiveAttempts().single().attempt.id == "missing-video")
+        check(repository.archiveAttempts().single { it.attempt.id == "missing-video" }.attempt.id == "missing-video")
+    }
+
+    @Test
+    fun classifiesAnArchivedUnclassifiedAttemptAsFailure() {
+        scenario?.close()
+        val cache = File(context.cacheDir, "unclassified.mp4").apply { writeBytes(byteArrayOf(1, 2, 3)) }
+        val repository = RoomSessionLoopRepository(SessionLoopDatabase.create(context).sessionLoopDao())
+        repository.saveAttempt(
+            Attempt(
+                id = "unclassified",
+                sessionId = "session-1",
+                color = "blue",
+                recordedAtEpochMillis = 1_700_000_001_000L,
+                outcome = AttemptOutcome.UNCLASSIFIED,
+                videoUri = null,
+                cachePath = cache.absolutePath,
+            ),
+        ).getOrThrow()
+        scenario = ActivityScenario.launch(MainActivity::class.java)
+
+        text("영상").click()
+        text("분류 필요")
+        text("분류하기").click()
+        text("방금 시도, 성공했나요?")
+        text("실패").click()
+
+        text("영상 아카이브")
+        val classified = repository.attempts("session-1").single { it.id == "unclassified" }
+        assertEquals(AttemptOutcome.FAILURE, classified.outcome)
+        assertFalse(cache.exists())
     }
 
     private fun text(value: String) = device.wait(Until.findObject(By.text(value)), 15_000)

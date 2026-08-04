@@ -93,4 +93,16 @@ class AttemptMediaServiceTest {
         assertEquals(AttemptMediaState.TRIM_PENDING, cancelled.media.state)
         assertEquals("content://media/original", cancelled.originalVideoUri)
     }
+
+    @Test
+    fun returnsFailedTrimToPendingWhenUserDefersIt() {
+        val processing = assertIs<AttemptMediaResult.Updated>(AttemptMediaService().startTrim(pendingAttempt)).attempt
+        val failed = AttemptMediaService().failTrim(processing, "출력 저장 실패")
+
+        val deferred = AttemptMediaService().cancelTrim(failed)
+
+        assertEquals(AttemptMediaState.TRIM_PENDING, deferred.media.state)
+        assertEquals(null, deferred.media.errorMessage)
+        assertEquals("content://media/original", deferred.originalVideoUri)
+    }
 }

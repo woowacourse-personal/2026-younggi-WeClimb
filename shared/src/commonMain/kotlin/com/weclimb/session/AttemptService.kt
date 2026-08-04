@@ -8,6 +8,7 @@ enum class AttemptOutcome {
     SUCCESS,
     FAILURE,
     SAVE_PENDING,
+    UNCLASSIFIED,
 }
 
 data class Attempt(
@@ -36,6 +37,26 @@ data class SuccessAttemptResult(
 class AttemptService(
     private val mediaStore: MediaStoreGateway,
 ) {
+    fun recordUnclassified(
+        session: Session,
+        color: String,
+        cachePath: String,
+        recordedAtEpochMillis: Long,
+        attemptId: String = "${session.id}-$recordedAtEpochMillis",
+    ): Attempt {
+        require(color.isNotBlank()) { "색상은 비어 있을 수 없습니다" }
+        require(cachePath.isNotBlank()) { "캐시 경로는 비어 있을 수 없습니다" }
+        return Attempt(
+            id = attemptId,
+            sessionId = session.id,
+            color = color,
+            recordedAtEpochMillis = recordedAtEpochMillis,
+            outcome = AttemptOutcome.UNCLASSIFIED,
+            videoUri = null,
+            cachePath = cachePath,
+        )
+    }
+
     fun recordSuccessWithoutVideo(
         session: Session,
         color: String,
@@ -111,6 +132,65 @@ class AttemptService(
             onFailure = { attempt },
         )
     }
+
+    fun classifyUnclassifiedSuccess(attempt: Attempt, color: String): SuccessAttemptResult {
+        require(attempt.outcome == AttemptOutcome.UNCLASSIFIED)
+        require(color.isNotBlank()) { "색상은 비어 있을 수 없습니다" }
+        val cachePath = requireNotNull(attempt.cachePath)
+        return mediaStore.save(cachePath).fold(
+            onSuccess = { uri ->
+                SuccessAttemptResult(
+                    attempt = attempt.copy(
+                        color = color,
+                        outcome = AttemptOutcome.SUCCESS,
+                        videoUri = uri,
+                        cachePath = null,
+                        media = AttemptMedia.pending(uri),
+                    ),
+                    successCount = 1,
+                )
+            },
+            onFailure = { error ->
+                SuccessAttemptResult(
+                    attempt = attempt.copy(
+                        color = color,
+                    ),
+                    successCount = 0,
+                    saveErrorMessage = error.message ?: "성공 영상을 저장하지 못했습니다",
+                )
+            },
+        )
+    }
+
+    fun classifyUnclassifiedFailure(
+        attempt: Attempt,
+        color: String,
+        cache: CacheGateway,
+    ): Result<Attempt> = runCatching {
+        require(attempt.outcome == AttemptOutcome.UNCLASSIFIED)
+        require(color.isNotBlank()) { "색상은 비어 있을 수 없습니다" }
+        val cachePath = requireNotNull(attempt.cachePath)
+        cache.delete(cachePath).getOrThrow()
+        attempt.copy(
+            color = color,
+            outcome = AttemptOutcome.FAILURE,
+            videoUri = null,
+            cachePath = null,
+            media = AttemptMedia.none(),
+        )
+    }
+
+    fun discardPendingVideo(attempt: Attempt, cache: CacheGateway): Result<Attempt> = runCatching {
+        require(attempt.outcome == AttemptOutcome.SAVE_PENDING)
+        val cachePath = requireNotNull(attempt.cachePath)
+        cache.delete(cachePath).getOrThrow()
+        attempt.copy(
+            outcome = AttemptOutcome.SUCCESS,
+            videoUri = null,
+            cachePath = null,
+            media = AttemptMedia.none(),
+        )
+    }
 }
 
 data class FinishedSession(
@@ -123,6 +203,9 @@ class SessionFinisher(
     private val cache: CacheGateway,
 ) {
     fun finish(session: Session, attempts: List<Attempt>, endedAtEpochMillis: Long): Result<FinishedSession> = runCatching {
+        require(attempts.none { it.outcome == AttemptOutcome.SAVE_PENDING }) {
+            "저장 대기 영상을 먼저 처리해 주세요"
+        }
         attempts.filter { it.outcome == AttemptOutcome.FAILURE }
             .mapNotNull(Attempt::cachePath)
             .forEach { path -> cache.delete(path).getOrThrow() }

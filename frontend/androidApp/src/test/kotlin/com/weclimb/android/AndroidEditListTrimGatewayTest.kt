@@ -5,6 +5,8 @@ import com.weclimb.session.Attempt
 import com.weclimb.session.AttemptOutcome
 import com.weclimb.media.TrimRequest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AndroidEditListTrimGatewayTest {
@@ -70,7 +72,64 @@ class AndroidEditListTrimGatewayTest {
         assertEquals(request, exporter.request)
         assertEquals(request.outputPath, completedPath)
     }
+
+    @Test
+    fun ignoresSheetDismissAfterOpeningTrimScreen() {
+        val attempt = pendingAttempt("attempt-1")
+
+        assertEquals(false, shouldDeferTrim(currentChoice = null, dismissedChoice = attempt))
+    }
+
+    @Test
+    fun defersOnlyTheCurrentlyOpenMediaChoice() {
+        val attempt = pendingAttempt("attempt-1")
+        val otherAttempt = pendingAttempt("attempt-2")
+
+        assertEquals(true, shouldDeferTrim(currentChoice = attempt, dismissedChoice = attempt))
+        assertEquals(false, shouldDeferTrim(currentChoice = otherAttempt, dismissedChoice = attempt))
+    }
+
+    @Test
+    fun routesProcessingAndFailedTrimBackThroughDeferral() {
+        val pending = pendingAttempt("attempt-1")
+        val processing = pending.copy(
+            media = pending.media.copy(state = com.weclimb.media.AttemptMediaState.TRIM_PROCESSING),
+        )
+        val failed = pending.copy(
+            media = pending.media.copy(state = com.weclimb.media.AttemptMediaState.TRIM_FAILED),
+        )
+        val completed = pending.copy(
+            media = pending.media.copy(state = com.weclimb.media.AttemptMediaState.TRIMMED),
+        )
+
+        assertTrue(shouldDeferTrimOnBack(processing))
+        assertTrue(shouldDeferTrimOnBack(failed))
+        assertFalse(shouldDeferTrimOnBack(completed))
+    }
+
+    @Test
+    fun preventsDuplicateTrimSubmissionBeforeTheExporterStarts() {
+        val initial = AppState(screen = Screen.Trim, selectedAttempt = pendingAttempt("attempt-1"))
+
+        val started = initial.beginTrimSubmission(1_000L, 4_000L)
+
+        assertEquals(true, started?.trimInProgress)
+        assertEquals(1_000L, started?.lastTrimStartMillis)
+        assertEquals(4_000L, started?.lastTrimEndMillis)
+        assertEquals(null, started?.beginTrimSubmission(1_000L, 4_000L))
+    }
 }
+
+private fun pendingAttempt(id: String) = Attempt(
+    id = id,
+    sessionId = "session-1",
+    color = "blue",
+    recordedAtEpochMillis = 10L,
+    outcome = AttemptOutcome.SUCCESS,
+    videoUri = "content://video/original",
+    cachePath = null,
+    media = AttemptMedia.pending("content://video/original"),
+)
 
 private class FakeEditListExporter : EditListExporter {
     var request: TrimRequest? = null
@@ -85,6 +144,8 @@ private class FakeEditListExporter : EditListExporter {
         this.request = request
         this.onCompleted = onCompleted
     }
+
+    override fun cancel() = Unit
 
     fun complete(outputPath: String) {
         requireNotNull(onCompleted)(outputPath)

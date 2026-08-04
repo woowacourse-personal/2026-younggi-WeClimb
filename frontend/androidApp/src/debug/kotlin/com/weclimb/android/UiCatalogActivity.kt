@@ -6,6 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
@@ -19,14 +22,14 @@ import com.weclimb.session.Gym
 import com.weclimb.session.GymSource
 import com.weclimb.session.Session
 import com.weclimb.session.SessionStatus
-import java.time.LocalDateTime
-import java.time.ZoneId
+import java.util.Calendar
+import java.util.TimeZone
 
 internal class UiCatalogActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val stateName = intent.getStringExtra(EXTRA_STATE)
-        val catalogState = catalogState(stateName)
+        var displayedState by mutableStateOf(catalogState(stateName))
         setContent {
             val targetDensity = targetCatalogDensity(resources.displayMetrics.widthPixels)
             CompositionLocalProvider(
@@ -47,7 +50,7 @@ internal class UiCatalogActivity : ComponentActivity() {
                             PermissionSettingsCardUi(openSettings = {})
                         } else {
                             RebuiltSessionLoopApp(
-                                state = catalogState,
+                                state = displayedState,
                                 requestPermissions = {},
                                 openAppSettings = {},
                                 completeOnboarding = {},
@@ -61,17 +64,26 @@ internal class UiCatalogActivity : ComponentActivity() {
                                 toggleRecording = {},
                                 classifySuccess = {},
                                 classifyFailure = {},
+                                captureSystemBack = {},
                                 openTrim = {},
                                 deferTrim = {},
                                 keepOriginal = {},
                                 openArchive = {},
+                                openClassification = {},
                                 playAttempt = {},
                                 closePlayback = {},
                                 submitTrim = { _, _ -> },
-                                cancelTrim = {},
+                                cancelTrim = {
+                                    displayedState = displayedState.copy(
+                                        screen = Screen.Board,
+                                        selectedAttempt = null,
+                                        trimInProgress = false,
+                                    )
+                                },
                                 backToBoard = {},
                                 shareAttempt = {},
                                 retryPendingAttempt = {},
+                                discardPendingAttempt = {},
                                 retryStatusAction = {},
                                 requestEndSession = {},
                                 endSession = {},
@@ -113,7 +125,7 @@ internal class UiCatalogActivity : ComponentActivity() {
         val screen = when (stateName) {
             "BoardDialog" -> Screen.Board
             "OnboardingRequest", "OnboardingDenied", "OnboardingGranted" -> Screen.Onboarding
-            "CapturePreparing", "CaptureError", "CaptureReady", "CaptureRecording", "CaptureClassify", "MediaChoice" -> Screen.Capture
+            "CapturePreparing", "CaptureError", "CaptureReady", "CaptureRecording", "CaptureClassify", "CaptureClassifying", "MediaChoice" -> Screen.Capture
             "TrimInvalid", "TrimProcessing", "TrimFailed", "TrimCompleted" -> Screen.Trim
             "LoadingSuccess", "LoadingError" -> Screen.Home
             "Playback" -> Screen.Archive
@@ -195,7 +207,10 @@ internal class UiCatalogActivity : ComponentActivity() {
             selectedAttempt = attempt,
             selectedVideoDurationMillis = 19_000L,
             cameraReady = stateName != "CapturePreparing" && stateName != "CaptureError",
-            capturedFile = cacheDir.resolve("catalog-attempt.mp4").takeIf { stateName == "CaptureClassify" },
+            capturedFile = cacheDir.resolve("catalog-attempt.mp4").takeIf {
+                stateName == "CaptureClassify" || stateName == "CaptureClassifying"
+            },
+            classificationInProgress = stateName == "CaptureClassifying",
             recording = stateName == "CaptureRecording",
             permissionsGranted = stateName != "OnboardingRequest" && stateName != "OnboardingDenied",
             permissionRequested = stateName == "OnboardingDenied",
@@ -209,6 +224,7 @@ internal class UiCatalogActivity : ComponentActivity() {
                 "TrimInvalid" -> "선택 구간을 확인해 주세요"
                 else -> null
             },
+            statusIsError = stateName == "LoadingError",
             unavailableVideoAttemptId = "archive-red",
             mediaChoiceAttempt = attempt.takeIf { stateName == "MediaChoice" },
             playingVideoUri = "content://com.weclimb.android.catalog/video".takeIf { stateName == "Playback" },
@@ -223,8 +239,8 @@ internal class UiCatalogActivity : ComponentActivity() {
 internal fun targetCatalogDensity(widthPixels: Int): Float = widthPixels / 390f
 
 private fun catalogEpoch(day: Int, hour: Int, minute: Int): Long =
-    LocalDateTime
-        .of(2026, 7, day, hour, minute)
-        .atZone(ZoneId.of("Asia/Seoul"))
-        .toInstant()
-        .toEpochMilli()
+    Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul")).run {
+        set(2026, Calendar.JULY, day, hour, minute, 0)
+        set(Calendar.MILLISECOND, 0)
+        timeInMillis
+    }

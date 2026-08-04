@@ -85,7 +85,9 @@ class AttemptMediaService {
         ),
     )
 
-    fun cancelTrim(attempt: Attempt): Attempt = if (attempt.media.state == AttemptMediaState.TRIM_PROCESSING) {
+    fun cancelTrim(attempt: Attempt): Attempt = if (
+        attempt.media.state in setOf(AttemptMediaState.TRIM_PROCESSING, AttemptMediaState.TRIM_FAILED)
+    ) {
         attempt.copy(
             media = attempt.media.copy(
                 state = AttemptMediaState.TRIM_PENDING,

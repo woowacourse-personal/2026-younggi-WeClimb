@@ -17,6 +17,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
+import androidx.media3.common.util.ExperimentalApi
+import androidx.media3.common.util.UnstableApi
 import com.weclimb.session.AppDestination
 import com.weclimb.session.Attempt
 import com.weclimb.session.AttemptOutcome
@@ -30,6 +32,7 @@ import com.weclimb.session.PermissionState
 import com.weclimb.session.Session
 import com.weclimb.session.SessionFinisher
 import com.weclimb.session.SessionNavigator
+import com.weclimb.session.SuccessAttemptResult
 import com.weclimb.session.displayVideoUri
 import com.weclimb.session.originalVideoUri
 import com.weclimb.media.AttemptShareResult
@@ -40,10 +43,13 @@ import com.weclimb.media.TrimRequest
 import java.util.UUID
 import java.util.concurrent.Executors
 
+@UnstableApi
+@ExperimentalApi
 class MainActivity : ComponentActivity() {
     private val executor = Executors.newSingleThreadExecutor()
     private lateinit var repository: RoomSessionLoopRepository
     private lateinit var recorder: CameraRecordingController
+    private val trimExports = TrimExportCoordinator { Media3EditListExporter(this) }
     private var state by mutableStateOf(AppState())
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions(),
@@ -70,10 +76,12 @@ class MainActivity : ComponentActivity() {
                     ::toggleRecording,
                     ::classifySuccess,
                     ::classifyFailure,
+                    ::captureSystemBack,
                     ::openTrim,
                     ::deferTrim,
                     ::keepOriginal,
                     ::openArchive,
+                    ::openClassification,
                     ::playAttempt,
                     ::closePlayback,
                     ::submitTrim,
@@ -81,6 +89,7 @@ class MainActivity : ComponentActivity() {
                     ::backToBoard,
                     ::shareAttempt,
                     ::retryPendingAttempt,
+                    ::discardPendingAttempt,
                     ::retryStatusAction,
                     ::requestEndSession,
                     ::endSession,
@@ -98,7 +107,12 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
     }
 
-    private fun loadInitialState(message: String? = null, mediaChoiceAttemptId: String? = null) = background {
+    private fun loadInitialState(
+        message: String? = null,
+        mediaChoiceAttemptId: String? = null,
+        statusIsError: Boolean = false,
+        statusRetryAttemptId: String? = null,
+    ) = background {
         runCatching {
             repository.importSeedGyms(loadSeedGyms(this))
             repository.recoverInterruptedTrims().getOrThrow()
@@ -113,6 +127,8 @@ class MainActivity : ComponentActivity() {
                 mediaChoiceAttempt = attempts.firstOrNull { it.id == mediaChoiceAttemptId },
                 cameraReady = state.cameraReady,
                 message = message,
+                statusIsError = statusIsError,
+                statusRetryAttemptId = statusRetryAttemptId,
             )
         }.fold(::render, ::showError)
     }
@@ -200,7 +216,31 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun openArchive() = background {
-        render(state.copy(screen = Screen.Archive, archive = repository.archiveAttempts()))
+        render(
+            state.copy(
+                screen = Screen.Archive,
+                archive = repository.archiveAttempts(),
+                capturedFile = null,
+                classificationAttempt = null,
+                classificationInProgress = false,
+            ),
+        )
+    }
+
+    private fun openClassification(attempt: Attempt) {
+        val cachePath = attempt.cachePath ?: return showError(IllegalStateException("분류할 영상을 찾을 수 없습니다"))
+        val file = File(cachePath)
+        if (!file.isFile) return showError(IllegalStateException("분류할 영상을 찾을 수 없습니다"))
+        render(
+            state.copy(
+                screen = Screen.Capture,
+                capturedFile = file,
+                classificationAttempt = attempt,
+                classificationInProgress = false,
+                cameraReady = true,
+                message = "성공 또는 실패를 선택하세요",
+            ),
+        )
     }
 
     private fun openTrim(attempt: Attempt) {
@@ -220,13 +260,17 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun deferTrim(attempt: Attempt) {
-        loadInitialState("${attempt.color} 영상은 아카이브에서 나중에 자를 수 있습니다")
+        if (!shouldDeferTrim(state.mediaChoiceAttempt, attempt)) return
+        loadInitialState("${holdLabel(attempt.color)} 영상은 아카이브에서 나중에 자를 수 있습니다")
     }
 
     private fun backToBoard() = loadInitialState()
 
-    private fun cancelTrim(attempt: Attempt) = background {
-        repository.saveAttempt(AttemptMediaService().cancelTrim(attempt)).fold({ loadInitialState() }, ::showError)
+    private fun cancelTrim(attempt: Attempt) {
+        trimExports.cancel(attempt.id)
+        background {
+            repository.saveAttempt(AttemptMediaService().cancelTrim(attempt)).fold({ loadInitialState() }, ::showError)
+        }
     }
 
     private fun closePlayback() {
@@ -244,6 +288,7 @@ class MainActivity : ComponentActivity() {
 
     private fun submitTrim(startMillis: Long, endMillis: Long) {
         val attempt = state.selectedAttempt ?: return
+        val submittedState = state.beginTrimSubmission(startMillis, endMillis) ?: return
         val sourceUri = attempt.originalVideoUri
         val duration = videoDurationMillis(sourceUri)
         if (duration == null) {
@@ -261,23 +306,29 @@ class MainActivity : ComponentActivity() {
             failTrim(attempt, "트리밍 구간을 확인하세요")
             return
         }
-        render(state.copy(lastTrimStartMillis = startMillis, lastTrimEndMillis = endMillis, message = null))
+        render(submittedState)
         background {
             when (val started = AttemptMediaService().startTrim(attempt)) {
                 is AttemptMediaResult.Updated -> repository.saveAttempt(started.attempt).fold(
                     onSuccess = {
                         render(state.copy(trimInProgress = true, selectedAttempt = started.attempt, message = "영상을 자르는 중입니다"))
                         runOnUiThread {
-                            Media3EditListExporter(this).export(
+                            val accepted = trimExports.start(
+                                attemptId = started.attempt.id,
                                 request = request,
                                 onCompleted = { path -> promoteTrim(started.attempt, path) },
                                 onError = { message -> failTrim(started.attempt, message) },
                             )
+                            if (!accepted) {
+                                failTrim(started.attempt, "이미 영상을 자르고 있습니다")
+                            }
                         }
                     },
-                    onFailure = ::showError,
+                    onFailure = { error ->
+                        render(state.copy(trimInProgress = false, message = error.message ?: "트리밍을 시작하지 못했습니다"))
+                    },
                 )
-                is AttemptMediaResult.Rejected -> render(state.copy(message = started.message))
+                is AttemptMediaResult.Rejected -> render(state.copy(trimInProgress = false, message = started.message))
             }
         }
     }
@@ -408,39 +459,106 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun classifySuccess(color: String) {
-        val session = state.activeSession ?: return
-        val file = state.capturedFile ?: return
+    private fun captureSystemBack(color: String) {
+        if (state.classificationInProgress) return
+        if (state.recording) {
+            toggleRecording()
+            return
+        }
+        if (state.classificationAttempt != null) {
+            openArchive()
+            return
+        }
+        val session = state.activeSession ?: return backToBoard()
+        val file = state.capturedFile ?: return backToBoard()
+        val attempt = AttemptService(AndroidMediaStoreGateway(this)).recordUnclassified(
+            session = session,
+            color = color,
+            cachePath = file.absolutePath,
+            recordedAtEpochMillis = System.currentTimeMillis(),
+            attemptId = newId(),
+        )
+        render(state.copy(classificationInProgress = true))
         background {
-            val result = AttemptService(AndroidMediaStoreGateway(this)).recordSuccess(
-                session,
-                color,
-                file.absolutePath,
-                System.currentTimeMillis(),
+            repository.saveAttempt(attempt).fold(
+                onSuccess = { loadInitialState("미분류 시도를 보관했어요") },
+                onFailure = ::showError,
             )
+        }
+    }
+
+    private fun classifySuccess(color: String) {
+        val submitted = state.beginClassification() ?: return
+        val file = state.capturedFile ?: return
+        val existing = state.classificationAttempt
+        val session = state.activeSession
+        if (existing == null && session == null) return
+        render(submitted)
+        background {
+            val service = AttemptService(AndroidMediaStoreGateway(this))
+            val result = if (existing == null) {
+                service.recordSuccess(
+                    requireNotNull(session),
+                    color,
+                    file.absolutePath,
+                    System.currentTimeMillis(),
+                )
+            } else {
+                service.classifyUnclassifiedSuccess(existing, color)
+            }
+            val presentation = attemptSavePresentation(result)
             repository.saveAttempt(result.attempt).fold(
-                onSuccess = { loadInitialState(result.saveErrorMessage, result.attempt.id) },
+                onSuccess = {
+                    if (existing == null) {
+                        loadInitialState(
+                            message = presentation.message,
+                            mediaChoiceAttemptId = presentation.mediaChoiceAttemptId,
+                            statusIsError = presentation.isError,
+                            statusRetryAttemptId = presentation.retryAttemptId,
+                        )
+                    } else if (result.attempt.outcome == AttemptOutcome.UNCLASSIFIED) {
+                        render(
+                            state.copy(
+                                classificationAttempt = result.attempt,
+                                classificationInProgress = false,
+                                message = result.saveErrorMessage,
+                                statusIsError = true,
+                            ),
+                        )
+                    } else {
+                        openArchive()
+                    }
+                },
                 onFailure = ::showError,
             )
         }
     }
 
     private fun classifyFailure(color: String) {
-        val session = state.activeSession ?: return
+        val submitted = state.beginClassification() ?: return
         val file = state.capturedFile ?: return
+        val existing = state.classificationAttempt
+        val session = state.activeSession
+        if (existing == null && session == null) return
+        render(submitted)
         background {
-            val recordedAt = System.currentTimeMillis()
-            val attempt = Attempt(
-                id = "${session.id}-$recordedAt",
-                sessionId = session.id,
-                color = color,
-                recordedAtEpochMillis = recordedAt,
-                outcome = AttemptOutcome.FAILURE,
-                videoUri = null,
-                cachePath = file.absolutePath,
-            )
+            val attempt = if (existing == null) {
+                Attempt(
+                    id = newId(),
+                    sessionId = requireNotNull(session).id,
+                    color = color,
+                    recordedAtEpochMillis = System.currentTimeMillis(),
+                    outcome = AttemptOutcome.FAILURE,
+                    videoUri = null,
+                    cachePath = file.absolutePath,
+                )
+            } else {
+                AttemptService(AndroidMediaStoreGateway(this))
+                    .classifyUnclassifiedFailure(existing, color, AndroidCacheGateway())
+                    .getOrThrow()
+            }
             repository.saveAttempt(attempt).fold(
-            onSuccess = { loadInitialState() },
+                onSuccess = { if (existing == null) loadInitialState() else openArchive() },
                 onFailure = ::showError,
             )
         }
@@ -461,10 +579,49 @@ class MainActivity : ComponentActivity() {
 
     private fun retryPendingAttempt(attempt: Attempt) = background {
         val retried = AttemptService(AndroidMediaStoreGateway(this)).retrySave(attempt)
-        repository.saveAttempt(retried).fold({ loadInitialState() }, ::showError)
+        val presentation = attemptSavePresentation(
+            SuccessAttemptResult(
+                attempt = retried,
+                successCount = if (retried.outcome == AttemptOutcome.SUCCESS) 1 else 0,
+                saveErrorMessage = if (retried.outcome == AttemptOutcome.SAVE_PENDING) {
+                    "영상을 저장하지 못했습니다"
+                } else {
+                    "영상을 저장했어요"
+                },
+            ),
+        )
+        repository.saveAttempt(retried).fold(
+            onSuccess = {
+                loadInitialState(
+                    message = presentation.message,
+                    mediaChoiceAttemptId = presentation.mediaChoiceAttemptId,
+                    statusIsError = presentation.isError,
+                    statusRetryAttemptId = presentation.retryAttemptId,
+                )
+            },
+            onFailure = ::showError,
+        )
+    }
+
+    private fun discardPendingAttempt(attempt: Attempt) = background {
+        AttemptService(AndroidMediaStoreGateway(this))
+            .discardPendingVideo(attempt, AndroidCacheGateway())
+            .fold(
+                onSuccess = { discarded ->
+                    repository.saveAttempt(discarded).fold(
+                        onSuccess = { loadInitialState("영상은 폐기하고 성공 기록은 유지했어요") },
+                        onFailure = ::showError,
+                    )
+                },
+                onFailure = ::showError,
+            )
     }
 
     private fun retryStatusAction() {
+        state.retryableSaveAttempt()?.let {
+            retryPendingAttempt(it)
+            return
+        }
         when (state.screen) {
             Screen.Trim -> {
                 val start = state.lastTrimStartMillis
@@ -479,61 +636,20 @@ class MainActivity : ComponentActivity() {
 
     private fun background(block: () -> Unit) { executor.execute { runCatching(block).onFailure(::showError) } }
     private fun render(value: AppState) { runOnUiThread { state = value } }
-    private fun showError(error: Throwable) { render(state.copy(message = error.message ?: "처리하지 못했습니다")) }
+    private fun showError(error: Throwable) {
+        render(
+            state.copy(
+                message = error.message ?: "처리하지 못했습니다",
+                statusIsError = true,
+                statusRetryAttemptId = null,
+                classificationInProgress = false,
+            ),
+        )
+    }
     private fun hasPermission(permission: String) = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
     private fun newId() = UUID.randomUUID().toString()
 }
 
-internal fun isValidTrimRange(startMillis: Long, endMillis: Long, durationMillis: Long): Boolean =
-    startMillis >= 0L && endMillis > startMillis && endMillis <= durationMillis
-
-internal fun AppState.afterTrimCompleted(
-    attempt: Attempt,
-    refreshedAttempts: List<Attempt>,
-): AppState = copy(
-    screen = Screen.Trim,
-    attempts = refreshedAttempts,
-    selectedAttempt = attempt,
-    trimInProgress = false,
-    message = null,
-)
-
-internal data class AppState(
-    val screen: Screen = Screen.Loading,
-    val gyms: List<Gym> = emptyList(),
-    val activeSession: Session? = null,
-    val attempts: List<Attempt> = emptyList(),
-    val archive: List<ArchiveAttempt> = emptyList(),
-    val selectedAttempt: Attempt? = null,
-    val selectedVideoDurationMillis: Long = 19_000L,
-    val mediaChoiceAttempt: Attempt? = null,
-    val playingVideoUri: String? = null,
-    val unavailableVideoAttemptId: String? = null,
-    val trimInProgress: Boolean = false,
-    val lastTrimStartMillis: Long? = null,
-    val lastTrimEndMillis: Long? = null,
-    val capturedFile: File? = null,
-    val cameraReady: Boolean = false,
-    val recording: Boolean = false,
-    val confirmEnd: Boolean = false,
-    val permissionsGranted: Boolean = false,
-    val permissionRequested: Boolean = false,
-    val settingsRequired: Boolean = false,
-    val message: String? = null,
-)
-internal enum class Screen {
-    Loading,
-    Onboarding,
-    Home,
-    Gyms,
-    Board,
-    Capture,
-    Trim,
-    Archive,
-    SessionEndPreview,
-    ReportPreview,
-    RecordsPreview,
-}
 private fun AppDestination?.toScreen() = when (this) { AppDestination.Home -> Screen.Home; is AppDestination.SessionBoard -> Screen.Board; null -> Screen.Onboarding }
 
 @Composable
@@ -552,10 +668,12 @@ private fun SessionLoopApp(
     toggleRecording: () -> Unit,
     classifySuccess: (String) -> Unit,
     classifyFailure: (String) -> Unit,
+    captureSystemBack: (String) -> Unit,
     openTrim: (Attempt) -> Unit,
     deferTrim: (Attempt) -> Unit,
     keepOriginal: (Attempt) -> Unit,
     openArchive: () -> Unit,
+    openClassification: (Attempt) -> Unit,
     playAttempt: (Attempt) -> Unit,
     closePlayback: () -> Unit,
     submitTrim: (Long, Long) -> Unit,
@@ -563,6 +681,7 @@ private fun SessionLoopApp(
     backToBoard: () -> Unit,
     shareAttempt: (Attempt) -> Unit,
     retryPendingAttempt: (Attempt) -> Unit,
+    discardPendingAttempt: (Attempt) -> Unit,
     retryStatusAction: () -> Unit,
     requestEndSession: () -> Unit,
     endSession: () -> Unit,
@@ -572,8 +691,8 @@ private fun SessionLoopApp(
     RebuiltSessionLoopApp(
         state, requestPermissions, openAppSettings, completeOnboarding, openGyms, openCapture,
         recordSuccessWithoutVideo, startSession, addGym, renameGym, hideGym, toggleRecording, classifySuccess,
-        classifyFailure, openTrim, deferTrim, keepOriginal, openArchive, playAttempt,
-        closePlayback, submitTrim, cancelTrim, backToBoard, shareAttempt, retryPendingAttempt,
+        classifyFailure, captureSystemBack, openTrim, deferTrim, keepOriginal, openArchive, openClassification, playAttempt,
+        closePlayback, submitTrim, cancelTrim, backToBoard, shareAttempt, retryPendingAttempt, discardPendingAttempt,
         retryStatusAction, requestEndSession, endSession, openStaticScreen, attachCameraPreview,
     )
 }

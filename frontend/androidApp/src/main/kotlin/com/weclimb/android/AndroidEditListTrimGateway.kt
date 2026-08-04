@@ -3,6 +3,8 @@ package com.weclimb.android
 import android.content.Context
 import android.net.Uri
 import androidx.media3.common.MediaItem
+import androidx.media3.common.util.ExperimentalApi
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.transformer.Composition
 import androidx.media3.transformer.EditedMediaItem
 import androidx.media3.transformer.ExportException
@@ -18,6 +20,8 @@ interface EditListExporter {
         onCompleted: (String) -> Unit,
         onError: (String) -> Unit,
     )
+
+    fun cancel()
 }
 
 class AndroidEditListTrimGateway(
@@ -28,12 +32,19 @@ class AndroidEditListTrimGateway(
     override fun start(request: TrimRequest) {
         exporter.export(request, onCompleted, onError)
     }
+
+    fun cancel() {
+        exporter.cancel()
+    }
 }
 
+@UnstableApi
+@ExperimentalApi
 class Media3EditListExporter(
     private val context: Context,
 ) : EditListExporter {
     private var transformer: Transformer? = null
+    private var activeOutput: File? = null
 
     override fun export(
         request: TrimRequest,
@@ -47,6 +58,7 @@ class Media3EditListExporter(
         }
 
         val listener = exportListener(output, onCompleted, onError)
+        activeOutput = output
         transformer = Transformer.Builder(context)
             .experimentalSetMp4EditListTrimEnabled(true)
             .addListener(listener)
@@ -66,9 +78,17 @@ class Media3EditListExporter(
             transformer?.start(EditedMediaItem.Builder(input).build(), output.absolutePath)
         }.onFailure { error ->
             transformer = null
+            activeOutput = null
             output.delete()
             onError(error.message ?: "트리밍을 시작하지 못했습니다")
         }
+    }
+
+    override fun cancel() {
+        transformer?.cancel()
+        transformer = null
+        activeOutput?.delete()
+        activeOutput = null
     }
 
     private fun exportListener(
@@ -78,6 +98,7 @@ class Media3EditListExporter(
     ): Transformer.Listener = object : Transformer.Listener {
         override fun onCompleted(composition: Composition, result: ExportResult) {
             transformer = null
+            activeOutput = null
             if (output.isFile && output.length() > 0L) {
                 onCompleted(output.absolutePath)
             } else {
@@ -92,6 +113,7 @@ class Media3EditListExporter(
             exception: ExportException,
         ) {
             transformer = null
+            activeOutput = null
             output.delete()
             onError(exception.message ?: "트리밍에 실패했습니다")
         }

@@ -45,7 +45,7 @@ class CameraRecordingFlowInstrumentationTest {
 
     @Test
     fun recordsAndClassifiesFailedVideoThroughCameraX() {
-        recordVideo()
+        recordVideo("초록")
 
         text("실패").click()
 
@@ -54,6 +54,7 @@ class CameraRecordingFlowInstrumentationTest {
         val session = requireNotNull(repository.activeSession())
         val failure = repository.attempts(session.id).single()
         assertEquals(AttemptOutcome.FAILURE, failure.outcome)
+        assertEquals("green", failure.color)
         val failedCache = requireNotNull(failure.cachePath)
         assertTrue(java.io.File(failedCache).exists())
 
@@ -91,7 +92,7 @@ class CameraRecordingFlowInstrumentationTest {
         text("성공").click()
 
         text("나중에").click()
-        text("blue 영상은 아카이브에서 나중에 자를 수 있습니다")
+        text("파랑 영상은 아카이브에서 나중에 자를 수 있습니다")
         text("클라이밍 종료").click()
         text("종료하기").click()
         text("영상").click()
@@ -124,6 +125,90 @@ class CameraRecordingFlowInstrumentationTest {
         assertTrue(attempt.media.state == AttemptMediaState.TRIMMED)
     }
 
+    @Test
+    fun classifiesRecordedVideoWithTheSelectedHoldColor() {
+        text("▣  촬영하기").click()
+        text("파랑").click()
+        text("초록").click()
+        description("녹화 시작").click()
+        description("녹화 중지")
+        Thread.sleep(1_000)
+        description("녹화 중지").click()
+        text("방금 시도, 성공했나요?")
+
+        text("성공").click()
+        text("지금 자르기")
+
+        val repository = RoomSessionLoopRepository(SessionLoopDatabase.create(context).sessionLoopDao())
+        val session = requireNotNull(repository.activeSession())
+        assertEquals("green", repository.attempts(session.id).single().color)
+    }
+
+    @Test
+    fun systemBackStopsRecordingAndKeepsTheVideoForClassification() {
+        text("▣  촬영하기").click()
+        description("녹화 시작").click()
+        description("녹화 중지")
+        Thread.sleep(1_000)
+
+        device.pressBack()
+
+        text("방금 시도, 성공했나요?")
+        assertTrue(
+            context.cacheDir.listFiles().orEmpty().any { file ->
+                file.name.startsWith("attempt-") && file.isFile && file.length() > 0L
+            },
+        )
+    }
+
+    @Test
+    fun systemBackFromClassificationPersistsAnUnclassifiedAttempt() {
+        recordVideo("초록")
+
+        device.pressBack()
+
+        text("●  클라이밍 중")
+        val repository = RoomSessionLoopRepository(SessionLoopDatabase.create(context).sessionLoopDao())
+        val session = requireNotNull(repository.activeSession())
+        val attempt = repository.attempts(session.id).single()
+        assertEquals(AttemptOutcome.UNCLASSIFIED, attempt.outcome)
+        assertEquals("green", attempt.color)
+        assertTrue(java.io.File(requireNotNull(attempt.cachePath)).exists())
+    }
+
+    @Test
+    fun dismissingMediaChoiceDefersTrimmingAndKeepsTheOriginal() {
+        recordVideo()
+        text("성공").click()
+        text("이 영상, 어떻게 할까요?")
+
+        device.pressBack()
+
+        text("●  클라이밍 중")
+        val repository = RoomSessionLoopRepository(SessionLoopDatabase.create(context).sessionLoopDao())
+        val session = requireNotNull(repository.activeSession())
+        val attempt = repository.attempts(session.id).single()
+        assertEquals(AttemptMediaState.TRIM_PENDING, attempt.media.state)
+        assertTrue(isReadableVideoUri(context, attempt.originalVideoUri))
+    }
+
+    @Test
+    fun backBeforeTrimStartsDefersTheAttemptAndKeepsTheOriginal() {
+        recordVideo()
+        text("성공").click()
+        text("지금 자르기").click()
+        text("앞뒤 자르기")
+
+        device.pressBack()
+
+        text("●  클라이밍 중")
+        val repository = RoomSessionLoopRepository(SessionLoopDatabase.create(context).sessionLoopDao())
+        val session = requireNotNull(repository.activeSession())
+        val attempt = repository.attempts(session.id).single()
+        assertEquals(AttemptMediaState.TRIM_PENDING, attempt.media.state)
+        assertTrue(isReadableVideoUri(context, attempt.originalVideoUri))
+    }
+
     private fun completeOnboardingAndStartSession() {
         text("카메라·마이크 허용하기").click()
         text("시작하기").click()
@@ -134,8 +219,12 @@ class CameraRecordingFlowInstrumentationTest {
         Thread.sleep(2_000)
     }
 
-    private fun recordVideo() {
+    private fun recordVideo(selectedColor: String? = null) {
         text("▣  촬영하기").click()
+        selectedColor?.let {
+            text("파랑").click()
+            text(it).click()
+        }
         description("녹화 시작").click()
         description("녹화 중지")
         Thread.sleep(1_000)

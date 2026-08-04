@@ -67,6 +67,77 @@ class AttemptServiceTest {
     }
 
     @Test
+    fun recordsCapturedVideoAsUnclassifiedWithoutChangingSessionCounts() {
+        val result = AttemptService(FailingMediaStore()).recordUnclassified(
+            session = activeSession,
+            color = "green",
+            cachePath = "/cache/unclassified.mp4",
+            recordedAtEpochMillis = 2L,
+            attemptId = "unclassified-1",
+        )
+
+        assertEquals("unclassified-1", result.id)
+        assertEquals(AttemptOutcome.UNCLASSIFIED, result.outcome)
+        assertEquals("green", result.color)
+        assertEquals("/cache/unclassified.mp4", result.cachePath)
+        assertEquals(AttemptMediaState.NONE, result.media.state)
+    }
+
+    @Test
+    fun classifiesUnclassifiedAttemptAsSuccessWithoutChangingItsIdentity() {
+        val pending = unclassifiedAttempt()
+
+        val result = AttemptService(SuccessfulMediaStore()).classifyUnclassifiedSuccess(pending, "yellow")
+
+        assertEquals(pending.id, result.attempt.id)
+        assertEquals(AttemptOutcome.SUCCESS, result.attempt.outcome)
+        assertEquals("yellow", result.attempt.color)
+        assertEquals("content://video/1", result.attempt.videoUri)
+        assertEquals(null, result.attempt.cachePath)
+        assertEquals(AttemptMediaState.TRIM_PENDING, result.attempt.media.state)
+    }
+
+    @Test
+    fun keepsUnclassifiedAttemptRetryableWhenMediaStoreSaveFails() {
+        val result = AttemptService(FailingMediaStore())
+            .classifyUnclassifiedSuccess(unclassifiedAttempt(), "yellow")
+
+        assertEquals(AttemptOutcome.UNCLASSIFIED, result.attempt.outcome)
+        assertEquals("yellow", result.attempt.color)
+        assertEquals("/cache/unclassified.mp4", result.attempt.cachePath)
+        assertEquals("MediaStore write failed", result.saveErrorMessage)
+    }
+
+    @Test
+    fun classifiesUnclassifiedAttemptAsFailureAndDeletesItsCache() {
+        val cache = RecordingCache()
+
+        val result = AttemptService(FailingMediaStore())
+            .classifyUnclassifiedFailure(unclassifiedAttempt(), "red", cache)
+            .getOrThrow()
+
+        assertEquals(AttemptOutcome.FAILURE, result.outcome)
+        assertEquals("red", result.color)
+        assertEquals(null, result.cachePath)
+        assertEquals(listOf("/cache/unclassified.mp4"), cache.deleted)
+    }
+
+    @Test
+    fun discardsPendingVideoButKeepsTheSuccessfulAttempt() {
+        val cache = RecordingCache()
+        val pending = Attempt("pending-1", activeSession.id, "blue", 2L, AttemptOutcome.SAVE_PENDING, null, "/cache/pending.mp4")
+
+        val result = AttemptService(FailingMediaStore()).discardPendingVideo(pending, cache).getOrThrow()
+
+        assertEquals(pending.id, result.id)
+        assertEquals(AttemptOutcome.SUCCESS, result.outcome)
+        assertEquals(null, result.videoUri)
+        assertEquals(null, result.cachePath)
+        assertEquals(AttemptMediaState.NONE, result.media.state)
+        assertEquals(listOf("/cache/pending.mp4"), cache.deleted)
+    }
+
+    @Test
     fun endsSessionAndDeletesOnlyFailedCacheAttempts() {
         val cache = RecordingCache()
         val attempts = listOf(
@@ -90,6 +161,26 @@ class AttemptServiceTest {
 
         assertTrue(result.isFailure)
     }
+
+    @Test
+    fun keepsSessionActiveWhileASuccessVideoIsWaitingToBeSaved() {
+        val pending = Attempt("pending", activeSession.id, "blue", 2L, AttemptOutcome.SAVE_PENDING, null, "/cache/pending.mp4")
+
+        val result = SessionFinisher(RecordingCache()).finish(activeSession, listOf(pending), 4L)
+
+        assertTrue(result.isFailure)
+        assertEquals("저장 대기 영상을 먼저 처리해 주세요", result.exceptionOrNull()?.message)
+    }
+
+    private fun unclassifiedAttempt() = Attempt(
+        id = "unclassified-1",
+        sessionId = activeSession.id,
+        color = "blue",
+        recordedAtEpochMillis = 2L,
+        outcome = AttemptOutcome.UNCLASSIFIED,
+        videoUri = null,
+        cachePath = "/cache/unclassified.mp4",
+    )
 
     private class SuccessfulMediaStore : MediaStoreGateway {
         override fun save(path: String): Result<String> = Result.success("content://video/1")

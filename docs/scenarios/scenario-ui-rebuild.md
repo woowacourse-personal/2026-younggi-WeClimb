@@ -2,10 +2,10 @@
 title: 'We-Climb 시안 충실도 UI 재구현'
 type: 'feature'
 created: '2026-07-24'
-status: 'auto-verified'
-baseline_commit: 'd81b24d'
+status: 'verifying'
+baseline_commit: 'a4148c3'
 test_command: 'cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUnitTest :androidApp:connectedDebugAndroidTest'
-loop_iteration: 3
+loop_iteration: 6
 ---
 
 <frozen-after-approval reason="human-owned contract - only the human changes this after approval">
@@ -62,12 +62,13 @@ design-bundle의 구조, 상태, 컴포넌트를 충실히 표현하지 못한�
 - **Then** 실패 Attempt와 캐시 정리 규칙은 기존대로 적용되고 세션 보드가 표시된다
 - **Verification:** auto
 
-### S6: 세션 종료는 시안의 확인 다이얼로그 뒤에만 실행된다
+### S6: 세션 종료는 실제 세션 요약을 보여준 확인 다이얼로그 뒤에만 실행된다
 
-- **Given** 활성 세션과 정리할 실패 영상이 있다
+- **Given** 활성 세션에 성공, 실패, 미분류 또는 정리가 필요한 영상 Attempt가 있다
 - **When** 사용자가 `04-session-board`에서 운동 종료를 요청한다
-- **Then** 완등, 최고 레벨, 트리밍 대기를 요약한 확인 다이얼로그가 표시되고,
-  명시적으로 확정하기 전에는 세션이 종료되지 않는다
+- **Then** 완등 수, 미분류를 포함한 전체 시도 수, `TRIM_PENDING`, `TRIM_FAILED`,
+  `TRIM_PROCESSING`을 합친 정리 필요 수를 요약한 확인 다이얼로그가 표시되고,
+  존재하지 않는 레벨 값은 표시하지 않으며 명시적으로 확정하기 전에는 세션이 종료되지 않는다
 - **Verification:** auto
 
 ### S7: 트리밍 화면은 실제 미디어 처리 상태를 시안에 맞게 표시한다
@@ -138,6 +139,92 @@ design-bundle의 구조, 상태, 컴포넌트를 충실히 표현하지 못한�
   상태로 저장되고, 세션 보드의 색상별 수와 완등 요약이 즉시 갱신된다
 - **Verification:** auto
 
+### S15: 촬영 화면에서 선택한 홀드 색상으로 시도를 분류한다
+
+- **Given** 활성 세션의 촬영 화면에 선택 가능한 홀드 색상이 표시된다
+- **When** 사용자가 홀드 색상을 바꾸고 녹화한 영상을 성공 또는 실패로 분류한다
+- **Then** 분류된 Attempt는 사용자가 선택한 색상을 가지며 선택하지 않은 기본 색상으로
+  고정되지 않는다
+- **Verification:** auto
+
+### S16: 시스템 뒤로가기는 진행 중인 녹화를 종료하고 분류 단계로 이동한다
+
+- **Given** CameraX 녹화가 진행 중인 촬영 화면이다
+- **When** 사용자가 Android 시스템 뒤로가기 버튼 또는 제스처를 실행한다
+- **Then** 녹화가 정상 종료되고 완성된 영상은 캐시에 유지되며 촬영 화면을 벗어나지
+  않은 채 성공 또는 실패 분류 UI가 표시된다
+- **Verification:** auto
+
+### S17: 분류 전 뒤로가기는 녹화한 시도를 미분류 상태로 보관한다
+
+- **Given** 녹화를 마쳐 캐시 영상이 있고 아직 홀드 색상과 성공 또는 실패를 확정하지
+  않은 분류 화면이다
+- **When** 사용자가 Android 시스템 뒤로가기 버튼 또는 제스처를 실행한다
+- **Then** 영상과 Attempt는 `UNCLASSIFIED` 상태로 저장되고 세션 보드로 돌아가며,
+  해당 Attempt는 완등 또는 실패 수에 포함되지 않는다
+- **Verification:** auto
+
+### S18: 트리밍 시작 전 뒤로가기는 작업을 나중으로 미룬다
+
+- **Given** `trimPending` 또는 `trimFailed` 성공 Attempt의 트리밍 화면에서 변환을
+  시작하지 않았다
+- **When** 사용자가 뒤로가기를 실행한다
+- **Then** 원본 영상과 Attempt는 보존되고 미디어 상태는 `TRIM_PENDING`으로 저장되며
+  트리밍 화면을 벗어난다
+- **Verification:** auto
+
+### S19: 트리밍 처리 중 뒤로가기는 변환을 취소하고 작업을 나중으로 미룬다
+
+- **Given** Media3 Transformer가 성공 Attempt의 트리밍 결과를 생성하고 있다
+- **When** 사용자가 뒤로가기를 실행한다
+- **Then** 실행 중인 변환이 취소되고 부분 결과가 제거되며 원본 영상은 보존되고
+  Attempt의 미디어 상태는 `TRIM_PENDING`으로 저장된 뒤 트리밍 화면을 벗어난다
+- **Verification:** auto
+
+### S20: 아카이브에서 미분류 시도를 다시 열어 분류한다
+
+- **Given** 활성 또는 종료된 세션에 캐시 영상이 보존된 `UNCLASSIFIED` Attempt가 있다
+- **When** 사용자가 아카이브의 `분류 필요` 항목을 열고 홀드 색상과 성공 또는 실패를
+  선택한다
+- **Then** 성공이면 영상을 MediaStore에 저장한 성공 Attempt로, 실패면 캐시 영상을
+  제거한 실패 Attempt로 한 번만 전이되고 아카이브와 세션 요약에 결과가 반영된다
+- **Verification:** auto
+
+### S21: 분류 입력은 최초 선택만 처리한다
+
+- **Given** 녹화를 마친 시도의 색상과 성공 또는 실패를 선택할 수 있는 화면이다
+- **When** 사용자가 저장 완료 전에 같은 분류 버튼을 반복해서 누르거나 성공과 실패를
+  연속해서 누른다
+- **Then** 최초 입력 뒤 분류 행동이 비활성화되고 하나의 Attempt와 하나의 결과만 저장된다
+- **Verification:** auto
+
+### S22: 미디어 선택 시트를 닫으면 트리밍을 나중으로 미룬다
+
+- **Given** 성공 영상을 저장한 뒤 `지금 자르기`, `나중에`, `원본 그대로`를 고르는
+  미디어 선택 바텀시트가 표시된다
+- **When** 사용자가 시스템 뒤로가기, 바깥 영역 누르기 또는 아래로 밀기로 시트를 닫는다
+- **Then** `나중에`를 선택한 것과 동일하게 원본은 보존되고 미디어 상태는
+  `TRIM_PENDING`으로 저장된다
+- **Verification:** auto
+
+### S23: 저장 대기 영상이 있으면 해결하기 전까지 세션 종료를 보류한다
+
+- **Given** 성공으로 분류했지만 MediaStore 저장에 실패해 캐시 영상이 남은
+  `SAVE_PENDING` Attempt가 있다
+- **When** 사용자가 세션 종료를 확정하려 한다
+- **Then** 세션은 종료되지 않고 저장 재시도와 `영상만 폐기하고 기록 유지` 행동이
+  표시되며, 재시도 성공 또는 명시적 폐기로 Attempt가 성공 상태가 된 뒤에만 종료할 수 있다
+- **Verification:** auto
+
+### S24: 정리가 필요한 모든 트리밍 상태를 종료 요약에 합산한다
+
+- **Given** 활성 세션에 `TRIM_PENDING`, `TRIM_FAILED`, `TRIM_PROCESSING` 상태의 영상이
+  각각 있다
+- **When** 사용자가 세션 종료 확인 다이얼로그를 연다
+- **Then** 세 상태의 Attempt가 모두 `정리 필요` 수에 포함되고, 원본 유지 또는 트리밍
+  완료 상태는 포함되지 않는다
+- **Verification:** auto
+
 ## Out of Scope
 
 - 트리밍을 앱 종료 뒤에도 완료하는 WorkManager 또는 foreground service 처리
@@ -153,20 +240,30 @@ design-bundle의 구조, 상태, 컴포넌트를 충실히 표현하지 못한�
 
 | Scenario | Verification | Status | Test | Implementation |
 |----------|--------------|--------|------|----------------|
-| S1 | auto | verified | `UiRebuildInstrumentationTest`, `SessionLoopServiceTest` | loading, permission request/denial/grant, settings card and status banners |
-| S2 | auto | verified | `UiRebuildInstrumentationTest` | `HomeUi`, `BottomTabs` |
+| S1 | auto | pending | `UiRebuildInstrumentationTest`, `SessionLoopServiceTest` (partial) | permission request and app-settings actions still need decisive proof |
+| S2 | auto | verified | `UiRebuildInstrumentationTest`, `ArchivePlaybackInstrumentationTest` | `HomeUi`, `BottomTabs` |
 | S3 | auto | verified | `UiRebuildInstrumentationTest`, `SessionLoopServiceTest` | search, add-and-select, rename and hide persist through Room |
 | S4 | auto | verified | `CameraRecordingFlowInstrumentationTest` | `BoardUi`, `CaptureUi`, `MediaChoiceSheet` |
 | S5 | auto | verified | `CameraRecordingFlowInstrumentationTest`, `AttemptServiceTest` | failed Attempt persists, then its cache and record are removed on confirmed end |
-| S6 | auto | verified | `UiRebuildInstrumentationTest`, `AttemptServiceTest` | active session survives dismissal and ends only after explicit confirmation |
-| S7 | auto | verified | `CameraRecordingFlowInstrumentationTest`, `AndroidEditListTrimGatewayTest` | validation, interrupted recovery, completion state and result actions |
-| S8 | auto | verified | `ArchivePlaybackInstrumentationTest`, `CameraRecordingFlowInstrumentationTest` | `ArchiveUi`, `PlaybackOverlay` |
-| S9 | auto | verified | `UiRebuildInstrumentationTest`, `AttemptServiceTest` | success/error banners, retry surface and save retry domain path |
-| S10 | auto | verified | `UiRebuildInstrumentationTest` | archive filters remain non-clickable example data |
+| S6 | auto | covered | [focused device test](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/UiRebuildInstrumentationTest.kt#L248), [summary unit test](../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptSummaryTest.kt#L8) | [summary](../../shared/src/commonMain/kotlin/com/weclimb/session/AttemptSummary.kt#L11), [dialog](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/ArchivePlaybackUi.kt#L342) |
+| S7 | auto | pending | `CameraRecordingFlowInstrumentationTest`, `AndroidEditListTrimGatewayTest` (partial) | invalid submission and failed retry still need integrated state-transition proof |
+| S8 | auto | pending | `ArchivePlaybackInstrumentationTest`, `CameraRecordingFlowInstrumentationTest` (partial) | exact playback URI and every promised card state label still need decisive proof |
+| S9 | auto | pending | `UiRebuildInstrumentationTest`, `AttemptServiceTest`, `AttemptSavePresentationTest` (partial) | save retry is covered; camera, share and unreadable-media error severity and retry remain |
+| S10 | auto | pending | `UiRebuildInstrumentationTest` (partial) | inert presentation is checked; absence of query, thumbnail and level-mapping work still needs proof |
 | S11 | auto | verified | `UiRebuildInstrumentationTest` | disabled Phase 3 actions leave state and repository unchanged |
 | S12 | auto | verified | `UiRebuildInstrumentationTest` | all approved states open on the 390dp catalog surface and produce screenshots |
-| S13 | manual | deferred-follow-up-goal | walkthrough in Verification Log | Galaxy S23 visual/native-media review |
+| S13 | manual | verified | walkthrough in Verification Log | Galaxy S23 visual/native-media review |
 | S14 | auto | verified | `UiRebuildInstrumentationTest`, `AttemptServiceTest`, `RoomSessionLoopRepositoryTest` | color tap saves and restores a video-less `SUCCESS` / `NONE` Attempt |
+| S15 | auto | covered | `CameraRecordingFlowInstrumentationTest` | `CaptureUi` color selector and success/failure classification |
+| S16 | auto | verified | `CameraRecordingFlowInstrumentationTest` | recording `BackHandler` stops CameraX and preserves the completed cache file |
+| S17 | auto | covered | [focused device test](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/CameraRecordingFlowInstrumentationTest.kt#L165), [domain test](../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptServiceTest.kt#L70) | [capture Back](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/MainActivity.kt#L462), [unclassified record](../../shared/src/commonMain/kotlin/com/weclimb/session/AttemptService.kt#L40) |
+| S18 | auto | verified | `CameraRecordingFlowInstrumentationTest`, `AttemptMediaServiceTest` | idle trim Back defers to `TRIM_PENDING` and preserves the original URI |
+| S19 | auto | covered | `UiRebuildInstrumentationTest`, `TrimExportCoordinatorTest`, `AttemptMediaServiceTest` | processing Back leaves Trim, cancels export, removes partial output and restores `TRIM_PENDING` |
+| S20 | auto | covered | [focused device test](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/ArchivePlaybackInstrumentationTest.kt#L75), [domain test](../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptServiceTest.kt#L86) | [archive query](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/SessionLoopRoom.kt#L103), [classification entry](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/MainActivity.kt#L230) |
+| S21 | auto | covered | [focused device test](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/UiRebuildInstrumentationTest.kt#L365), [state test](../../frontend/androidApp/src/test/kotlin/com/weclimb/android/ClassificationStateTest.kt#L11) | [classification guard](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/AppState.kt#L66), [disabled actions](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/CaptureTrimUi.kt#L238) |
+| S22 | auto | covered | [focused device test](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/CameraRecordingFlowInstrumentationTest.kt#L180), [dismiss race test](../../frontend/androidApp/src/test/kotlin/com/weclimb/android/AndroidEditListTrimGatewayTest.kt#L84) | [sheet dismissal](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/RebuiltSessionLoopUi.kt#L190), [choice guard](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/AppState.kt#L13) |
+| S23 | auto | covered | [focused device test](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/UiRebuildInstrumentationTest.kt#L331), [domain test](../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptServiceTest.kt#L115) | [pending-save guard](../../shared/src/commonMain/kotlin/com/weclimb/session/AttemptService.kt#L183), [dialog actions](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/ArchivePlaybackUi.kt#L342) |
+| S24 | auto | covered | [focused device test](../../frontend/androidApp/src/androidTest/kotlin/com/weclimb/android/UiRebuildInstrumentationTest.kt#L248), [summary unit test](../../shared/src/commonTest/kotlin/com/weclimb/session/AttemptSummaryTest.kt#L24) | [summary](../../shared/src/commonMain/kotlin/com/weclimb/session/AttemptSummary.kt#L11), [dialog](../../frontend/androidApp/src/main/kotlin/com/weclimb/android/ArchivePlaybackUi.kt#L342) |
 
 ## Verification Log
 
@@ -174,7 +271,7 @@ design-bundle의 구조, 상태, 컴포넌트를 충실히 표현하지 못한�
 - 2026-07-27: after the S3 search and add-sheet correction, `cd frontend && ./gradlew :androidApp:compileDebugKotlin :androidApp:compileDebugAndroidTestKotlin :androidApp:testDebugUnitTest :shared:jvmTest` passed and `git diff --check` was clean.
 - 2026-07-27: no ADB device was attached (`adb devices -l` returned no devices), so `connectedDebugAndroidTest` has not been rerun after this UI change. All `ready-device` rows require that execution before they become covered.
 - 2026-07-27: S13 is intentionally deferred by the active goal. It is not a completion claim for the Galaxy S23 visual or native-media walkthrough.
-- 2026-07-27: the frozen command `cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUnitTest :androidApp:connectedDebugAndroidTest` passed on SM-S911N (Galaxy S23). The connected suite finished 13 tests with 0 failures. S1–S12 are covered by that run and their mapped unit tests.
+- 2026-07-27: the frozen command `cd frontend && ./gradlew :shared:jvmTest :androidApp:testDebugUnitTest :androidApp:connectedDebugAndroidTest` passed on SM-S911N (Galaxy S23). The connected suite finished 13 tests with 0 failures. S1-S12 are covered by that run and their mapped unit tests.
 - 2026-07-29: the UI was re-audited against `design-bundle/00-common.html` through
   `11-records.html` on a reproducible 390dp debug catalog. The board proportion fix
   was also rebuilt, installed and captured on SM-S911N.
@@ -182,14 +279,138 @@ design-bundle의 구조, 상태, 컴포넌트를 충실히 표현하지 못한�
   behavior corrections. `shared:jvmTest`, Android unit tests, and 15 connected
   instrumentation tests on SM-S911N completed with 0 failures. This run directly
   covers S3 add-and-select, S5 cleanup, S6 confirmation, S7 completion retention,
-  S10–S12 static/catalog guards, and S14 video-less success.
+  S10-S12 static/catalog guards, and S14 video-less success.
+- 2026-07-29: S13 follow-up installed the current debug APK on SM-S911N and
+  captured the approved `00`-`11` catalog states at 390dp. The live walkthrough
+  then completed onboarding, gym selection, CameraX preview and recording,
+  successful Attempt classification, archive resume, Media3 range preview and
+  playback, edit-list trim export, trimmed-result playback, and the Android share
+  chooser. Native output reported `0:00 / 0:12`, and the chooser received one
+  share item.
+- 2026-07-29: the first live `지금 자르기` attempt exposed a bottom-sheet dismiss
+  race that replaced the trim destination with the deferred destination. The
+  dismiss callback now applies only while the same media choice is still open;
+  focused unit coverage and the physical-device
+  `trimsSuccessfulVideoThroughTheAppAndKeepsOriginalAttempt` regression passed.
+  The frozen command then passed with all 15 connected tests and 0 failures.
+- 2026-07-29: the connected in-app browser had no available browser instance, so
+  the agent could not render the local HTML bundle for a fresh side-by-side
+  browser comparison. The device captures and native-media walkthrough are
+  complete; final subjective comparison against the bundle remains the S13 human
+  sign-off boundary.
+- 2026-07-29: S13 human review rejected the initial trim timeline because the
+  default Material `RangeSlider` track and circular thumbs did not match
+  `06-trim`. A new red device test first failed because the framed timeline and
+  edge handles were absent. The replacement now uses the bundle's continuous
+  10-frame strip, 22%-86% orange selection frame, 14×34dp rectangular handles,
+  and `선택 0:04 – 0:16` label. The test passed after implementation, a physical
+  drag changed the start label to `0:05`, and the frozen command passed with all
+  16 connected tests and 0 failures.
+- 2026-07-29: the human approved the corrected `06-trim` timeline on the Galaxy
+  S23. Together with the completed `00`-`11` catalog capture review and native
+  CameraX/Media3 walkthrough above, this closes the manual S13 visual sign-off.
+- 2026-07-29: Step 4 reran the frozen command after human S13 approval. Shared
+  tests, Android unit tests, and all 16 connected tests passed together on
+  SM-S911N with 0 failures. Cold reviewers still found contract and coverage
+  gaps, so the artifact remains `verifying` until the findings below are routed.
+- 2026-07-29: after S15, S16, S18 and S19 implementation, the frozen command
+  passed with shared tests, Android unit tests and all 23 connected tests on
+  SM-S911N. Focused follow-up tests also passed after adding failure-classification
+  color evidence for S15 and processing-Back screen-exit evidence for S19. Those
+  two rows remain `covered` until the strengthened tests pass in the next full
+  frozen-command run.
+- 2026-08-04: Step 3 tests for the approved S6, S17 and S20-S24 contract first
+  failed on the absent `UNCLASSIFIED` transitions, summary, Room archive mapping,
+  classification lock and pending-save guard. Their shared and Android unit tests
+  pass after implementation; the debug APK, Android instrumentation sources and
+  Android lint also build successfully.
+- 2026-08-04: the frozen command compiled the app and instrumentation APK and
+  completed the shared and Android unit work, but `connectedDebugAndroidTest`
+  stopped with `No connected devices!`. The new scenario rows stay `uncovered`
+  until their instrumentation tests run on the physical Android device.
+- 2026-08-04: the device was attached to the existing ADB server on port `5038`
+  rather than the default `5037`. A focused run selected only the six changed
+  instrumentation methods for S6, S17 and S20-S24; all 6 passed on SM-S911N
+  with 0 failures. The rows are `covered`, not `verified`, because the human
+  explicitly deferred the longer full-suite run.
 
 ## Review Findings
 
 - 2026-07-27 `missing_scenario` resolved by the human: direct color-tap completion creates a video-less `SUCCESS` Attempt with `NONE` media. It became S14.
 - 2026-07-29 `patch`: S3 add-and-select and S7 trim completion retention are implemented and directly covered.
-- 2026-07-29 `patch`: the S1, S3, S5–S7, S9–S12 hollow coverage findings are replaced by state, repository, screenshot, CameraX and Media3 evidence.
+- 2026-07-29 `patch`: the S1, S3, S5-S7, S9-S12 hollow coverage findings are replaced by state, repository, screenshot, CameraX and Media3 evidence.
 - 2026-07-29 `patch`: cold-read review removed the accidental color-to-level calculation and keeps `Lv.x` as ordered preview data; selected personal gyms now synchronize after rename and hide.
+- 2026-07-29 `patch`: programmatic removal of the media-choice sheet no longer
+  triggers the user-dismissed `나중에` path after `지금 자르기`.
+- 2026-07-29 `patch`: the `06-trim` timeline no longer exposes the default
+  Material slider visuals; its frame strip, selection outline, handles, spacing,
+  labels, accessibility nodes, and drag behavior now follow the bundle.
+- 2026-07-29 `missing_scenario`: human decision required for capture hold-color
+  selection, leaving Capture while recording or awaiting classification, and
+  leaving Trim while Transformer processing is active.
+- 2026-07-29 `missing_scenario`: the human approved S15, S16, S18 and S19 for
+  capture color selection, system Back behavior during recording, and deferring
+  idle or active trimming. The design has no separate in-app Capture Back
+  control. Leaving Capture while awaiting classification remains a separate
+  unresolved product decision.
+- 2026-07-29 `unmet_scenario`: S9 save-failure retry is not wired to the pending
+  Attempt, and some real save errors are rendered as success banners.
+- 2026-07-29 `hollow_test`: strengthen S6 summary values, S7 drag/processing
+  guard/failure retry, S10 no-new-data-work, S11 all static Phase 3 surfaces, and
+  S12 stable semantic surfaces. Keep S13 manual only for the remaining
+  subjective visual and live CameraX residue; move deterministic seams into the
+  S7/S12 automation rather than claiming the whole scenario is automatable.
+- 2026-07-29 `patch`: S15 now checks the selected color through both success and
+  failure classification, and S19 splits its proof across processing-Back screen
+  exit, Transformer cancellation and partial-file cleanup, and the persisted
+  `TRIM_PENDING` original-preserving state.
+- 2026-07-29 `unmet_scenario`: S6 requires a real highest-level summary while
+  S10 and Out of Scope prohibit introducing color-to-level mapping. The current
+  live dialog displays a hard-coded `Lv.5`; the frozen contract must choose a
+  truthful replacement before implementation can close S6.
+- 2026-07-29 `unmet_scenario`: S9 still renders unreadable-video and sharing
+  failures without explicit error severity or a retry path, and the trim failure
+  banner replaces the concrete cause with fixed copy.
+- 2026-07-29 `hollow_test`: S1 permission and settings actions, S7 invalid-range
+  and retry state transitions, S8 state labels and exact playback URI, and S10
+  absence of new data work need stronger deterministic assertions. S2 already
+  has real Home-to-Archive navigation evidence in
+  `ArchivePlaybackInstrumentationTest`; its Coverage Map entry was corrected.
+- 2026-07-29 `missing_scenario`: cold review found five contract gaps requiring
+  human routing: Capture Back while awaiting classification, duplicate
+  classification taps, media-choice sheet dismissal, session end with a
+  `SAVE_PENDING` Attempt, and whether failed or interrupted trims count as
+  `트리밍 대기` in the live end-session summary.
+- 2026-08-04 `missing_scenario` resolved by the human: S17 and S20 preserve an
+  unclassified recording and provide an Archive re-entry point; S21 makes the
+  first classification input win; S22 maps every user dismissal of the media
+  choice sheet to `나중에`; S23 blocks session end until `SAVE_PENDING` is retried
+  or its video is explicitly discarded; S24 counts every unfinished trim state.
+- 2026-08-04 `unmet_scenario` resolved by the human: S6 replaces the unsupported
+  hard-coded highest level with the truthful total Attempt count and renames the
+  trim summary to `정리 필요`.
+- 2026-08-04 `patch`: focused Galaxy S23 tests cover S6, S17 and S20-S24 with
+  6 tests and 0 failures. The latest full-suite run remains deferred by the human,
+  so these rows stay `covered`.
+- 2026-08-04 `hollow_test`: S1 still needs decisive permission-request and
+  app-settings action proof. S7 still needs an integrated invalid-submission and
+  failed-retry transition test. S8 still needs exact playback URI and all promised
+  state-label assertions. S10 proves inert presentation and unchanged persisted
+  data, but not yet the absence of query, thumbnail or level-mapping work. These
+  rows are `pending` until the stronger proof passes.
+- 2026-08-04 `unmet_scenario`: S9 save failure now has truthful error severity and
+  retry bound to its `SAVE_PENDING` Attempt. Camera binding, sharing and unreadable
+  media can still produce a message without the correct error severity or a retry
+  of the failed action. S9 remains `pending` until those paths are wired and tested.
+- 2026-08-04 `defer`: the human paused the remaining S1 and S7-S10 closure work.
+  A separate worktree will first decouple Attempt outcome from video retention,
+  replace hardcoded values on functional screens with runtime data, and consume a
+  new human-provided design bundle for motion and flow changes. Re-audit these
+  pending findings against that result instead of strengthening the old UI now.
+- 2026-08-04 `defer`: the functional surfaces for unclassified archive cards,
+  classification re-entry, pending-save session end and the truthful end summary
+  have no dedicated design-bundle states. Keep their behavior and accessibility
+  stable, then run a separate fidelity pass after the next bundle update.
 - 2026-07-27 `defer`: playback control hide/show on tap is not frozen in S8. Do not implement until it is explicitly contracted.
 
 ## Notes

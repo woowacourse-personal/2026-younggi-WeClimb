@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -34,6 +36,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +47,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RangeSlider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -88,6 +93,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+private val captureHoldColors = listOf("red", "blue", "green", "yellow", "white")
+
 @Composable
 internal fun CaptureUi(
     state: AppState,
@@ -97,11 +104,14 @@ internal fun CaptureUi(
     failure: (String) -> Unit,
     retry: () -> Unit,
     openSettings: () -> Unit,
-    back: () -> Unit,
+    systemBack: (String) -> Unit,
 ) {
-    BackHandler(onBack = back)
-    val color = "blue"
-    val cameraError = !state.cameraReady && state.message != null
+    var color by remember(state.classificationAttempt?.id) {
+        mutableStateOf(state.classificationAttempt?.color ?: "blue")
+    }
+    BackHandler(onBack = { systemBack(color) })
+    var colorMenuExpanded by remember { mutableStateOf(false) }
+    val cameraError = !state.cameraReady && state.capturedFile == null && state.message != null
     Box(Modifier.fillMaxSize().semantics { testTag = "screen-capture" }) {
         CameraPreviewSurface(attachPreview, Modifier.fillMaxSize())
         Column(Modifier.fillMaxSize()) {
@@ -110,14 +120,46 @@ internal fun CaptureUi(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Surface(shape = RoundedCornerShape(20.dp), color = Color.Black.copy(alpha = .5f)) {
-                    Row(Modifier.padding(horizontal = 14.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Box(Modifier.size(16.dp).clip(RoundedCornerShape(5.dp)).background(WeClimbHoldColors.blue))
-                        Spacer(Modifier.width(8.dp))
-                        Text("파랑", color = Color.White, fontWeight = FontWeight.Bold)
-                        if (state.capturedFile == null) {
-                            Spacer(Modifier.width(6.dp))
-                            Text("⌄", color = Color.White)
+                Box {
+                    Surface(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .clickable(enabled = state.capturedFile == null) { colorMenuExpanded = true }
+                            .semantics {
+                                contentDescription = "홀드 색상 ${holdLabel(color)}"
+                                testTag = "selector-capture-color"
+                            },
+                        shape = RoundedCornerShape(20.dp),
+                        color = Color.Black.copy(alpha = .5f),
+                    ) {
+                        Row(Modifier.padding(horizontal = 14.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Box(Modifier.size(16.dp).clip(RoundedCornerShape(5.dp)).background(holdColor(color)))
+                            Spacer(Modifier.width(8.dp))
+                            Text(holdLabel(color), color = Color.White, fontWeight = FontWeight.Bold)
+                            if (state.capturedFile == null) {
+                                Spacer(Modifier.width(6.dp))
+                                Text("⌄", color = Color.White)
+                            }
+                        }
+                    }
+                    DropdownMenu(
+                        expanded = colorMenuExpanded,
+                        onDismissRequest = { colorMenuExpanded = false },
+                    ) {
+                        captureHoldColors.forEach { option ->
+                            DropdownMenuItem(
+                                text = {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Box(Modifier.size(16.dp).clip(RoundedCornerShape(5.dp)).background(holdColor(option)))
+                                        Spacer(Modifier.width(8.dp))
+                                        Text(holdLabel(option))
+                                    }
+                                },
+                                onClick = {
+                                    color = option
+                                    colorMenuExpanded = false
+                                },
+                            )
                         }
                     }
                 }
@@ -182,10 +224,18 @@ internal fun CaptureUi(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         Text("방금 시도, 성공했나요?", color = Color.White, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                        if (state.statusIsError) {
+                            Text(
+                                state.message ?: "처리하지 못했습니다",
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                        }
                         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             Button(
                                 onClick = { failure(color) },
                                 modifier = Modifier.weight(1f).height(100.dp).semantics { testTag = "cta-classify-failure" },
+                                enabled = !state.classificationInProgress,
                                 shape = RoundedCornerShape(22.dp),
                                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
                             ) {
@@ -198,6 +248,7 @@ internal fun CaptureUi(
                             Button(
                                 onClick = { success(color) },
                                 modifier = Modifier.weight(1f).height(100.dp).semantics { testTag = "cta-classify-success" },
+                                enabled = !state.classificationInProgress,
                                 shape = RoundedCornerShape(22.dp),
                                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                             ) {
@@ -268,20 +319,21 @@ internal fun TrimUi(
         Text("트리밍할 영상을 찾을 수 없습니다")
         TextButton(back) { Text("세션으로 돌아가기") }
     }
-    BackHandler(onBack = back)
     val durationMillis = state.selectedVideoDurationMillis.coerceAtLeast(1_000L)
-    var range by remember(attempt.id, durationMillis) { mutableStateOf(.2f..minOf(.84f, 1f)) }
+    var range by remember(attempt.id, durationMillis) { mutableStateOf(.22f..minOf(.86f, 1f)) }
     val startMillis = (durationMillis * range.start).toLong()
     val endMillis = (durationMillis * range.endInclusive).toLong()
     val completed = attempt.media.state == AttemptMediaState.TRIMMED
     val failed = attempt.media.state == AttemptMediaState.TRIM_FAILED
+    val leaveTrim = { if (shouldDeferTrimOnBack(attempt)) cancel(attempt) else back() }
+    BackHandler(onBack = leaveTrim)
     Box(Modifier.fillMaxSize().semantics { testTag = "screen-trim" }) {
         Column(Modifier.fillMaxSize()) {
             Row(
                 Modifier.fillMaxWidth().padding(start = 8.dp, top = 6.dp, end = 20.dp, bottom = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                TextButton(back, Modifier.size(48.dp)) { Text("×", color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.headlineSmall) }
+                TextButton(leaveTrim, Modifier.size(48.dp)) { Text("×", color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.headlineSmall) }
                 Box(Modifier.size(15.dp).clip(RoundedCornerShape(5.dp)).background(holdColor(attempt.color)))
                 Spacer(Modifier.width(8.dp))
                 Text(
@@ -330,32 +382,14 @@ internal fun TrimUi(
             }
             if (!completed) {
                 Column(Modifier.padding(start = 20.dp, top = 14.dp, end = 20.dp)) {
-                    Box(
-                        Modifier.fillMaxWidth().height(56.dp).background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp)),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Row(Modifier.fillMaxSize().padding(7.dp), horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-                            repeat(10) { index ->
-                                Box(
-                                    Modifier
-                                        .weight(1f)
-                                        .fillMaxSize()
-                                        .clip(RoundedCornerShape(3.dp))
-                                        .background(if (index in 2..7) Color(0xFF3A4351) else Color(0xFF262D39)),
-                                )
-                            }
-                        }
-                        RangeSlider(
-                            value = range,
-                            onValueChange = { range = it },
-                            modifier = Modifier.fillMaxWidth().semantics { testTag = "trim-range" },
-                            valueRange = 0f..1f,
-                            enabled = !state.trimInProgress,
-                        )
-                    }
-                    Row(Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                    TrimRangeTimeline(
+                        range = range,
+                        onRangeChange = { range = it },
+                        enabled = !state.trimInProgress,
+                    )
+                    Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("0:00", color = Color(0xFF64748B), style = MaterialTheme.typography.labelSmall)
-                        Text("선택 ${formatSeconds(startMillis)} - ${formatSeconds(endMillis)}", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelSmall)
+                        Text("선택 ${formatSeconds(startMillis)} – ${formatSeconds(endMillis)}", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelSmall)
                         Text(formatSeconds(durationMillis), color = Color(0xFF64748B), style = MaterialTheme.typography.labelSmall)
                     }
                     if (state.message?.contains("구간") == true) {
@@ -405,6 +439,97 @@ internal fun TrimUi(
             }
         }
     }
+}
+
+internal fun shouldDeferTrimOnBack(attempt: Attempt): Boolean = attempt.media.state in setOf(
+    AttemptMediaState.TRIM_PENDING,
+    AttemptMediaState.TRIM_FAILED,
+    AttemptMediaState.TRIM_PROCESSING,
+)
+
+@Composable
+private fun TrimRangeTimeline(
+    range: ClosedFloatingPointRange<Float>,
+    onRangeChange: (ClosedFloatingPointRange<Float>) -> Unit,
+    enabled: Boolean,
+) {
+    val accent = MaterialTheme.colorScheme.primary
+    BoxWithConstraints(
+        Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color(0xFF1E2634))
+            .semantics {
+                testTag = "trim-range"
+                contentDescription = "트리밍 프레임 타임라인"
+            },
+    ) {
+        Row(Modifier.fillMaxSize()) {
+            repeat(10) { index ->
+                Box(
+                    Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .background(Brush.verticalGradient(listOf(Color(0xFF3A3330), Color(0xFF161A20)))),
+                )
+                if (index < 9) {
+                    Spacer(Modifier.fillMaxHeight().width(1.dp).background(Color.White.copy(alpha = .06f)))
+                }
+            }
+        }
+
+        val selectionStart = maxWidth * range.start
+        val selectionWidth = maxWidth * (range.endInclusive - range.start)
+        RangeSlider(
+            value = range,
+            onValueChange = onRangeChange,
+            modifier = Modifier.fillMaxSize().alpha(0.001f),
+            valueRange = 0f..1f,
+            enabled = enabled,
+            colors = SliderDefaults.colors(
+                thumbColor = Color.Transparent,
+                activeTrackColor = Color.Transparent,
+                inactiveTrackColor = Color.Transparent,
+                activeTickColor = Color.Transparent,
+                inactiveTickColor = Color.Transparent,
+            ),
+        )
+        Box(
+            Modifier
+                .padding(start = selectionStart)
+                .width(selectionWidth)
+                .fillMaxHeight()
+                .background(accent.copy(alpha = .12f), RoundedCornerShape(10.dp))
+                .border(3.dp, accent, RoundedCornerShape(10.dp))
+                .semantics { contentDescription = "트리밍 선택 구간" },
+        )
+        TrimRangeHandle(
+            modifier = Modifier.align(Alignment.CenterStart).offset(x = selectionStart - 7.dp),
+            description = "범위 시작 손잡이",
+            accent = accent,
+        )
+        TrimRangeHandle(
+            modifier = Modifier.align(Alignment.CenterStart).offset(x = selectionStart + selectionWidth - 7.dp),
+            description = "범위 끝 손잡이",
+            accent = accent,
+        )
+    }
+}
+
+@Composable
+private fun TrimRangeHandle(
+    modifier: Modifier,
+    description: String,
+    accent: Color,
+) {
+    Box(
+        modifier
+            .size(width = 14.dp, height = 34.dp)
+            .clip(RoundedCornerShape(5.dp))
+            .background(accent)
+            .semantics { contentDescription = description },
+    )
 }
 
 @Composable

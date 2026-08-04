@@ -68,6 +68,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -105,10 +106,12 @@ internal fun RebuiltSessionLoopApp(
     toggleRecording: () -> Unit,
     classifySuccess: (String) -> Unit,
     classifyFailure: (String) -> Unit,
+    captureSystemBack: (String) -> Unit,
     openTrim: (Attempt) -> Unit,
     deferTrim: (Attempt) -> Unit,
     keepOriginal: (Attempt) -> Unit,
     openArchive: () -> Unit,
+    openClassification: (Attempt) -> Unit,
     playAttempt: (Attempt) -> Unit,
     closePlayback: () -> Unit,
     submitTrim: (Long, Long) -> Unit,
@@ -116,6 +119,7 @@ internal fun RebuiltSessionLoopApp(
     backToBoard: () -> Unit,
     shareAttempt: (Attempt) -> Unit,
     retryPendingAttempt: (Attempt) -> Unit,
+    discardPendingAttempt: (Attempt) -> Unit,
     retryStatusAction: () -> Unit,
     requestEndSession: () -> Unit,
     endSession: () -> Unit,
@@ -125,6 +129,7 @@ internal fun RebuiltSessionLoopApp(
     val bottomScreen = state.playingVideoUri == null &&
         (state.screen == Screen.Home || state.screen == Screen.Archive || state.screen == Screen.RecordsPreview)
     Scaffold(
+        modifier = Modifier.semantics { testTagsAsResourceId = true },
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             if (bottomScreen) {
@@ -144,9 +149,26 @@ internal fun RebuiltSessionLoopApp(
                 Screen.Home -> HomeUi(openGyms, openArchive)
                 Screen.Gyms -> GymPickerUi(state.gyms, startSession, addGym, renameGym, hideGym, backToBoard)
                 Screen.Board -> BoardUi(state, openCapture, recordSuccessWithoutVideo, requestEndSession)
-                Screen.Capture -> CaptureUi(state, attachCameraPreview, toggleRecording, classifySuccess, classifyFailure, retryStatusAction, openAppSettings, backToBoard)
+                Screen.Capture -> CaptureUi(
+                    state,
+                    attachCameraPreview,
+                    toggleRecording,
+                    classifySuccess,
+                    classifyFailure,
+                    retryStatusAction,
+                    openAppSettings,
+                    captureSystemBack,
+                )
                 Screen.Trim -> TrimUi(state, submitTrim, keepOriginal, cancelTrim, playAttempt, shareAttempt, openArchive, backToBoard)
-                Screen.Archive -> ArchiveUi(state.archive, state.unavailableVideoAttemptId, playAttempt, openTrim, shareAttempt, openGyms)
+                Screen.Archive -> ArchiveUi(
+                    state.archive,
+                    state.unavailableVideoAttemptId,
+                    playAttempt,
+                    openTrim,
+                    shareAttempt,
+                    openClassification,
+                    openGyms,
+                )
                 Screen.SessionEndPreview -> SessionEndPreviewUi { openStaticScreen(Screen.Home) }
                 Screen.ReportPreview -> ReportPreviewUi()
                 Screen.RecordsPreview -> RecordsPreviewUi()
@@ -154,7 +176,13 @@ internal fun RebuiltSessionLoopApp(
             state.message
                 ?.takeUnless { state.screen == Screen.Capture }
                 ?.takeUnless { state.screen == Screen.Trim }
-                ?.let { StatusBanner(it, retryStatusAction) }
+                ?.let {
+                    StatusBanner(
+                        message = it,
+                        error = state.statusIsError,
+                        retry = retryStatusAction.takeIf { state.statusIsError },
+                    )
+                }
             state.playingVideoUri?.let { uri -> PlaybackOverlay(uri, state.selectedAttempt, closePlayback, state.selectedAttempt?.let { attempt -> { shareAttempt(attempt) } }) }
         }
     }
@@ -164,6 +192,6 @@ internal fun RebuiltSessionLoopApp(
         }
     }
     if (state.confirmEnd) {
-        EndSessionDialog(state, endSession, backToBoard)
+        EndSessionDialog(state, endSession, backToBoard, retryPendingAttempt, discardPendingAttempt)
     }
 }

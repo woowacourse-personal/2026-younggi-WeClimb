@@ -110,6 +110,27 @@ class RoomSessionLoopRepositoryTest {
     }
 
     @Test
+    fun returnsUnclassifiedAttemptFromArchiveWithItsCachePath() {
+        val gym = Gym("gym-1", "테스트 암장", GymSource.USER_ADDED)
+        val session = Session("session-1", gym.id, 10L, status = SessionStatus.ENDED)
+        val unclassified = Attempt(
+            "unclassified-1",
+            session.id,
+            "green",
+            20L,
+            AttemptOutcome.UNCLASSIFIED,
+            null,
+            "/cache/unclassified.mp4",
+        )
+
+        repository.saveGym(gym).getOrThrow()
+        repository.saveSession(session).getOrThrow()
+        repository.saveAttempt(unclassified).getOrThrow()
+
+        assertEquals(unclassified, repository.archiveAttempts().single().attempt)
+    }
+
+    @Test
     fun recoversInterruptedTrimWithoutRemovingOriginalVideo() {
         val session = Session("session-1", "gym-1", 10L, status = SessionStatus.ACTIVE)
         val processing = Attempt(

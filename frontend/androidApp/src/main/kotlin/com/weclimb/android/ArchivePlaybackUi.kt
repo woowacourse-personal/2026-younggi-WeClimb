@@ -69,6 +69,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -85,6 +86,7 @@ import com.weclimb.session.GymCatalog
 import com.weclimb.session.GymSource
 import com.weclimb.session.originalVideoUri
 import com.weclimb.session.displayVideoUri
+import com.weclimb.session.summarizeAttempts
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -96,13 +98,14 @@ internal fun ArchiveUi(
     play: (Attempt) -> Unit,
     trim: (Attempt) -> Unit,
     share: (Attempt) -> Unit,
+    classify: (Attempt) -> Unit,
     startClimbing: () -> Unit,
 ) {
     Column(Modifier.fillMaxSize().semantics { testTag = "screen-archive" }) {
         Column(Modifier.fillMaxWidth().padding(start = 20.dp, top = 6.dp, end = 20.dp, bottom = 8.dp)) {
             Text("영상 아카이브", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
             Text(
-                if (archive.isEmpty()) "성공 영상을 모아둬요" else "성공 영상 ${archive.size}개",
+                if (archive.isEmpty()) "성공 영상을 모아둬요" else "영상과 미분류 시도 ${archive.size}개",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.SemiBold,
@@ -149,7 +152,7 @@ internal fun ArchiveUi(
             ) {
                 itemsIndexed(archive) { index, item ->
                     val previewLevel = listOf("Lv.5", "Lv.4", "Lv.3", "Lv.1").getOrElse(index) { "Lv.5" }
-                    ArchiveCard(item, previewLevel, item.attempt.id == unavailableId, play, trim, share)
+                    ArchiveCard(item, previewLevel, item.attempt.id == unavailableId, play, trim, share, classify)
                 }
             }
         }
@@ -164,12 +167,14 @@ internal fun ArchiveCard(
     play: (Attempt) -> Unit,
     trim: (Attempt) -> Unit,
     share: (Attempt) -> Unit,
+    classify: (Attempt) -> Unit,
 ) = Surface(
     color = MaterialTheme.colorScheme.surface,
     shape = RoundedCornerShape(16.dp),
     border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = if (unavailable) .14f else .08f)),
 ) {
     val attempt = item.attempt
+    val unclassified = attempt.outcome == AttemptOutcome.UNCLASSIFIED
     Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
         Box(
             Modifier
@@ -178,7 +183,9 @@ internal fun ArchiveCard(
                 .clip(RoundedCornerShape(12.dp))
                 .background(if (unavailable) Color(0xFF0D111A) else holdColor(attempt.color).copy(alpha = .2f)),
         ) {
-            if (unavailable) {
+            if (unclassified) {
+                Text("분류\n필요", Modifier.align(Alignment.Center), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            } else if (unavailable) {
                 Text("이미지\n없음", Modifier.align(Alignment.Center), color = Color(0xFF64748B), style = MaterialTheme.typography.labelSmall)
             } else {
                 Box(Modifier.align(Alignment.TopStart).padding(7.dp).size(12.dp).clip(RoundedCornerShape(4.dp)).background(holdColor(attempt.color)))
@@ -195,12 +202,22 @@ internal fun ArchiveCard(
             Row(Modifier.padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.size(13.dp).clip(RoundedCornerShape(4.dp)).background(holdColor(attempt.color)))
                 Spacer(Modifier.width(6.dp))
-                Text("${holdLabel(attempt.color)} · $previewLevel", color = Color(0xFFCBD5E1), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+                Text(
+                    if (unclassified) "${holdLabel(attempt.color)} · 미분류" else "${holdLabel(attempt.color)} · $previewLevel",
+                    color = Color(0xFFCBD5E1),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.SemiBold,
+                )
             }
-            ArchiveStatePill(if (unavailable) null else attempt.media.state)
+            if (unclassified) {
+                ArchiveUnclassifiedPill()
+            } else {
+                ArchiveStatePill(if (unavailable) null else attempt.media.state)
+            }
             Spacer(Modifier.weight(1f))
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 when {
+                    unclassified -> ArchiveAction("분류하기", { classify(attempt) }, primary = true)
                     unavailable -> ArchiveAction("기록만 유지 · 재생 불가", {}, enabled = false)
                     attempt.media.state == AttemptMediaState.TRIM_PENDING || attempt.media.state == AttemptMediaState.TRIM_FAILED -> {
                         ArchiveAction("이어서 자르기", { trim(attempt) }, primary = true)
@@ -216,6 +233,24 @@ internal fun ArchiveCard(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ArchiveUnclassifiedPill() {
+    val color = MaterialTheme.colorScheme.primary
+    Surface(
+        Modifier.padding(top = 6.dp),
+        shape = RoundedCornerShape(8.dp),
+        color = color.copy(alpha = .14f),
+    ) {
+        Text(
+            "분류 필요",
+            Modifier.padding(horizontal = 9.dp, vertical = 4.dp),
+            color = color,
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Bold,
+        )
     }
 }
 
@@ -263,7 +298,10 @@ internal fun ArchiveAction(label: String, onClick: () -> Unit, primary: Boolean 
 
 @Composable
 internal fun MediaChoiceSheet(attempt: Attempt, trim: () -> Unit, later: () -> Unit, original: () -> Unit) = Column(
-    Modifier.padding(start = 22.dp, end = 22.dp, bottom = 30.dp).semantics { testTag = "sheet-media-choice" },
+    Modifier.padding(start = 22.dp, end = 22.dp, bottom = 30.dp).semantics {
+        testTag = "sheet-media-choice"
+        testTagsAsResourceId = true
+    },
     verticalArrangement = Arrangement.spacedBy(10.dp),
 ) {
     Surface(shape = RoundedCornerShape(20.dp), color = MaterialTheme.colorScheme.secondary.copy(alpha = .16f)) {
@@ -301,15 +339,24 @@ internal fun MediaChoiceOption(icon: String, title: String, detail: String, onCl
 }
 
 @Composable
-internal fun EndSessionDialog(state: AppState, confirm: () -> Unit, dismiss: () -> Unit) {
-    val successCount = state.attempts.count { it.outcome == AttemptOutcome.SUCCESS }
-    val pendingCount = state.attempts.count { it.media.state == AttemptMediaState.TRIM_PENDING }
+internal fun EndSessionDialog(
+    state: AppState,
+    confirm: () -> Unit,
+    dismiss: () -> Unit,
+    retryPending: (Attempt) -> Unit,
+    discardPending: (Attempt) -> Unit,
+) {
+    val summary = summarizeAttempts(state.attempts)
+    val pendingSave = state.attempts.firstOrNull { it.outcome == AttemptOutcome.SAVE_PENDING }
     Dialog(
         onDismissRequest = dismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false),
     ) {
         Surface(
-            Modifier.fillMaxWidth().padding(horizontal = 24.dp).semantics { testTag = "dialog-end-session" },
+            Modifier.fillMaxWidth().padding(horizontal = 24.dp).semantics {
+                testTag = "dialog-end-session"
+                testTagsAsResourceId = true
+            },
             shape = RoundedCornerShape(22.dp),
             color = MaterialTheme.colorScheme.surface,
             border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = .1f)),
@@ -324,16 +371,37 @@ internal fun EndSessionDialog(state: AppState, confirm: () -> Unit, dismiss: () 
                 )
                 Spacer(Modifier.height(16.dp))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    EndRecap(successCount.toString(), "완등", Modifier.weight(1f))
-                    EndRecap("Lv.5", "최고", Modifier.weight(1f), WeClimbHoldColors.blue)
-                    EndRecap(pendingCount.toString(), "트리밍 대기", Modifier.weight(1f), MaterialTheme.colorScheme.primary)
+                    EndRecap(summary.successCount.toString(), "완등", Modifier.weight(1f))
+                    EndRecap(summary.totalCount.toString(), "전체 시도", Modifier.weight(1f), WeClimbHoldColors.blue)
+                    EndRecap(summary.mediaActionCount.toString(), "정리 필요", Modifier.weight(1f), MaterialTheme.colorScheme.primary)
                 }
                 Spacer(Modifier.height(20.dp))
-                Button(
-                    onClick = confirm,
-                    modifier = Modifier.fillMaxWidth().height(50.dp).semantics { testTag = "cta-confirm-end-session" },
-                    shape = RoundedCornerShape(14.dp),
-                ) { Text("종료하기") }
+                if (pendingSave == null) {
+                    Button(
+                        onClick = confirm,
+                        modifier = Modifier.fillMaxWidth().height(50.dp).semantics { testTag = "cta-confirm-end-session" },
+                        shape = RoundedCornerShape(14.dp),
+                    ) { Text("종료하기") }
+                } else {
+                    Text(
+                        "저장하지 못한 영상이 있어요",
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    Button(
+                        onClick = { retryPending(pendingSave) },
+                        modifier = Modifier.fillMaxWidth().height(50.dp),
+                        shape = RoundedCornerShape(14.dp),
+                    ) { Text("다시 저장") }
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(
+                        onClick = { discardPending(pendingSave) },
+                        modifier = Modifier.fillMaxWidth().height(50.dp),
+                        shape = RoundedCornerShape(14.dp),
+                    ) { Text("영상만 폐기하고 기록 유지") }
+                }
                 Spacer(Modifier.height(10.dp))
                 OutlinedButton(
                     onClick = dismiss,
@@ -347,7 +415,7 @@ internal fun EndSessionDialog(state: AppState, confirm: () -> Unit, dismiss: () 
 
 @Composable
 internal fun EndRecap(value: String, label: String, modifier: Modifier, color: Color = MaterialTheme.colorScheme.onSurface) = Surface(
-    modifier,
+    modifier.semantics { contentDescription = "$label $value" },
     shape = RoundedCornerShape(12.dp),
     color = Color(0xFF0D111A),
 ) {
@@ -358,8 +426,7 @@ internal fun EndRecap(value: String, label: String, modifier: Modifier, color: C
 }
 
 @Composable
-internal fun StatusBanner(message: String, retry: () -> Unit) {
-    val error = listOf("실패", "오류", "못", "불가", "확인").any(message::contains)
+internal fun StatusBanner(message: String, error: Boolean, retry: (() -> Unit)?) {
     val accent = if (error) MaterialTheme.colorScheme.error else Color(0xFF059669)
     val lines = message.lines()
     val title = if (lines.size > 1) {
@@ -385,7 +452,7 @@ internal fun StatusBanner(message: String, retry: () -> Unit) {
                 Text(detail, color = Color.White.copy(alpha = .75f), style = MaterialTheme.typography.bodySmall)
             }
         }
-        if (error) {
+        if (retry != null) {
             Button(
                 onClick = retry,
                 modifier = Modifier.height(38.dp).semantics { testTag = "cta-retry-status" },

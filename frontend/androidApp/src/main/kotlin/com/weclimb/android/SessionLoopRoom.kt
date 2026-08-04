@@ -57,7 +57,9 @@ data class ArchiveAttemptRow(
     val sessionId: String,
     val color: String,
     val recordedAtEpochMillis: Long,
+    val outcome: String,
     val videoUri: String?,
+    val cachePath: String?,
     val mediaState: String,
     val originalVideoUri: String?,
     val trimmedVideoUri: String?,
@@ -93,12 +95,12 @@ interface SessionLoopDao {
 
     @Query("""
         SELECT attempts.id, attempts.sessionId, attempts.color, attempts.recordedAtEpochMillis,
-            attempts.videoUri, attempts.mediaState, attempts.originalVideoUri,
+            attempts.outcome, attempts.videoUri, attempts.cachePath, attempts.mediaState, attempts.originalVideoUri,
             attempts.trimmedVideoUri, attempts.mediaErrorMessage, gyms.name AS gymName
         FROM attempts
         JOIN sessions ON sessions.id = attempts.sessionId
         JOIN gyms ON gyms.id = sessions.gymId
-        WHERE attempts.outcome = 'SUCCESS'
+        WHERE attempts.outcome IN ('SUCCESS', 'UNCLASSIFIED')
         ORDER BY attempts.recordedAtEpochMillis DESC
     """)
     fun archiveAttempts(): List<ArchiveAttemptRow>
@@ -226,9 +228,9 @@ internal fun ArchiveAttemptRow.toArchiveAttempt(): ArchiveAttempt = ArchiveAttem
         sessionId = sessionId,
         color = color,
         recordedAtEpochMillis = recordedAtEpochMillis,
-        outcome = AttemptOutcome.SUCCESS,
+        outcome = AttemptOutcome.valueOf(outcome),
         videoUri = videoUri,
-        cachePath = null,
+        cachePath = cachePath,
         media = mediaFromColumns(mediaState, originalVideoUri, trimmedVideoUri, mediaErrorMessage, videoUri),
     ),
     gymName = gymName,
