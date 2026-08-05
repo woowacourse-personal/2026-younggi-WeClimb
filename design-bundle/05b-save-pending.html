@@ -1,0 +1,250 @@
+<!-- @dsCard group="Screens" -->
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5b · 저장 대기 해소 (SAVE_PENDING)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#05070d;color:#fff;font-family:'Barlow',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:30px 24px 56px}
+.cnd{font-family:'Barlow Condensed',sans-serif}
+.pageh{max-width:1240px;margin:0 auto 26px}
+.pageh h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px}
+.pageh h1 b{color:#EA580C}
+.pageh p{color:#94A3B8;font-size:14px;margin-top:5px;max-width:800px;line-height:1.55}
+.stage{display:flex;flex-wrap:wrap;gap:30px 22px;justify-content:center;align-items:flex-start;max-width:1660px;margin:0 auto}
+.frame{width:390px}
+.cap{display:flex;align-items:center;gap:9px;margin-bottom:11px;flex-wrap:wrap}
+.cap .n{width:24px;height:24px;border-radius:7px;background:#1E2634;color:#EA580C;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;flex:none;border:1px solid rgba(234,88,12,.4)}
+.cap .t{font-size:14px;font-weight:700;color:#e2e8f0}
+.cap .d{font-size:12px;color:#64748B;font-weight:600}
+.phone{width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06);background:#05070a}
+
+.ann{width:390px;margin-top:12px;background:#0a0e18;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px 14px;font-size:11.5px;line-height:1.55}
+.ann h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:#EA580C;letter-spacing:.6px;margin-bottom:8px;text-transform:uppercase}
+.ann .grp{border-top:1px dashed rgba(255,255,255,.09);margin-top:9px;padding-top:9px}
+.ann .grp:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.ann .vn{font-weight:700;color:#fff;font-size:12px;margin-bottom:4px}
+.ann dl{display:grid;grid-template-columns:52px 1fr;gap:3px 9px}
+.ann dt{color:#64748B;font-weight:700}
+.ann dd{color:#cbd5e1}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;color:#f0a878;background:rgba(234,88,12,.1);padding:1px 5px;border-radius:5px}
+
+.frozen{position:absolute;inset:0;background:linear-gradient(180deg,#2a2320 0%,#161a20 45%,#0e1219 100%);filter:saturate(.5) brightness(.72)}
+.wall{position:absolute;inset:0;opacity:.22;background:
+  radial-gradient(circle at 30% 26%,#E45D5D 0 14px,transparent 15px),
+  radial-gradient(circle at 62% 20%,#5A8FDB 0 12px,transparent 13px),
+  radial-gradient(circle at 44% 48%,#DDBB44 0 13px,transparent 14px),
+  radial-gradient(circle at 28% 70%,#46AE72 0 13px,transparent 14px)}
+.sb{position:relative;z-index:3;height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#fff}
+.mid{flex:1;position:relative;z-index:3}
+.dim{position:absolute;inset:0;background:rgba(5,7,13,.6);z-index:4}
+
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:5;background:#141A26;border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);padding:8px 22px 30px;box-shadow:0 -20px 50px rgba(0,0,0,.5)}
+.grab{width:40px;height:4px;border-radius:2px;background:#334155;margin:6px auto 14px}
+.rbadge{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:12px;padding:6px 12px;border-radius:20px;margin-bottom:12px}
+.rbadge .sq{width:11px;height:11px;border-radius:3px;background:#5A8FDB}
+.rbadge.ok{background:rgba(5,150,105,.16);color:#34d399}
+.rbadge.no{background:rgba(220,38,38,.16);color:#fca5a5}
+.sheet h2{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:700;margin-bottom:4px}
+.sheet .sd{font-size:13px;color:#94A3B8;margin-bottom:14px;line-height:1.5}
+.opt{display:flex;align-items:center;gap:14px;background:#1E2634;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:13px;margin-bottom:9px;min-height:64px}
+.opt.primary{border-color:#EA580C;background:linear-gradient(160deg,#20140b,#1e2634)}
+.opt.destructive{border-color:rgba(220,38,38,.42);background:linear-gradient(160deg,#1e1114,#1e2634)}
+.opt .oi{width:40px;height:40px;border-radius:12px;background:#0d111a;display:flex;align-items:center;justify-content:center;flex:none}
+.opt.primary .oi{background:rgba(234,88,12,.18)}
+.opt.destructive .oi{background:rgba(220,38,38,.16)}
+.opt .oi svg{width:20px;height:20px}
+.opt .ot{font-weight:700;font-size:15px}
+.opt .os{font-size:12px;color:#94A3B8;margin-top:1px;line-height:1.4}
+.opt.destructive .ot{color:#fca5a5}
+.opt .chev{margin-left:auto;color:#475569;flex:none}
+.opt .chev svg{width:18px;height:18px}
+.closehint{display:flex;align-items:center;gap:8px;justify-content:center;font-size:11.5px;color:#64748B;font-weight:600;margin-top:11px;text-align:center;line-height:1.5}
+.closehint svg{width:14px;height:14px;flex:none}
+
+.dialog{position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);z-index:7;background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:24px 22px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.dialog .dic{width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.dialog .dic svg{width:27px;height:27px}
+.dic.warn{background:rgba(234,88,12,.16)}
+.dialog h2{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:700;margin-bottom:8px;text-align:center}
+.dialog p{font-size:13px;color:#94A3B8;line-height:1.55;text-align:center;margin-bottom:16px}
+.keepbox{background:#0d111a;border:1px solid rgba(255,255,255,.08);border-radius:13px;padding:12px 14px;margin-bottom:18px;text-align:left}
+.keepbox .kk{font-size:11px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.keepbox .kr{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#cbd5e1;margin-bottom:4px}
+.keepbox .kr:last-child{margin-bottom:0}
+.keepbox .kr svg{width:14px;height:14px;flex:none}
+.dbtns{display:flex;flex-direction:column;gap:10px}
+.dbtn{height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:15px;border:none}
+.dbtn svg{width:17px;height:17px}
+.dbtn.danger{background:#DC2626;color:#fff}
+.dbtn.pri{background:#EA580C;color:#fff}
+.dbtn.gh{background:transparent;border:1px solid rgba(255,255,255,.16);color:#cbd5e1}
+
+.banner{position:absolute;left:16px;right:16px;top:56px;z-index:6;border-radius:14px;padding:13px 15px;display:flex;align-items:center;gap:11px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.banner .ic{width:30px;height:30px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center}
+.banner .ic svg{width:18px;height:18px}
+.banner .tt{font-weight:700;font-size:14px}
+.banner .ss{font-size:12px;color:rgba(255,255,255,.75);margin-top:1px}
+.banner.err{background:#2a1315;border:1px solid rgba(220,38,38,.5)}
+.banner.err .ic{background:#DC2626}
+.retry{margin-left:auto;background:#DC2626;color:#fff;border:none;font-weight:700;font-size:13px;padding:9px 14px;border-radius:10px;min-height:38px}
+</style></head>
+<body>
+<div class="pageh">
+  <h1>5b · 저장 대기 해소 — <b>SAVE_PENDING</b></h1>
+  <p>MediaStore 저장에 실패해 영상이 앱 임시 공간에만 있는 상태다. <b>완등 기록은 이미 남았고</b>, 남은 결정은 영상을 다시 저장할지 포기할지뿐이다. 저장 대기가 남아 있으면 세션을 종료할 수 없다(<code style="font-size:12px">04</code> 프레임 E). v2에서 <b>영상 처리 시트가 사라지면서</b> 이 페이지는 저장 실패 분기만 담당한다.</p>
+</div>
+<div class="stage">
+
+  <!-- A 저장 대기 -->
+  <div class="frame">
+    <div class="cap"><span class="n">A</span><span class="t">저장 대기 해소</span><span class="d">재시도 / 영상만 폐기</span></div>
+    <div class="phone">
+      <div class="frozen"></div><div class="wall"></div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="banner err">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="#fff" stroke="none"/><path d="M12 3l9 16H3z"/></svg></div>
+        <div><div class="tt">영상을 저장하지 못했어요</div><div class="ss">완등 기록은 이미 남았어요</div></div>
+      </div>
+      <div class="mid"></div>
+      <div class="dim"></div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="rbadge ok"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.6" style="width:13px;height:13px"><path d="M5 13l4 4L19 7"/></svg><span class="sq"></span>파랑 완등 · 저장 대기</div>
+        <h2>영상 저장을 마무리해요</h2>
+        <div class="sd">기기 저장소에 옮기지 못했어요. 영상은 앱 임시 공간에 아직 있어요.</div>
+        <div class="opt primary">
+          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M20 11a8 8 0 10-2 5.3M20 5v6h-6"/></svg></div>
+          <div><div class="ot">다시 저장하기</div><div class="os">기기 저장소에 한 번 더 시도</div></div>
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+        </div>
+        <div class="opt destructive">
+          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></div>
+          <div><div class="ot">영상만 폐기하고 기록 유지</div><div class="os">완등 1개는 그대로 남아요</div></div>
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+        </div>
+        <div class="closehint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          닫아도 대기 상태로 남아요 — 세션 종료 전에 정해야 해요
+        </div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">저장 대기</div><dl>
+        <dt>소스</dt><dd><code>AttemptOutcome.SAVE_PENDING</code> + <code>Attempt.cachePath</code> 존재</dd>
+        <dt>형식</dt><dd>원인 + <b>영상이 아직 살아 있다는 사실</b>을 먼저 알린다</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>재저장 중 두 옵션 비활성 + 진행 배너</dd>
+        <dt>오류</dt><dd>재저장 실패 → 프레임 C. <b>대기 상태와 캐시는 보존</b></dd></dl></div>
+      <div class="grp"><div class="vn">결과별 진입</div><dl>
+        <dt>완등</dt><dd><code>SUCCESS</code> + 저장 실패 → 이 시트. 카운트는 이미 +1</dd>
+        <dt>영상 남기기</dt><dd><code>FAILURE</code> + 저장 실패 → 같은 시트, 배지만 실패로. <b>기능 차등 없음</b></dd>
+        <dt>실패</dt><dd>영상을 보관하지 않으므로 이 경로로 오지 않는다</dd></dl></div>
+      <div class="grp"><div class="vn">행동 계약</div><dl>
+        <dt>재저장</dt><dd><code>AttemptService.retrySave()</code> → 성공 시 <code>TRIM_PENDING</code>으로 대기함 편입, 바로 보드 복귀</dd>
+        <dt>폐기</dt><dd><code>discardPendingVideo()</code> → 확인(프레임 B) 후 <code>media = NONE</code></dd>
+        <dt>차단</dt><dd>대기가 남아 있으면 <code>SessionFinisher.finish()</code>가 실패 → <code>04</code> 프레임 F로 종료 보류</dd></dl></div>
+      <div class="grp"><div class="vn">경로</div><dl>
+        <dt>뒤로/바깥</dt><dd>대기 유지. 삭제되지 않는다</dd>
+        <dt>재진입</dt><dd>보드 오류 배너 또는 세션 종료 시도 시</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- B 폐기 확인 -->
+  <div class="frame">
+    <div class="cap"><span class="n">B</span><span class="t">영상만 폐기 확인</span><span class="d">파괴적 확인 · 기록 보존 명시</span></div>
+    <div class="phone">
+      <div class="frozen"></div><div class="wall"></div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="mid"></div>
+      <div class="dim" style="background:rgba(5,7,13,.74)"></div>
+      <div class="dialog">
+        <div class="dic warn"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="#EA580C" stroke="none"/><path d="M12 3l9 16H3z"/></svg></div>
+        <h2>영상만 폐기할까요?</h2>
+        <p>저장하지 못한 영상을 버리고<br>기록만 남깁니다.</p>
+        <div class="keepbox">
+          <div class="kk">남는 것</div>
+          <div class="kr"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>완등 1개 (파랑)</div>
+          <div class="kr"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>세션 요약의 완등·시도 수</div>
+          <div class="kk" style="margin-top:11px">사라지는 것</div>
+          <div class="kr"><svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>임시 공간의 영상 파일</div>
+        </div>
+        <div class="dbtns">
+          <button class="dbtn danger">영상만 폐기</button>
+          <button class="dbtn pri">다시 저장 시도</button>
+          <button class="dbtn gh">취소</button>
+        </div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">확인 구성</div><dl>
+        <dt>소스</dt><dd><code>discardPendingVideo()</code> 호출 직전</dd>
+        <dt>형식</dt><dd>파괴 버튼 위에 <b>비파괴 대안(다시 저장)</b>을 함께 제시 — 되돌릴 수 없는 선택 앞에서 출구를 남긴다</dd>
+        <dt>포커스</dt><dd>제목. 파괴 버튼에 자동 포커스하지 않는다</dd>
+        <dt>로딩</dt><dd>처리 중 세 버튼 비활성</dd>
+        <dt>오류</dt><dd>캐시 삭제 실패 → Attempt 유지 + 오류 배너, 대기 상태 그대로</dd></dl></div>
+      <div class="grp"><div class="vn">경로</div><dl>
+        <dt>뒤로/바깥</dt><dd>= 취소. 대기 상태 유지</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- C 재시도 실패 -->
+  <div class="frame">
+    <div class="cap"><span class="n">C</span><span class="t">재저장 반복 실패</span><span class="d">출구 제시 · 상태 보존</span></div>
+    <div class="phone">
+      <div class="frozen"></div><div class="wall"></div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="banner err">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="#fff" stroke="none"/><path d="M12 3l9 16H3z"/></svg></div>
+        <div><div class="tt">여전히 저장하지 못했어요</div><div class="ss">저장 공간이 부족할 수 있어요</div></div>
+        <button class="retry">다시</button>
+      </div>
+      <div class="mid"></div>
+      <div class="dim"></div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="rbadge no"><svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2.4" style="width:13px;height:13px"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="#fca5a5" stroke="none"/><path d="M12 3l9 16H3z"/></svg>저장 대기 · 재시도 실패</div>
+        <h2>다른 방법을 골라 주세요</h2>
+        <div class="sd">기기 저장 공간을 확보한 뒤 다시 시도하거나, 이 영상은 포기하고 기록만 남길 수 있어요.</div>
+        <div class="opt">
+          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></div>
+          <div><div class="ot">저장 공간 정리하기</div><div class="os">설정을 연 뒤 돌아와 다시 시도</div></div>
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+        </div>
+        <div class="opt primary">
+          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M20 11a8 8 0 10-2 5.3M20 5v6h-6"/></svg></div>
+          <div><div class="ot">다시 저장하기</div><div class="os">한 번 더 시도</div></div>
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+        </div>
+        <div class="opt destructive">
+          <div class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></div>
+          <div><div class="ot">영상만 폐기하고 기록 유지</div><div class="os">완등 1개는 그대로 남아요</div></div>
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+        </div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">반복 실패 처리</div><dl>
+        <dt>소스</dt><dd><code>retrySave()</code>가 같은 Attempt에서 2회 이상 실패</dd>
+        <dt>형식</dt><dd>실패 <b>횟수를 노출하지 않는다</b>. 대신 원인 추정 + 제3의 출구(저장 공간 정리)를 추가</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>재시도 중 전체 비활성</dd>
+        <dt>오류</dt><dd><code>StoreError.WRITE_FAILED</code> 등 원인별 문구 매핑. 원문 예외 메시지 노출 금지</dd></dl></div>
+      <div class="grp"><div class="vn">불변</div><dl>
+        <dt>규칙</dt><dd>몇 번 실패하든 캐시 파일과 Attempt는 사용자가 명시적으로 폐기하기 전까지 유지된다</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 시트</div><dl>
+        <dt>트리거</dt><dd>저장 실패 확정</dd>
+        <dt>시작</dt><dd>시트 Y +100% · scrim 불투명도 0</dd>
+        <dt>종료</dt><dd>시트 Y 0 · scrim .6</dd>
+        <dt>지속</dt><dd>진입 <code>--dur-emphasized 320ms</code> / 이탈 <code>--dur-exit 200ms</code></dd>
+        <dt>이징</dt><dd>진입 <code>decelerate</code> · 이탈 <code>accelerate</code></dd>
+        <dt>중단</dt><dd>진입 중 아래로 밀면 현재 Y와 속도를 드래그가 인수</dd>
+        <dt>반복</dt><dd>없음</dd>
+        <dt>축소</dt><dd>즉시 표시/제거</dd></dl></div>
+    </div>
+  </div>
+
+</div>
+</body></html>

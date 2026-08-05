@@ -107,7 +107,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
 <body>
 <div class="pageh">
   <h1>6 · 트리밍 — <b>실제 길이 · 실제 범위 · 프레임 타임라인</b></h1>
-  <p>프리뷰는 실제 Media3 Player. 길이와 선택 범위는 전부 런타임 값이며, <b>고정 <code style="font-size:12px">19_000L</code> 기본값과 고정 <code style="font-size:12px">0:04–0:16</code> 표기를 제거</b>했다. 타임라인은 실제 프레임 썸네일 스트립이다. 성공·실패 어느 결과의 영상이든 같은 화면으로 들어온다.</p>
+  <p>프리뷰는 실제 Media3 Player. 길이와 선택 범위는 전부 런타임 값이며, <b>고정 <code style="font-size:12px">19_000L</code> 기본값과 고정 <code style="font-size:12px">0:04–0:16</code> 표기를 제거</b>했다. 타임라인은 실제 프레임 썸네일 스트립이다. v2에서 촬영 직후 진입이 사라져 <b>유일한 진입점은 <code style="font-size:12px">07</code> 아카이브</b>다. 완등이든 실패든 같은 화면으로 들어오고, 결과는 헤더의 작은 칩으로만 붙는다.</p>
 </div>
 <div class="stage">
 
@@ -140,6 +140,10 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
       </div>
     </div>
     <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">진입점 (v2 변경)</div><dl>
+        <dt>유일</dt><dd><code>07</code> 아카이브의 <b>이어서 자르기 · 자르기 · 다시 자르기</b>. 촬영 직후 진입은 없다</dd>
+        <dt>근거</dt><dd>암장에서 벽 앞에 서서 트리밍하지 않는다. 자르기는 쉬거나 집에 와서 하는 활동이다</dd>
+        <dt>결과</dt><dd>완등·실패 어느 쪽이든 동일한 화면·동일한 행동. 헤더 칩만 다르다</dd></dl></div>
       <div class="grp"><div class="vn">전체 길이</div><dl>
         <dt>소스</dt><dd>Media3 <code>Player.duration</code> → <code>AppState.selectedVideoDurationMillis</code></dd>
         <dt>형식</dt><dd><code>m:ss</code> (1시간 이상 <code>h:mm:ss</code>), tabular-nums</dd>

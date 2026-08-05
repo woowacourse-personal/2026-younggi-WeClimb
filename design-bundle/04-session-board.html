@@ -85,11 +85,35 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
 .warnbox svg{width:19px;height:19px;flex:none;margin-top:1px}
 .warnbox .wt{font-weight:700;font-size:13px;color:#f0a878}
 .warnbox .ws{font-size:12px;color:#cbd5e1;margin-top:3px;line-height:1.5}
+
+/* 되돌리기 칩 (오탭 정정) */
+.undochip{display:flex;align-items:center;gap:8px;background:rgba(234,88,12,.13);border:1px solid rgba(234,88,12,.45);border-radius:12px;padding:8px 12px;margin:-6px 0 13px;font-size:12.5px;font-weight:700;color:#f0a878;position:relative;overflow:hidden;min-height:44px}
+.undochip .uu{margin-left:auto;color:#EA580C;font-weight:700;font-size:13px;background:transparent;border:none}
+.undochip .ubar{position:absolute;left:0;bottom:0;height:2px;background:#EA580C;width:58%}
+/* 롱프레스 조정 시트 */
+.dim{position:absolute;inset:0;background:rgba(5,7,13,.62);z-index:8}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:9;background:#141A26;border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.1);padding:8px 22px 30px;box-shadow:0 -20px 50px rgba(0,0,0,.5)}
+.grab{width:40px;height:4px;border-radius:2px;background:#334155;margin:6px auto 16px}
+.sheet .shd{display:flex;align-items:center;gap:11px;margin-bottom:6px}
+.sheet .shd .sw{width:26px;height:26px;border-radius:8px}
+.sheet h2{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:700}
+.sheet .sd{font-size:13px;color:#94A3B8;margin-bottom:18px;line-height:1.5}
+.stepper{display:flex;align-items:center;justify-content:center;gap:22px;margin-bottom:16px}
+.stepper .sb2{width:60px;height:60px;border-radius:20px;background:#1E2634;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:#fff}
+.stepper .sb2 svg{width:24px;height:24px}
+.stepper .sb2[disabled]{background:#141A26;border-color:rgba(255,255,255,.05);color:#3f4b5c}
+.stepper .val{font-family:'Barlow Condensed',sans-serif;font-size:52px;font-weight:700;min-width:74px;text-align:center;font-variant-numeric:tabular-nums}
+.lockbox{display:flex;gap:10px;background:#0d111a;border:1px solid rgba(255,255,255,.08);border-radius:13px;padding:12px 13px;margin-bottom:16px;text-align:left}
+.lockbox svg{width:18px;height:18px;flex:none;margin-top:1px}
+.lockbox .lt{font-weight:700;font-size:12.5px;color:#cbd5e1}
+.lockbox .ls{font-size:12px;color:#94A3B8;margin-top:3px;line-height:1.5}
+.sheet .done{width:100%;height:50px;border-radius:14px;background:#EA580C;color:#fff;border:none;font-weight:700;font-size:15px}
+.sheet .goarch{width:100%;height:48px;border-radius:14px;background:transparent;border:1px solid rgba(255,255,255,.16);color:#cbd5e1;font-weight:700;font-size:14px;margin-top:10px}
 </style></head>
 <body>
 <div class="pageh">
   <h1>4 · 세션 보드 — <b>런타임 카운트 · 실제 종료 요약</b></h1>
-  <p>색상 카운트 · 타이머 · 요약이 전부 런타임 값이다. v2에서 <b>고정 <code style="font-size:12px">26 완등</code>과 <code style="font-size:12px">최고 Lv.5</code> 타일을 제거</b>했다 — 레벨은 런타임 소스가 없다. 종료 요약은 <code style="font-size:12px">summarizeAttempts()</code>의 완등 · 전체 시도 · 정리 필요 세 값만 쓴다. <code style="font-size:12px">SAVE_PENDING</code>이 남아 있으면 종료가 보류된다. 진행 막대는 <b>한 바퀴 5완등</b>이고, 한 바퀴를 다 채우면 다음 바퀴가 <b>한 단계 진한 색으로 덧칠</b>된다 — 절대량을 나타내므로 다른 색이 늘어도 내 막대가 줄지 않는다.</p>
+  <p>색상 카운트 · 타이머 · 요약이 전부 런타임 값이다. v2에서 <b>고정 <code style="font-size:12px">26 완등</code>과 <code style="font-size:12px">최고 Lv.5</code> 타일을 제거</b>했다 — 레벨은 런타임 소스가 없다. 종료 요약은 <code style="font-size:12px">summarizeAttempts()</code>의 완등 · 전체 시도 · <b>저장한 영상</b> 세 값만 쓴다. 촬영한 영상은 전부 대기함으로 가므로 <code style="font-size:12px">정리 필요</code>는 정보량이 없어 중립 지표로 바꿨다. <code style="font-size:12px">SAVE_PENDING</code>이 남아 있으면 종료가 보류된다. 진행 막대는 <b>한 바퀴 5완등</b>이고, 한 바퀴를 다 채우면 다음 바퀴가 <b>한 단계 진한 색으로 덧칠</b>된다 — 절대량을 나타내므로 다른 색이 늘어도 내 막대가 줄지 않는다.</p>
 </div>
 <div class="stage">
 
@@ -143,7 +167,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <div class="blvl"><span class="sw" style="background:#E2E8F0"></span><span class="cname">하양</span><div class="track"><div class="fill" style="width:40%;background:#E2E8F0"></div></div><div class="cnt">2</div></div>
         <button class="cam"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.4"/></svg>촬영하기</button>
       </div>
-      <div class="foot"><div class="sum"><b>26</b> 완등 · <b>31</b> 시도 · <b>2</b> 정리 필요</div><button class="end">클라이밍 종료</button></div>
+      <div class="foot"><div class="sum"><b>26</b> 완등 · <b>31</b> 시도 · <b>9</b> 영상</div><button class="end">클라이밍 종료</button></div>
     </div>
     <div class="ann"><h4>런타임 주석</h4>
       <div class="grp"><div class="vn">색상 행 목록</div><dl>
@@ -167,8 +191,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <dt>shade</dt><dd>바퀴마다 <code>RGB × 0.70</code>. 표준 색 램프는 <code>spec-components.html</code> 참조. 검정은 어둡게 할 수 없어 slate 램프로 <b>밝게</b> 진행</dd>
         <dt>대비</dt><dd>바탕과 덧칠의 대비 ≥1.5:1 유지. 색만으로 바퀴 수를 읽게 하지 않는다 — <b>숫자 카운트가 정본</b></dd></dl></div>
       <div class="grp"><div class="vn">하단 요약</div><dl>
-        <dt>소스</dt><dd><code>summarizeAttempts()</code> → <code>successCount</code> · <code>totalCount</code> · <code>mediaActionCount</code></dd>
-        <dt>형식</dt><dd><code>{완등} 완등 · {시도} 시도 · {정리} 정리 필요</code>. 정리 0이면 그 항목 생략</dd>
+        <dt>소스</dt><dd><code>summarizeAttempts()</code> → <code>successCount</code> · <code>totalCount</code> · <code>savedVideoCount</code>(신규)</dd>
+        <dt>형식</dt><dd><code>{완등} 완등 · {시도} 시도 · {영상} 영상</code>. 영상 0이면 그 항목 생략</dd>
         <dt>빈</dt><dd>모두 0 → <code>0 완등 · 0 시도</code></dd>
         <dt>로딩</dt><dd>값 자리 유지, 숫자만 <code>–</code></dd>
         <dt>오류</dt><dd>집계 실패 시 요약 숨김, 종료 버튼은 유지</dd></dl></div>
@@ -193,9 +217,110 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
     </div>
   </div>
 
-  <!-- C: 종료 확인 -->
+  <!-- C: 되돌리기 칩 -->
   <div class="frame">
-    <div class="cap"><span class="n">C</span><span class="t">세션 종료 확인</span><span class="d">실제 요약 3값 · 레벨 타일 제거</span></div>
+    <div class="cap"><span class="n">C</span><span class="t">오탭 되돌리기</span><span class="d">신규 · 탭 직후 5초</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="top"><div class="gym">닻 클라이밍</div><div class="timer">01:12:51</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
+      <div class="body">
+        <div class="hd"><span class="l">색을 탭해서 완등</span><span class="r">한 바퀴 = 5완등</span></div>
+        <div class="blvl"><span class="sw" style="background:#E45D5D"></span><span class="cname">빨강</span><div class="track"><div class="fill" style="width:20%;background:#E45D5D"></div></div><div class="cnt bump">1</div></div>
+        <div class="undochip">
+          빨강 완등 1개 추가됨
+          <button class="uu">되돌리기</button>
+          <div class="ubar"></div>
+        </div>
+        <div class="blvl"><span class="sw" style="background:#5A8FDB"></span><span class="cname">파랑</span><div class="track"><div class="fill" style="width:100%;background:#5A8FDB"></div><div class="over" style="width:40%;background:#3E6CB5"></div></div><div class="cnt">7</div></div>
+        <div class="blvl"><span class="sw" style="background:#46AE72"></span><span class="cname">초록</span><div class="track"><div class="fill" style="width:100%;background:#2E7A52"></div><div class="over" style="width:40%;background:#20573A"></div></div><div class="cnt">12</div></div>
+        <button class="cam"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.4"/></svg>촬영하기</button>
+      </div>
+      <div class="foot"><div class="sum"><b>27</b> 완등 · <b>32</b> 시도 · <b>9</b> 영상</div><button class="end">클라이밍 종료</button></div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">되돌리기 칩</div><dl>
+        <dt>소스</dt><dd>방금 만든 <code>Attempt.id</code> (보드 탭 → <code>recordSuccessWithoutVideo()</code>)</dd>
+        <dt>형식</dt><dd>탭한 <b>색 행 바로 아래</b>에 삽입. 5초 진행 막대. 남은 초를 숫자로 쓰지 않는다</dd>
+        <dt>빈</dt><dd>창이 끝나면 사라진다. 그 뒤 정정은 프레임 D 롱프레스</dd>
+        <dt>로딩</dt><dd>되돌리는 동안 그 색 행 탭 비활성</dd>
+        <dt>오류</dt><dd>삭제 실패 시 칩을 오류 문구로 교체, 카운트는 유지</dd></dl></div>
+      <div class="grp"><div class="vn">왜 칩인가</div><dl>
+        <dt>제약</dt><dd>색 행은 <b>탭 = +1</b>이 전부여야 한다. 행 안에 −버튼을 두면 매 탭마다 조준이 필요해져 보드가 느려진다</dd>
+        <dt>해법</dt><dd>정정은 <b>사후</b>에 준다. 오탭은 대부분 직후에 알아차린다</dd>
+        <dt>위치</dt><dd>화면 하단 토스트가 아니라 <b>해당 행 아래</b> — 어떤 색을 되돌리는지 명확해야 한다</dd></dl></div>
+      <div class="grp"><div class="vn">되돌린 결과</div><dl>
+        <dt>Attempt</dt><dd>방금 만든 Attempt 삭제. 완등 −1, 전체 시도 −1</dd>
+        <dt>막대</dt><dd>바퀴 경계를 되넘으면 승격도 <b>역순</b>으로 되돌린다</dd>
+        <dt>영상</dt><dd>보드 탭으로 만든 시도에는 영상이 없다. 삭제될 미디어가 없다</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 되돌리기</div><dl>
+        <dt>트리거</dt><dd>되돌리기 탭</dd>
+        <dt>시작</dt><dd>현재 숫자 · 현재 막대 폭</dd>
+        <dt>종료</dt><dd>이전 숫자 Y −6dp에서 0으로 · 막대 폭 이전 <code>rem/5</code></dd>
+        <dt>지속</dt><dd><code>--dur-standard 220ms</code>. 증가 모션의 <b>정확한 역방향</b></dd>
+        <dt>이징</dt><dd><code>--ease-standard</code></dd>
+        <dt>중단</dt><dd>되돌리는 중 같은 색을 다시 탭하면 되돌리기를 취소하고 원래 값 유지</dd>
+        <dt>반복</dt><dd>없음</dd>
+        <dt>축소</dt><dd>즉시 값 교체. TalkBack은 "빨강 완등 0개, 되돌렸어요" 공지</dd></dl></div>
+      <div class="grp"><div class="vn">접근성</div><dl>
+        <dt>공지</dt><dd>칩 등장 시 <code>liveRegion = Polite</code>로 "되돌리기 가능"</dd>
+        <dt>연장</dt><dd>TalkBack 활성 시 5초 창을 <b>연장한다</b> — 읽고 조작할 시간이 필요하다</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- D: 롱프레스 조정 -->
+  <div class="frame">
+    <div class="cap"><span class="n">D</span><span class="t">롱프레스 조정</span><span class="d">신규 · 지난 오탭 정정</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="top" style="opacity:.4"><div class="gym">닻 클라이밍</div><div class="timer">01:18:02</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
+      <div class="body" style="opacity:.4"><div class="blvl"><span class="sw" style="background:#5A8FDB"></span><span class="cname">파랑</span><div class="track"><div class="fill" style="width:100%;background:#5A8FDB"></div><div class="over" style="width:40%;background:#3E6CB5"></div></div><div class="cnt">7</div></div></div>
+      <div class="dim"></div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="shd"><span class="sw" style="background:#5A8FDB"></span><h2>파랑 완등 수</h2></div>
+        <div class="sd">잘못 올린 기록을 정정해요.</div>
+        <div class="stepper">
+          <button class="sb2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"/></svg></button>
+          <div class="val">7</div>
+          <button class="sb2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button>
+        </div>
+        <div class="lockbox">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+          <div>
+            <div class="lt">영상이 있는 시도 3개는 잠겨 있어요</div>
+            <div class="ls">여기서는 영상 없는 기록만 줄어요. 영상까지 지우려면 아카이브에서 해주세요.</div>
+          </div>
+        </div>
+        <button class="done">완료</button>
+        <button class="goarch">아카이브에서 정리하기</button>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">진입</div><dl>
+        <dt>제스처</dt><dd>색 행 <b>롱프레스</b>(500ms). 탭은 +1이므로 충돌하지 않는다</dd>
+        <dt>대상</dt><dd>그 색의 완등 수만. 다른 색은 건드리지 않는다</dd>
+        <dt>발견성</dt><dd>첫 세션에 한 번 힌트를 띄운다("길게 눌러 수정")</dd></dl></div>
+      <div class="grp"><div class="vn">− 버튼 대상</div><dl>
+        <dt>규칙</dt><dd>그 색의 <b>영상 없는 시도 중 가장 최근 것</b>부터 삭제 (<code>videoUri == null &amp;&amp; cachePath == null</code>)</dd>
+        <dt>잠금</dt><dd>영상 있는 시도만 남으면 <b>− 비활성</b> + 잠금 안내. 개수를 명시한다</dd>
+        <dt>근거</dt><dd>오탭 정정이 <b>영상 삭제로 번지면 안 된다.</b> 영상 삭제는 아카이브의 파괴적 확인 경로에만 둔다</dd>
+        <dt>+ 버튼</dt><dd>영상 없는 완등을 추가한다 — 촬영을 잊고 올라간 경우</dd></dl></div>
+      <div class="grp"><div class="vn">상태</div><dl>
+        <dt>소스</dt><dd><code>attempts.filter { color == c &amp;&amp; outcome == SUCCESS }</code></dd>
+        <dt>형식</dt><dd>큰 숫자 + 60dp 원형 스테퍼 버튼(터치 타깃 충분)</dd>
+        <dt>빈</dt><dd>0이면 − 비활성</dd>
+        <dt>로딩</dt><dd>Room 반영 중 두 버튼 비활성. 낙관적 갱신 후 실패 시 롤백</dd>
+        <dt>오류</dt><dd>쓰기 실패 → 숫자 롤백 + 시트 안에 오류 문구</dd></dl></div>
+      <div class="grp"><div class="vn">경로</div><dl>
+        <dt>완료</dt><dd>시트 닫고 보드 갱신. 변경은 <b>버튼을 누를 때마다 즉시</b> 반영된다</dd>
+        <dt>뒤로/바깥</dt><dd>= 완료. 이미 반영된 변경은 되돌리지 않는다</dd>
+        <dt>아카이브</dt><dd>영상까지 지우려는 사용자를 <code>07</code>로 보낸다</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- E: 종료 확인 -->
+  <div class="frame">
+    <div class="cap"><span class="n">E</span><span class="t">세션 종료 확인</span><span class="d">실제 요약 3값 · 레벨 타일 제거</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="top" style="opacity:.4"><div class="gym">닻 클라이밍</div><div class="timer">01:24:07</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
@@ -207,7 +332,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <div class="recap">
           <div class="rc"><div class="v">26</div><div class="k">완등</div></div>
           <div class="rc"><div class="v">31</div><div class="k">전체 시도</div></div>
-          <div class="rc warn"><div class="v">2</div><div class="k">정리 필요</div></div>
+          <div class="rc"><div class="v">9</div><div class="k">저장한 영상</div></div>
         </div>
         <div class="dbtns">
           <button class="dbtn end2">종료하기</button>
@@ -217,14 +342,16 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
     </div>
     <div class="ann"><h4>런타임 주석</h4>
       <div class="grp"><div class="vn">요약 타일 3개 (고정)</div><dl>
-        <dt>소스</dt><dd><code>AttemptSummary.successCount</code> / <code>.totalCount</code> / <code>.mediaActionCount</code></dd>
+        <dt>소스</dt><dd><code>AttemptSummary.successCount</code> / <code>.totalCount</code> / <code>.savedVideoCount</code>(신규)</dd>
         <dt>형식</dt><dd>정수 3개. <b>이 세 값 외 타일 추가 금지</b></dd>
-        <dt>빈</dt><dd>정리 필요 0이면 타일 회색 처리, 숨기지는 않음(자리 유지)</dd>
+        <dt>빈</dt><dd>저장한 영상 0이면 타일 회색 처리, 숨기지는 않음(자리 유지)</dd>
         <dt>로딩</dt><dd>집계 중 종료 버튼 비활성 + 타일 <code>–</code></dd>
         <dt>오류</dt><dd>집계 실패 시 타일 숨기고 "요약을 계산하지 못했어요" + 종료는 계속 가능</dd></dl></div>
-      <div class="grp"><div class="vn">정리 필요 정의</div><dl>
-        <dt>포함</dt><dd><code>TRIM_PENDING</code> + <code>TRIM_FAILED</code> + <code>TRIM_PROCESSING</code></dd>
-        <dt>제외</dt><dd><code>TRIMMED</code> · <code>ORIGINAL_KEPT</code> · <code>NONE</code></dd></dl></div>
+      <div class="grp"><div class="vn">저장한 영상 정의 (v2 변경)</div><dl>
+        <dt>포함</dt><dd><code>media.state != NONE</code>인 모든 Attempt — 완등이든 실패든</dd>
+        <dt>이전</dt><dd><code>mediaActionCount</code>(정리 필요) = <code>TRIM_PENDING</code>+<code>TRIM_FAILED</code>+<code>TRIM_PROCESSING</code></dd>
+        <dt>왜</dt><dd>촬영한 영상이 <b>전부</b> <code>TRIM_PENDING</code>으로 들어가면서 "정리 필요"가 곧 "촬영한 영상 수"가 됐다. 숙제처럼 보이는 문구를 중립 지표로 바꾼다</dd>
+        <dt>구현</dt><dd><code>AttemptSummary</code>에 <code>savedVideoCount</code> 추가 필요. <code>mediaActionCount</code>는 아카이브 배지에만 남긴다</dd></dl></div>
       <div class="grp"><div class="vn">제거된 값 (v2)</div><dl>
         <dt>삭제</dt><dd><code>최고 Lv.5</code> 타일 — 색→레벨 매핑 런타임 소스 없음</dd>
         <dt>삭제</dt><dd>고정 <code>26 완등 · 최고 Lv.5</code> 하단 문구</dd></dl></div>
@@ -244,9 +371,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
     </div>
   </div>
 
-  <!-- D: 저장 대기 보류 -->
+  <!-- F: 저장 대기 보류 -->
   <div class="frame">
-    <div class="cap"><span class="n">D</span><span class="t">저장 대기로 종료 보류</span><span class="d">SAVE_PENDING · 재시도 / 영상만 폐기</span></div>
+    <div class="cap"><span class="n">F</span><span class="t">저장 대기로 종료 보류</span><span class="d">SAVE_PENDING · 재시도 / 영상만 폐기</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="top" style="opacity:.4"><div class="gym">닻 클라이밍</div><div class="timer">01:24:07</div><div class="rec"><span class="d"></span>클라이밍 중</div></div>
@@ -264,7 +391,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <div class="recap">
           <div class="rc"><div class="v">26</div><div class="k">완등</div></div>
           <div class="rc"><div class="v">31</div><div class="k">전체 시도</div></div>
-          <div class="rc warn"><div class="v">2</div><div class="k">정리 필요</div></div>
+          <div class="rc"><div class="v">9</div><div class="k">저장한 영상</div></div>
         </div>
         <div class="dbtns">
           <button class="dbtn end2"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 11a8 8 0 10-2 5.3M20 5v6h-6"/></svg>다시 저장하기</button>
@@ -283,7 +410,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
       <div class="grp"><div class="vn">행동 계약</div><dl>
         <dt>재저장</dt><dd><code>AttemptService.retrySave()</code>. 성공하면 <code>SUCCESS</code> + <code>TRIM_PENDING</code></dd>
         <dt>폐기</dt><dd><code>discardPendingVideo()</code> — <b>영상만</b> 삭제, Attempt는 <code>SUCCESS</code>로 유지</dd>
-        <dt>파괴적</dt><dd>폐기는 2차 확인 다이얼로그를 거친다 (<code>05b</code> 프레임 G)</dd>
+        <dt>파괴적</dt><dd>폐기는 2차 확인 다이얼로그를 거친다 (<code>05b</code> 프레임 B)</dd>
         <dt>종료 차단</dt><dd><code>SessionFinisher.finish()</code>가 <code>SAVE_PENDING</code> 존재 시 실패하므로 UI에서 선행 차단</dd></dl></div>
       <div class="grp"><div class="vn">경로</div><dl>
         <dt>뒤로</dt><dd>= "계속 클라이밍". 대기 상태 그대로 유지</dd>

@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>5 · 촬영 (준비 · 대기 · 녹화 · 정지 · 분류 · 오류)</title>
+<title>5 · 촬영 (준비 · 녹화 · 3버튼 분류 · 되돌리기 · 오류)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -74,6 +74,30 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
 .big small{font-weight:600;font-size:12px;opacity:.88}
 .big.busy{background:#1E2634;color:#475569}
 .big.busy svg{stroke:#475569}
+/* 실패지만 영상은 남기기 — 결과는 실패, 영상만 보관 */
+.keepbtn{width:100%;margin-top:12px;min-height:60px;border-radius:18px;background:rgba(20,26,38,.92);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);color:#fff;display:flex;align-items:center;gap:12px;padding:11px 16px;text-align:left}
+.keepbtn .ki{width:36px;height:36px;border-radius:11px;background:rgba(234,88,12,.18);display:flex;align-items:center;justify-content:center;flex:none}
+.keepbtn .ki svg{width:19px;height:19px}
+.keepbtn .kt{display:block;font-weight:700;font-size:15px}
+.keepbtn .ks{display:block;font-size:12px;color:#94A3B8;margin-top:1px}
+.keepbtn.busy{background:#141A26;border-color:rgba(255,255,255,.08)}
+.keepbtn.busy .kt{color:#475569}
+.keepbtn.busy .ks{color:#3f4b5c}
+.keepbtn.busy .ki{background:#1E2634}
+/* 되돌리기 배너 */
+.undo{position:absolute;left:16px;right:16px;bottom:26px;z-index:6;background:#141A26;border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:11px;box-shadow:0 12px 34px rgba(0,0,0,.5)}
+.undo .ut{font-weight:700;font-size:14px}
+.undo .us{font-size:12px;color:#94A3B8;margin-top:1px}
+.undo .ub{margin-left:auto;background:transparent;border:1px solid rgba(234,88,12,.55);color:#EA580C;font-weight:700;font-size:13px;padding:10px 15px;border-radius:11px;min-height:40px;flex:none}
+.undo .bar{position:absolute;left:0;bottom:0;height:3px;background:#EA580C;border-radius:0 0 0 14px;width:62%}
+/* 저장 완료 배너 */
+.banner{position:relative;z-index:6;margin:12px 16px 0;border-radius:14px;padding:13px 15px;display:flex;align-items:center;gap:11px;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.banner .ic{width:30px;height:30px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center}
+.banner .ic svg{width:18px;height:18px}
+.banner .tt{font-weight:700;font-size:14px}
+.banner .ss{font-size:12px;color:rgba(255,255,255,.75);margin-top:1px}
+.banner.ok{background:#0e2a20;border:1px solid rgba(5,150,105,.5)}
+.banner.ok .ic{background:#059669}
 .busyspin{width:26px;height:26px;border-radius:50%;border:3px solid rgba(255,255,255,.16);border-top-color:#EA580C;animation:sp .9s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 
@@ -104,8 +128,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
 </style></head>
 <body>
 <div class="pageh">
-  <h1>5 · 촬영 — <b>카메라 표면 7상태</b></h1>
-  <p>전체 화면은 실제 CameraX <code style="font-size:12px">PreviewView</code>. 준비 중 → 대기 → 녹화(실시간 타이머 + 펄스) → 정지 → 분류 대기 → 분류 처리 중, 그리고 오류. <b>결과 확정 이후의 영상 처리 결정은 <code style="font-size:12px">05b</code>로 분리</b>됐다. 녹화 타이머는 실시간 경과 값이며 고정 <code style="font-size:12px">0:19</code> 같은 값은 쓰지 않는다.</p>
+  <h1>5 · 촬영 — <b>3버튼 분류 · 되돌리기</b></h1>
+  <p>전체 화면은 실제 CameraX <code style="font-size:12px">PreviewView</code>. 준비 중 → 대기 → 녹화(실시간 타이머 + 펄스) → 정지 → 분류 → 저장, 그리고 오류. 분류는 <b><code style="font-size:12px">실패</code> · <code style="font-size:12px">완등</code> + <code style="font-size:12px">실패지만 영상은 남기기</code> 세 버튼</b>이고, 결과와 영상 보관 여부를 <b>한 번의 탭</b>으로 정한다. <b>영상 처리 시트는 없다</b> — 보관되는 영상은 전부 <code style="font-size:12px">TRIM_PENDING</code>이고 자르기는 아카이브에서만 한다. 녹화 타이머는 실시간 경과 값이다.</p>
 </div>
 <div class="stage">
 
@@ -266,25 +290,37 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
       <div class="mid"></div>
       <div class="scrim"></div>
       <div class="result">
-        <div class="q">방금 시도, 성공했나요?</div>
-        <div class="qs">영상을 어떻게 할지는 <b>다음 단계</b>에서 따로 고릅니다</div>
+        <div class="q">이번 시도, 완등했나요?</div>
         <div class="btns">
-          <button class="big no"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>실패<small>기록에 남김</small></button>
-          <button class="big ok"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>성공<small>완등 +1</small></button>
+          <button class="big no"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>실패<small>영상도 지워요</small></button>
+          <button class="big ok"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>완등<small>완등 +1 · 영상 보관</small></button>
         </div>
+        <button class="keepbtn">
+          <span class="ki"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span>
+          <span><span class="kt">실패지만 영상은 남기기</span><span class="ks">무빙이 좋았을 때</span></span>
+        </button>
       </div>
     </div>
     <div class="ann"><h4>런타임 주석</h4>
-      <div class="grp"><div class="vn">v2 핵심 변경</div><dl>
-        <dt>이전</dt><dd>실패 = "영상 삭제" / 성공 = "영상 보관" — 결과와 영상 처리가 묶여 있었다</dd>
-        <dt>v2</dt><dd>이 화면은 <code>AttemptOutcome</code>만 정한다. 영상 처리(<code>VideoAction</code>)는 <code>05b</code>에서 <b>성공·실패 모두</b> 선택한다</dd>
-        <dt>부제</dt><dd>버튼 소제목에서 영상 문구 제거 → <code>완등 +1</code> / <code>기록에 남김</code></dd></dl></div>
+      <div class="grp"><div class="vn">v2 핵심 변경 — 버튼 3개</div><dl>
+        <dt>이전</dt><dd>실패 / 성공 두 버튼. 실패는 영상이 무조건 삭제돼 되돌릴 수 없었다</dd>
+        <dt>v2</dt><dd><b>실패지만 영상은 남기기</b>를 세 번째 버튼으로 추가. 완등하지 못해도 <b>무빙이 좋으면 남긴다</b></dd>
+        <dt>근거</dt><dd>영상의 가치와 시도의 결과는 별개다. 실패했다고 영상까지 버릴 이유가 없다</dd>
+        <dt>한 번에</dt><dd>결과와 영상 보관 여부를 <b>한 번의 탭</b>으로 정한다. 별도 영상 처리 시트를 띄우지 않는다</dd></dl></div>
+      <div class="grp"><div class="vn">세 버튼 → 상태</div><dl>
+        <dt>실패</dt><dd><code>FAILURE</code> + <code>media = NONE</code>. 캐시 삭제 (<b>되돌리기 창 이후</b>)</dd>
+        <dt>완등</dt><dd><code>SUCCESS</code> + <code>TRIM_PENDING</code>. 완등 카운트 +1</dd>
+        <dt>영상 남기기</dt><dd><code>FAILURE</code> + <code>TRIM_PENDING</code>. 카운트는 <b>오르지 않는다</b></dd>
+        <dt>공통</dt><dd>보관되는 영상은 예외 없이 <code>TRIM_PENDING</code>. 자르기는 아카이브에서만 한다</dd></dl></div>
       <div class="grp"><div class="vn">결과 선택</div><dl>
         <dt>소스</dt><dd><code>AttemptService.recordSuccess()</code> / 실패 분기</dd>
-        <dt>형식</dt><dd>하단 절반 큰 두 버튼, 간격 12dp(≥8dp), 각 100dp 높이</dd>
+        <dt>형식</dt><dd>큰 두 버튼(각 100dp, 간격 12dp) + 전체 폭 보조 버튼(60dp). 세 개를 나란히 두지 않는다 — 주 선택의 속도를 지킨다</dd>
         <dt>빈</dt><dd>해당 없음</dd>
-        <dt>로딩</dt><dd>탭 즉시 프레임 F로 전환</dd>
-        <dt>오류</dt><dd>MediaStore 저장 실패 → <code>SAVE_PENDING</code>, <code>05b</code> 프레임 F로 이동</dd></dl></div>
+        <dt>로딩</dt><dd>탭 즉시 프레임 F로 전환. 세 버튼 모두 비활성</dd>
+        <dt>오류</dt><dd>MediaStore 저장 실패 → <code>SAVE_PENDING</code>, <code>05b</code>로 이동</dd></dl></div>
+      <div class="grp"><div class="vn">배치 근거</div><dl>
+        <dt>왜 아래</dt><dd>세 번째 버튼은 <b>실패의 변형</b>이지 대등한 세 번째 결과가 아니다. 같은 줄에 놓으면 매번 세 개를 읽게 된다</dd>
+        <dt>부제</dt><dd>영상 결과를 <b>버튼에 명시</b>한다 — 탭 한 번으로 영상이 지워지므로 사전 고지가 필수</dd></dl></div>
       <div class="grp"><div class="vn">모션 · 결과 오버레이 진입</div><dl>
         <dt>트리거</dt><dd>파일 확정 완료</dd>
         <dt>시작</dt><dd>scrim 불투명도 0, 버튼 영역 Y +24dp · 불투명도 0</dd>
@@ -313,8 +349,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <div class="qs">완료될 때까지 다시 누를 수 없어요</div>
         <div class="btns">
           <button class="big busy" disabled><svg viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>실패<small>대기</small></button>
-          <button class="big busy" disabled><div class="busyspin"></div>성공<small>저장 중</small></button>
+          <button class="big busy" disabled><div class="busyspin"></div>완등<small>저장 중</small></button>
         </div>
+        <button class="keepbtn busy" disabled>
+          <span class="ki"><svg viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span>
+          <span><span class="kt">실패지만 영상은 남기기</span><span class="ks">대기</span></span>
+        </button>
       </div>
     </div>
     <div class="ann"><h4>런타임 주석</h4>
@@ -326,7 +366,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <dt>오류</dt><dd>저장 실패 → <code>SAVE_PENDING</code> + 오류 배너, 버튼 재활성</dd></dl></div>
       <div class="grp"><div class="vn">경로</div><dl>
         <dt>뒤로</dt><dd>처리 중 뒤로가기 <b>차단</b>. 완료 후에만 이동</dd>
-        <dt>다음</dt><dd>성공/실패 확정 → <code>05b</code> 영상 처리 결정</dd></dl></div>
+        <dt>다음</dt><dd>확정 → 프레임 H 저장 완료(보관 시) 또는 프레임 G 되돌리기(실패 시)</dd></dl></div>
       <div class="grp"><div class="vn">모션 · 버튼 비활성 전환</div><dl>
         <dt>트리거</dt><dd>결과 버튼 탭</dd>
         <dt>시작</dt><dd>원래 색(<code>#059669</code>/<code>#DC2626</code>), 불투명도 1</dd>
@@ -339,9 +379,85 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
     </div>
   </div>
 
-  <!-- G 분류 전 뒤로가기 -->
+  <!-- G 실패 되돌리기 -->
   <div class="frame">
-    <div class="cap"><span class="n">G</span><span class="t">분류 전 뒤로가기</span><span class="d">→ UNCLASSIFIED 보관</span></div>
+    <div class="cap"><span class="n">G</span><span class="t">실패 되돌리기</span><span class="d">신규 · 영상 삭제 취소 5초</span></div>
+    <div class="phone">
+      <div class="frozen"></div>
+      <div class="wall" style="opacity:.22"></div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hdr"><div class="selc" style="opacity:.5"><span class="sq"></span>파랑</div></div>
+      <div class="mid"></div>
+      <div class="undo">
+        <div><div class="ut">실패로 기록했어요</div><div class="us">영상은 곧 지워져요</div></div>
+        <button class="ub">되돌리기</button>
+        <div class="bar"></div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">되돌리기 창</div><dl>
+        <dt>소스</dt><dd>방금 확정한 <code>Attempt.id</code> + 아직 살아 있는 <code>cachePath</code></dd>
+        <dt>형식</dt><dd>5초 카운트다운 진행 막대. 남은 시간을 숫자로 쓰지 않는다 — 압박이 된다</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>되돌리기 처리 중 버튼 비활성</dd>
+        <dt>오류</dt><dd>복구 실패 시 배너를 오류로 교체. <b>캐시는 그대로 둔다</b></dd></dl></div>
+      <div class="grp"><div class="vn">구현 제약 — 삭제 지연 (중요)</div><dl>
+        <dt>규칙</dt><dd>실패 확정 시 <b>캐시를 즉시 삭제하지 않는다.</b> 되돌리기 창이 끝나거나 화면을 벗어날 때 삭제한다</dd>
+        <dt>이유</dt><dd>먼저 지우면 되돌릴 것이 없다. 탭 한 번으로 사라지는 영상에는 반드시 회수 구간이 필요하다</dd>
+        <dt>영향</dt><dd><code>AttemptService</code>의 실패 분기와 <code>classifyUnclassifiedFailure()</code>가 즉시 <code>cache.delete()</code>를 호출하는 현재 동작을 바꿔야 한다</dd></dl></div>
+      <div class="grp"><div class="vn">되돌린 결과</div><dl>
+        <dt>복귀</dt><dd>분류 대기(프레임 E)로 돌아간다. 결과 미확정, 영상 그대로</dd>
+        <dt>Attempt</dt><dd>방금 만든 <code>FAILURE</code> Attempt 삭제. 전체 시도 수도 −1</dd></dl></div>
+      <div class="grp"><div class="vn">모션 · 되돌리기 배너</div><dl>
+        <dt>트리거</dt><dd>실패 확정 저장 완료</dd>
+        <dt>시작</dt><dd>Y +16dp · 불투명도 0 / 진행 막대 폭 100%</dd>
+        <dt>종료</dt><dd>Y 0 · 불투명도 1 / 진행 막대 폭 0</dd>
+        <dt>지속</dt><dd>진입 <code>--dur-emphasized 320ms</code> / 막대 <b>5000ms 선형</b></dd>
+        <dt>이징</dt><dd>진입 <code>--ease-decelerate</code> · 막대 <code>linear</code></dd>
+        <dt>중단</dt><dd>되돌리기 탭 또는 화면 이탈 시 막대 정지 후 즉시 이탈</dd>
+        <dt>반복</dt><dd>없음</dd>
+        <dt>축소</dt><dd>배너 즉시 표시, 막대 애니메이션 대신 <b>정적 표시 + 남은 시간 유지</b>. TalkBack 활성 시 창을 <b>연장</b>한다</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- H 저장 완료 -->
+  <div class="frame">
+    <div class="cap"><span class="n">H</span><span class="t">저장 완료</span><span class="d">신규 · 자동 대기함 · 보드 복귀</span></div>
+    <div class="phone">
+      <div class="frozen"></div>
+      <div class="wall" style="opacity:.22"></div>
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="banner ok">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg></div>
+        <div><div class="tt">영상을 저장했어요</div><div class="ss">아카이브에서 다듬을 수 있어요</div></div>
+      </div>
+      <div class="mid"></div>
+      <div class="stopwrap">
+        <div class="hintline">잠시 뒤 보드로 돌아가요</div>
+        <div class="startbtn"><i></i></div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">v2 변경 — 시트 제거</div><dl>
+        <dt>이전</dt><dd>결과 확정 뒤 영상 처리 시트(자르기·나중에·원본·지우기)가 떴다</dd>
+        <dt>v2</dt><dd><b>시트를 띄우지 않는다.</b> 보관되는 영상은 전부 <code>TRIM_PENDING</code>으로 대기함에 들어가고 바로 보드로 돌아간다</dd>
+        <dt>근거</dt><dd>암장에서 벽 앞에 서서 트리밍하지 않는다. 답이 거의 항상 "나중에"인 질문을 매번 띄우지 않는다</dd>
+        <dt>자르기</dt><dd>전부 <code>07</code> 아카이브에서. <code>06</code> 트리밍의 유일한 진입점이 아카이브가 된다</dd></dl></div>
+      <div class="grp"><div class="vn">확정 배너</div><dl>
+        <dt>소스</dt><dd>Room 반영 완료 + <code>media.state == TRIM_PENDING</code></dd>
+        <dt>형식</dt><dd>완등/실패 어느 쪽이든 <b>같은 문구</b>. 영상은 결과로 차등하지 않는다</dd>
+        <dt>빈</dt><dd>실패(영상 없음)는 이 배너 대신 프레임 G 되돌리기 배너</dd>
+        <dt>로딩</dt><dd>저장 중에는 프레임 F</dd>
+        <dt>오류</dt><dd>저장 실패 → <code>SAVE_PENDING</code> → <code>05b</code></dd></dl></div>
+      <div class="grp"><div class="vn">경로</div><dl>
+        <dt>자동</dt><dd>4초 뒤 배너 소멸 + 보드 복귀. 촬영 버튼을 누르면 즉시 다음 촬영</dd>
+        <dt>뒤로</dt><dd>즉시 보드 복귀. 상태는 이미 확정돼 있다</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- I 분류 전 뒤로가기 -->
+  <div class="frame">
+    <div class="cap"><span class="n">I</span><span class="t">분류 전 뒤로가기</span><span class="d">→ UNCLASSIFIED 보관</span></div>
     <div class="phone">
       <div class="frozen"></div>
       <div class="wall" style="opacity:.2"></div>
@@ -373,9 +489,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
     </div>
   </div>
 
-  <!-- H 카메라 오류 -->
+  <!-- J 카메라 오류 -->
   <div class="frame">
-    <div class="cap"><span class="n">H</span><span class="t">7 · 카메라 오류</span><span class="d">ERROR · 재시도 / 설정</span></div>
+    <div class="cap"><span class="n">J</span><span class="t">7 · 카메라 오류</span><span class="d">ERROR · 재시도 / 설정</span></div>
     <div class="phone">
       <div class="preview" style="background:#0e1219"></div>
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>

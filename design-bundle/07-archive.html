@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>7 · 영상 아카이브 (결과 × 미디어 상태)</title>
+<title>7 · 영상 아카이브 (미디어 상태 중심 · 자르기 진입점)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -59,6 +59,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
 .vcard .dt{font-size:12px;color:#94A3B8;margin-top:2px}
 .vcard .color{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#cbd5e1;font-weight:600;margin-top:7px}
 .vcard .color .sw{width:13px;height:13px;border-radius:4px}
+.ochip{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;margin-left:6px}
 .stpill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 9px;border-radius:8px;margin-top:auto;align-self:flex-start}
 .stpill svg{width:12px;height:12px}
 .st-done{background:rgba(5,150,105,.15);color:#6ee7b7}
@@ -99,6 +100,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
 .big small{font-weight:600;font-size:11.5px;opacity:.88}
 .ok{background:#059669}
 .no{background:#DC2626}
+.keepbtn{width:100%;margin-top:11px;min-height:60px;border-radius:18px;background:#1E2634;border:1px solid rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;gap:12px;padding:11px 16px;text-align:left}
+.keepbtn .ki{width:36px;height:36px;border-radius:11px;background:rgba(234,88,12,.18);display:flex;align-items:center;justify-content:center;flex:none}
+.keepbtn .ki svg{width:19px;height:19px}
+.keepbtn .kt{display:block;font-weight:700;font-size:15px}
+.keepbtn .ks{display:block;font-size:12px;color:#94A3B8;margin-top:1px}
 .closehint{display:flex;align-items:center;gap:8px;justify-content:center;font-size:11.5px;color:#64748B;font-weight:600;margin-top:13px;line-height:1.5}
 .closehint svg{width:14px;height:14px;flex:none}
 
@@ -110,8 +116,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
 </style></head>
 <body>
 <div class="pageh">
-  <h1>7 · 영상 아카이브 — <b>결과 × 미디어 상태</b></h1>
-  <p>카드는 <b>두 축을 각각</b> 보여 준다 — 결과 배지(완등 · 실패 · 분류 필요)와 미디어 상태 pill(트리밍 완료 · 원본 유지 · 트리밍 대기 · 트리밍 실패 · 읽기 불가). <b>실패 영상도 목록에 남는다.</b> <code style="font-size:12px">ArchiveAttempt</code>에 썸네일·길이 컬럼이 없으므로 가짜 썸네일과 길이 배지를 제거하고 색 파생 플레이스홀더를 쓴다.</p>
+  <h1>7 · 영상 아카이브 — <b>정리의 유일한 장소</b></h1>
+  <p>v2에서 촬영 직후 영상 처리 시트가 사라지면서 <b>자르기·원본 유지·공유·지우기가 전부 여기로</b> 모였다. 카드의 분류축은 <b>미디어 상태</b>(트리밍 완료 · 원본 유지 · 트리밍 대기 · 트리밍 실패 · 읽기 불가)이고, <b>완등·실패는 색 옆의 작은 칩</b>으로만 붙는다 — 영상을 결과로 나누지 않는다. <code style="font-size:12px">ArchiveAttempt</code>에 썸네일·길이 컬럼이 없으므로 색 파생 플레이스홀더를 쓴다.</p>
 </div>
 <div class="stage">
 
@@ -121,16 +127,15 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="hd"><h1>영상 아카이브</h1><div class="sub">영상 12개</div></div>
-      <div class="filters"><span class="chip on">전체</span><span class="chip prev">완등</span><span class="chip prev">실패</span><span class="chip prev">정리 필요</span></div>
+      <div class="filters"><span class="chip on">전체</span><span class="chip prev">대기</span><span class="chip prev">완료</span><span class="chip prev">닻 클라이밍</span></div>
       <div class="body">
 
         <div class="vcard">
           <div class="th" style="background:linear-gradient(160deg,#2f3b52,#141a26)"><span class="sq" style="background:#5A8FDB"></span><span class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span><span class="pc"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div>
           <div class="meta">
-            <div class="toprow"><span class="obadge ob-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.8"><path d="M5 13l4 4L19 7"/></svg>완등</span></div>
             <div class="g">닻 클라이밍</div>
             <div class="dt">7월 22일 · 오후 8:14</div>
-            <div class="color"><span class="sw" style="background:#5A8FDB"></span>파랑</div>
+            <div class="color"><span class="sw" style="background:#5A8FDB"></span>파랑<span class="ochip ob-ok">완등</span></div>
             <span class="stpill st-done"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg>트리밍 완료</span>
             <div class="actions"><span class="ab pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4l13 8-13 8z"/></svg>재생</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 13.3l7.2 4.4M15.6 6.3l-7.2 4.4"/></svg>공유</span></div>
           </div>
@@ -139,10 +144,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <div class="vcard">
           <div class="th" style="background:linear-gradient(160deg,#25402f,#141a26)"><span class="sq" style="background:#46AE72"></span><span class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span><span class="pc"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div>
           <div class="meta">
-            <div class="toprow"><span class="obadge ob-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.8"><path d="M5 13l4 4L19 7"/></svg>완등</span></div>
             <div class="g">닻 클라이밍</div>
             <div class="dt">7월 22일 · 오후 7:55</div>
-            <div class="color"><span class="sw" style="background:#46AE72"></span>초록</div>
+            <div class="color"><span class="sw" style="background:#46AE72"></span>초록<span class="ochip ob-ok">완등</span></div>
             <span class="stpill st-wait"><svg viewBox="0 0 24 24" fill="none" stroke="#f0a878" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>트리밍 대기</span>
             <div class="actions"><span class="ab pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg>이어서 자르기</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4l13 8-13 8z"/></svg>재생</span></div>
           </div>
@@ -151,10 +155,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <div class="vcard">
           <div class="th" style="background:linear-gradient(160deg,#403a25,#141a26)"><span class="sq" style="background:#DDBB44"></span><span class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span><span class="pc"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div>
           <div class="meta">
-            <div class="toprow"><span class="obadge ob-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.8"><path d="M5 13l4 4L19 7"/></svg>완등</span></div>
             <div class="g">더클라임 양재</div>
             <div class="dt">7월 19일 · 오후 9:02</div>
-            <div class="color"><span class="sw" style="background:#DDBB44"></span>노랑</div>
+            <div class="color"><span class="sw" style="background:#DDBB44"></span>노랑<span class="ochip ob-ok">완등</span></div>
             <span class="stpill st-orig"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg>원본 유지</span>
             <div class="actions"><span class="ab pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4l13 8-13 8z"/></svg>재생</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg>자르기</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 13.3l7.2 4.4M15.6 6.3l-7.2 4.4"/></svg></span></div>
           </div>
@@ -183,6 +186,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <dt>길이</dt><dd><code>0:12</code> 등 고정 길이 배지 <b>삭제</b>. duration 컬럼 없음</dd>
         <dt>레벨</dt><dd><code>Lv.5</code> 표기 <b>삭제</b>. 색→레벨 매핑 없음</dd>
         <dt>필터</dt><dd>칩은 점선 보라 = 미리보기. query·필터 로직 미구현</dd></dl></div>
+      <div class="grp"><div class="vn">결과를 분류축에서 내림 (v2 핵심)</div><dl>
+        <dt>이전</dt><dd>카드 <b>최상단에 큰 완등/실패 배지</b>. 그 영상의 정체성이 "실패"가 됐다</dd>
+        <dt>v2</dt><dd>결과는 <b>색 옆의 작은 칩</b>으로 내려간다. 카드의 분류축은 미디어 상태다</dd>
+        <dt>근거</dt><dd>영상을 남긴 이유는 결과가 아니라 <b>영상의 가치</b>다. 무빙이 좋아 남긴 영상이 "실패 영상"으로 분류되면 안 된다</dd>
+        <dt>필터</dt><dd>칩도 완등/실패 대신 <b>정리 상태·암장</b> 기준. 결과로 거르지 않는다</dd>
+        <dt>유지</dt><dd>결과 자체는 지우지 않는다 — 복기할 때 유용한 <b>맥락 정보</b>로 남긴다</dd></dl></div>
       <div class="grp"><div class="vn">미디어 상태 pill</div><dl>
         <dt>소스</dt><dd><code>attempt.media.state</code></dd>
         <dt>매핑</dt><dd><code>TRIMMED</code>=트리밍 완료 · <code>ORIGINAL_KEPT</code>=원본 유지 · <code>TRIM_PENDING</code>=트리밍 대기 · <code>TRIM_FAILED</code>=트리밍 실패 · <code>NONE</code>=목록 제외</dd>
@@ -192,20 +201,19 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
 
   <!-- B 실패 · 미분류 -->
   <div class="frame">
-    <div class="cap"><span class="n">B</span><span class="t">실패 · 분류 필요</span><span class="d">신규 · 실패 영상 보관</span></div>
+    <div class="cap"><span class="n">B</span><span class="t">실패 · 분류 필요</span><span class="d">실패 영상 보관 · 분류 필요</span></div>
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="hd"><h1>영상 아카이브</h1><div class="sub">영상 12개</div></div>
-      <div class="filters"><span class="chip on">전체</span><span class="chip prev">완등</span><span class="chip prev">실패</span><span class="chip prev">정리 필요</span></div>
+      <div class="filters"><span class="chip on">전체</span><span class="chip prev">대기</span><span class="chip prev">완료</span><span class="chip prev">닻 클라이밍</span></div>
       <div class="body">
 
         <div class="vcard">
           <div class="th" style="background:linear-gradient(160deg,#42282c,#141a26)"><span class="sq" style="background:#E45D5D"></span><span class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span><span class="pc"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div>
           <div class="meta">
-            <div class="toprow"><span class="obadge ob-no"><svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2.8"><path d="M6 6l12 12M18 6L6 18"/></svg>실패</span></div>
             <div class="g">닻 클라이밍</div>
             <div class="dt">7월 22일 · 오후 8:31</div>
-            <div class="color"><span class="sw" style="background:#E45D5D"></span>빨강</div>
+            <div class="color"><span class="sw" style="background:#E45D5D"></span>빨강<span class="ochip ob-no">실패</span></div>
             <span class="stpill st-orig"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg>원본 유지</span>
             <div class="actions"><span class="ab pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4l13 8-13 8z"/></svg>재생</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg>자르기</span><span class="ab dan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></span></div>
           </div>
@@ -214,10 +222,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <div class="vcard">
           <div class="th" style="background:linear-gradient(160deg,#3a3550,#141a26)"><span class="sq" style="background:#7C7FDB"></span><span class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span><span class="pc"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div>
           <div class="meta">
-            <div class="toprow"><span class="obadge ob-no"><svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2.8"><path d="M6 6l12 12M18 6L6 18"/></svg>실패</span></div>
             <div class="g">닻 클라이밍</div>
             <div class="dt">7월 22일 · 오후 8:26</div>
-            <div class="color"><span class="sw" style="background:#7C7FDB"></span>남색</div>
+            <div class="color"><span class="sw" style="background:#7C7FDB"></span>남색<span class="ochip ob-no">실패</span></div>
             <span class="stpill st-wait"><svg viewBox="0 0 24 24" fill="none" stroke="#f0a878" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>트리밍 대기</span>
             <div class="actions"><span class="ab pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg>이어서 자르기</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4l13 8-13 8z"/></svg>재생</span></div>
           </div>
@@ -226,10 +233,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <div class="vcard">
           <div class="th" style="background:linear-gradient(160deg,#382f4a,#141a26)"><span class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16.2" r=".7" fill="#c084fc" stroke="none"/></svg></span><span class="pc"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div>
           <div class="meta">
-            <div class="toprow"><span class="obadge ob-unc"><svg viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/></svg>분류 필요</span></div>
             <div class="g">닻 클라이밍</div>
             <div class="dt">7월 22일 · 오후 8:20</div>
-            <div class="color"><span class="sw" style="background:#5A8FDB"></span>파랑</div>
+            <div class="color"><span class="sw" style="background:#5A8FDB"></span>파랑<span class="ochip ob-unc">분류 필요</span></div>
             <span class="stpill st-wait"><svg viewBox="0 0 24 24" fill="none" stroke="#f0a878" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>분류 대기</span>
             <div class="actions"><span class="ab pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 6-6"/><circle cx="12" cy="12" r="9"/></svg>성공·실패 정하기</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4l13 8-13 8z"/></svg>재생</span></div>
           </div>
@@ -245,7 +251,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
     <div class="ann"><h4>런타임 주석</h4>
       <div class="grp"><div class="vn">실패 + 보관 (신규)</div><dl>
         <dt>소스</dt><dd><code>outcome == FAILURE</code> + <code>media.state != NONE</code></dd>
-        <dt>형식</dt><dd>실패 배지(danger) + 미디어 pill을 <b>따로</b> 표시. 두 축이 섞이지 않는다</dd>
+        <dt>형식</dt><dd>미디어 pill이 주 신호, 실패 칩은 색 옆 보조. <b>실패 영상이라고 카드가 위축되지 않는다</b></dd>
         <dt>행동</dt><dd>재생 · 자르기 · 영상 지우기. 완등과 동일한 미디어 행동을 갖는다</dd>
         <dt>빈</dt><dd><code>DISCARD</code>된 실패는 목록에 없다 (Attempt 기록만 통계에 남음)</dd>
         <dt>오류</dt><dd>URI 읽기 불가 시 프레임 C 읽기 불가 카드로</dd></dl></div>
@@ -267,16 +273,15 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
     <div class="phone">
       <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
       <div class="hd"><h1>영상 아카이브</h1><div class="sub">영상 12개</div></div>
-      <div class="filters"><span class="chip on">전체</span><span class="chip prev">완등</span><span class="chip prev">실패</span><span class="chip prev">정리 필요</span></div>
+      <div class="filters"><span class="chip on">전체</span><span class="chip prev">대기</span><span class="chip prev">완료</span><span class="chip prev">닻 클라이밍</span></div>
       <div class="body">
 
         <div class="vcard">
           <div class="th" style="background:linear-gradient(160deg,#42282c,#141a26)"><span class="sq" style="background:#5A8FDB"></span><span class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span><span class="pc"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></div>
           <div class="meta">
-            <div class="toprow"><span class="obadge ob-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.8"><path d="M5 13l4 4L19 7"/></svg>완등</span></div>
             <div class="g">닻 클라이밍</div>
             <div class="dt">7월 20일 · 오후 7:12</div>
-            <div class="color"><span class="sw" style="background:#5A8FDB"></span>파랑</div>
+            <div class="color"><span class="sw" style="background:#5A8FDB"></span>파랑<span class="ochip ob-ok">완등</span></div>
             <span class="stpill st-fail"><svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2.2"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="#fca5a5" stroke="none"/><path d="M12 3l9 16H3z"/></svg>트리밍 실패</span>
             <div class="actions"><span class="ab pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 11a8 8 0 10-2 5.3M20 5v6h-6"/></svg>다시 자르기</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg>원본 유지</span></div>
             <div class="note">원본 영상은 그대로 있어요</div>
@@ -286,10 +291,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <div class="vcard dead">
           <div class="th"><span class="ph" style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.7" style="width:34px;height:34px"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 15l5-4 4 3 3-2 6 4"/><path d="M3 5l18 14"/></svg></span></div>
           <div class="meta">
-            <div class="toprow"><span class="obadge ob-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.8"><path d="M5 13l4 4L19 7"/></svg>완등</span></div>
             <div class="g">닻 클라이밍</div>
             <div class="dt">7월 13일 · 오후 8:40</div>
-            <div class="color"><span class="sw" style="background:#E45D5D"></span>빨강</div>
+            <div class="color"><span class="sw" style="background:#E45D5D"></span>빨강<span class="ochip ob-ok">완등</span></div>
             <span class="stpill st-dead"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>기기에서 삭제됨</span>
             <div class="note">기록은 유지돼요 · 재생·공유 불가</div>
           </div>
@@ -298,10 +302,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <div class="vcard dead">
           <div class="th"><span class="ph" style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.7" style="width:34px;height:34px"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 15l5-4 4 3 3-2 6 4"/><path d="M3 5l18 14"/></svg></span></div>
           <div class="meta">
-            <div class="toprow"><span class="obadge ob-no"><svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2.8"><path d="M6 6l12 12M18 6L6 18"/></svg>실패</span></div>
             <div class="g">더클라임 양재</div>
             <div class="dt">7월 11일 · 오후 6:58</div>
-            <div class="color"><span class="sw" style="background:#46AE72"></span>초록</div>
+            <div class="color"><span class="sw" style="background:#46AE72"></span>초록<span class="ochip ob-no">실패</span></div>
             <span class="stpill st-dead"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>기기에서 삭제됨</span>
             <div class="note">기록은 유지돼요 · 재생·공유 불가</div>
           </div>
@@ -424,11 +427,15 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
       <div class="sheet">
         <div class="grab"></div>
         <h2>이 시도, 성공했나요?</h2>
-        <div class="sd">7월 22일 오후 8:20 · 파랑 · 닻 클라이밍<br>결과를 정하면 영상 처리도 이어서 고를 수 있어요.</div>
+        <div class="sd">7월 22일 오후 8:20 · 파랑 · 닻 클라이밍<br>결과를 정하면 바로 확정돼요. 자르기는 여기 아카이브에서 하면 돼요.</div>
         <div class="btns">
-          <button class="big no"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>실패<small>기록에 남김</small></button>
-          <button class="big ok"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>성공<small>완등 +1</small></button>
+          <button class="big no"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>실패<small>영상도 지워요</small></button>
+          <button class="big ok"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>완등<small>완등 +1 · 영상 보관</small></button>
         </div>
+        <button class="keepbtn">
+          <span class="ki"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span>
+          <span><span class="kt">실패지만 영상은 남기기</span><span class="ks">무빙이 좋았을 때</span></span>
+        </button>
         <div class="closehint">
           <svg viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
           닫으면 <b style="color:#94A3B8">분류 필요</b> 상태로 남아요
@@ -441,10 +448,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <dt>형식</dt><dd>어떤 시도인지 <b>날짜·시각·색·암장</b>으로 특정. 여러 미분류 중 헷갈리지 않게</dd>
         <dt>빈</dt><dd>해당 없음</dd>
         <dt>로딩</dt><dd>최초 선택만 처리, 저장 중 두 버튼 비활성 (<code>05</code> 프레임 F와 동일 패턴)</dd>
-        <dt>오류</dt><dd>저장 실패 → <code>SAVE_PENDING</code> → <code>05b</code> 프레임 F</dd></dl></div>
-      <div class="grp"><div class="vn">다음 단계</div><dl>
-        <dt>성공</dt><dd>→ <code>05b</code> 프레임 A 영상 처리 시트</dd>
-        <dt>실패</dt><dd>→ <code>05b</code> 프레임 B 영상 처리 시트 (v2: 실패도 영상 선택권을 갖는다)</dd></dl></div>
+        <dt>오류</dt><dd>저장 실패 → <code>SAVE_PENDING</code> → <code>05b</code> 프레임 A</dd></dl></div>
+      <div class="grp"><div class="vn">세 버튼 → 상태</div><dl>
+        <dt>실패</dt><dd><code>FAILURE</code> + <code>NONE</code>. 캐시 삭제(되돌리기 창 이후)</dd>
+        <dt>완등</dt><dd><code>SUCCESS</code> + <code>TRIM_PENDING</code>. 완등 카운트 +1</dd>
+        <dt>영상 남기기</dt><dd><code>FAILURE</code> + <code>TRIM_PENDING</code>. 카운트는 오르지 않는다</dd>
+        <dt>이후</dt><dd>시트를 닫고 <b>같은 목록</b>으로 돌아온다. 영상 처리 시트를 이어 띄우지 않는다</dd></dl></div>
       <div class="grp"><div class="vn">경로</div><dl>
         <dt>뒤로/바깥/스와이프</dt><dd>모두 <code>UNCLASSIFIED</code> 유지. 삭제되지 않는다</dd></dl></div>
     </div>

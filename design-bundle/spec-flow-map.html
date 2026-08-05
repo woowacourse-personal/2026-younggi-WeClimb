@@ -41,7 +41,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 </style></head>
 <body><div class="wrap">
 <h1>화면 <b>플로우 맵</b></h1>
-<div class="sub">Phase 2 Flow v2의 전체 이동 경로. 굵은 화살표는 주 경로, 점선은 되돌아오는 경로다. <b>결과 확정</b>과 <b>영상 처리 결정</b>이 두 단계로 분리된 것이 v1과의 핵심 차이다.</div>
+<div class="sub">Phase 2 Flow v2의 전체 이동 경로. 굵은 화살표는 주 경로, 점선은 되돌아오는 경로다. <b>결과와 영상 보관을 한 번의 탭</b>으로 정하고, <b>자르기는 전부 아카이브로</b> 모은 것이 v1과의 핵심 차이다.</div>
 
 <div class="legend">
   <span><i class="dotb"></i>기능 화면 (작동)</span>
@@ -59,60 +59,58 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
   <b>03 암장 선택</b>  <span class="m">(검색 · 개인 암장 추가 · 선택)</span>
     │
     ▼
-  <b>04 세션 보드</b> ◄──────────────────────────────────┐
-    │  "촬영하기"                                       │
-    ▼                                                  │
-  <b>05 촬영</b>                                             │
-    │  준비 중 → 대기 → 녹화 → 정지 → <b>결과 확정</b>          │
-    │                                                  │
-    ├─ <span class="g">SUCCESS</span> ─┐                                    │
-    ├─ <span class="d">FAILURE</span> ─┤                                    │
-    │              ▼                                   │
-    │      <b>05b 영상 처리 결정</b>                            │
-    │              │                                   │
-    │              ├─ TRIM_NOW ──────► <b>06 트리밍</b>        │
-    │              ├─ TRIM_LATER ────► <span class="w">TRIM_PENDING</span> ──┤
-    │              ├─ KEEP_ORIGINAL ─► <span class="g">ORIGINAL_KEPT</span> ─┤
-    │              └─ <span class="d">DISCARD</span> ──────► 확인 → NONE ──┤
-    │                                                  │
-    └─ 분류 전 이탈 ─► <span class="p">UNCLASSIFIED</span> ────────────────┘
-                                                       │
-  <b>06 트리밍</b>                                             │
-    │  편집 → (검증) → 처리 중 → 완료                       │
-    │              └─ 실패 ─► 재시도 | 원본 유지 | 나중에 ──┤
-    │                                                  │
-    └─ 완료 ─► <span class="g">TRIMMED</span> ─► 재생 | 공유 | 아카이브 ─────┘
+  <b>04 세션 보드</b> ◄──────────────────────────────────────┐
+    │  색 탭 = 완등 +1 ──► <span class="w">되돌리기 칩 5초</span> ──► 취소 가능   │
+    │  색 롱프레스 ──────► <span class="w">조정 시트 (− / +)</span>            │
+    │                                                      │
+    │  "촬영하기"                                            │
+    ▼                                                      │
+  <b>05 촬영</b>                                                 │
+    │  준비 중 → 대기 → 녹화 → 정지 → <b>분류 3버튼</b>              │
+    │                                                      │
+    ├─ <span class="d">실패</span> ───────────► <span class="w">되돌리기 5초</span> ─► 캐시 삭제 ──────┤
+    │                              └─ 되돌리기 ─► 분류 대기    │
+    │                                                      │
+    ├─ <span class="g">완등</span> ───────────► SUCCESS + <span class="w">TRIM_PENDING</span> ───────┤
+    │                                                      │
+    ├─ <span class="w">실패지만 영상 남기기</span> ► FAILURE + <span class="w">TRIM_PENDING</span> ───────┤
+    │                                                      │
+    ├─ 저장 실패 ─────────► <b>05b 저장 대기</b>                    │
+    │                       ├─ 재저장 ─► TRIM_PENDING ──────┤
+    │                       └─ <span class="d">영상만 폐기</span> ─► 확인 ─► NONE ┤
+    │                                                      │
+    └─ 분류 전 이탈 ──────► <span class="p">UNCLASSIFIED</span> ─────────────────┘
 
   <b>04 세션 보드</b>
     │  "클라이밍 종료"
-    ├─ <span class="w">SAVE_PENDING 있음</span> ─► 종료 보류
-    │       ├─ 재저장 ─► SUCCESS + TRIM_PENDING
-    │       └─ <span class="d">영상만 폐기</span> ─► 확인 ─► SUCCESS + NONE
-    │
-    └─ 대기 없음 ─► 종료 확인 ─► finish() ─► <b>02 홈</b>
+    ├─ <span class="w">SAVE_PENDING 있음</span> ─► 종료 보류 (재저장 | 영상만 폐기)
+    └─ 대기 없음 ────────► 종료 확인 ─► finish() ─► <b>02 홈</b>
+
+  <span class="m">촬영 직후에는 영상 처리를 묻지 않는다.
+  보관되는 영상은 예외 없이 TRIM_PENDING으로 대기함에 들어간다.</span>
 </pre>
-<div class="note"><b>v1과의 차이</b> — v1은 <code>05</code>에서 "성공"을 고르면 곧바로 영상 처리 시트가 떴고, "실패"는 영상을 즉시 삭제했다. v2는 <code>05</code>가 결과만 확정하고, <code>05b</code>가 <b>성공·실패 모두에 대해</b> 영상 처리를 묻는다.</div>
+<div class="note"><b>v1과의 차이</b> — v1은 <code>05</code>에서 "성공"을 고르면 영상 처리 시트(자르기·나중에·원본)가 떴고, "실패"는 영상을 되돌릴 수 없게 즉시 삭제했다. v2는 <b>세 버튼으로 결과와 보관을 동시에</b> 정하고, 자르기는 <code>07</code> 아카이브로 미룬다. 실패 삭제에는 <b>5초 되돌리기 창</b>이 붙는다.</div>
 
 <h2>2 · 아카이브 경로</h2>
 <pre>
-  <b>02 홈</b> ──"전체 보기" / 영상 탭──► <b>07 아카이브</b>
+  <b>02 홈</b> ──"전체 보기" / 영상 탭──► <b>07 아카이브</b>   <span class="m">← 자르기의 유일한 진입점</span>
                                         │
     ┌───────────────────────────────────┼──────────────────────┐
     │                                   │                      │
     ▼                                   ▼                      ▼
   <span class="g">완등 카드</span>                        <span class="d">실패 카드</span>              <span class="p">분류 필요 카드</span>
+  <span class="m">(결과는 색 옆 작은 칩)</span>            <span class="m">(행동 동일)</span>            │
     │                                   │                      │
     ├─ 재생 ──────► <b>08 재생 오버레이</b>      ├─ 재생 ──────► <b>08</b>    └─ "성공·실패 정하기"
-    ├─ 이어서 자르기 ► <b>06 트리밍</b>          ├─ 자르기 ────► <b>06</b>            │
-    ├─ 다시 자르기 ─► <b>06 트리밍</b>           └─ <span class="d">영상 지우기</span> ─► 확인       ▼
-    ├─ 원본 유지 ──► ORIGINAL_KEPT                                  <b>재분류 시트</b>
+    ├─ 이어서 자르기 ► <b>06 트리밍</b>          ├─ 이어서 자르기 ► <b>06</b>           │
+    ├─ 다시 자르기 ─► <b>06 트리밍</b>           ├─ 자르기 ────► <b>06</b>            ▼
+    ├─ 원본 유지 ──► ORIGINAL_KEPT       └─ <span class="d">영상 지우기</span> ─► 확인    <b>재분류 시트</b>
+    ├─ <span class="d">영상 지우기</span> ─► 확인 ─► NONE                              <span class="m">(05와 같은 3버튼)</span>
     └─ 공유 ──────► ACTION_SEND <span class="m">(chooser는 앱 밖)</span>                  │
-                                                          ┌───────┴───────┐
-  <span class="m">읽기 불가 카드 ─ 행동 없음. 기록만 유지</span>                        ▼               ▼
-                                                      <span class="g">SUCCESS</span>          <span class="d">FAILURE</span>
-                                                          └───────┬───────┘
-                                                                  ▼
-                                                          <b>05b 영상 처리 결정</b>
+                                                    ┌─────────┼─────────┐
+  <span class="m">읽기 불가 카드 ─ 행동 없음. 기록만 유지</span>              ▼         ▼         ▼
+                                                <span class="d">실패</span>      <span class="g">완등</span>   <span class="w">실패+영상</span>
+                                                 NONE   TRIM_PENDING TRIM_PENDING
 
   <b>08 재생 오버레이</b>
     │  재생 중 ⇄ 일시정지 ⇄ 버퍼링
@@ -143,8 +141,8 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 <tbody>
 <tr><td class="k">02 → 03 → 04</td><td>화면 push</td><td>X +100%→0, <code>320ms</code> decelerate</td><td>X 0→−30%, <code>200ms</code> accelerate</td><td>즉시 교체</td></tr>
 <tr><td class="k">04 → 05 촬영</td><td>전체 화면 push</td><td>불투명도 0→1 + scale .96→1, <code>320ms</code></td><td>역방향 <code>200ms</code></td><td>즉시 교체</td></tr>
-<tr><td class="k">05 → 05b 시트</td><td>바텀 시트</td><td>Y +100%→0, <code>320ms</code> decelerate</td><td>Y 0→+100%, <code>200ms</code> accelerate</td><td>즉시 표시/제거</td></tr>
-<tr><td class="k">05b → 06 트리밍</td><td>화면 push</td><td>시트를 먼저 <code>200ms</code>로 접고 push</td><td>X 0→−30%</td><td>즉시 교체</td></tr>
+<tr><td class="k">05b · 07 시트</td><td>바텀 시트</td><td>Y +100%→0, <code>320ms</code> decelerate</td><td>Y 0→+100%, <code>200ms</code> accelerate</td><td>즉시 표시/제거</td></tr>
+<tr><td class="k">07 → 06 트리밍</td><td>화면 push</td><td>X +100%→0, <code>320ms</code> decelerate</td><td>X 0→−30%, <code>200ms</code></td><td>즉시 교체</td></tr>
 <tr><td class="k">07 → 08 재생</td><td>전체 화면 오버레이</td><td>불투명도 0→1 + scale .96→1, <code>320ms</code></td><td>역방향 <code>200ms</code></td><td>즉시 표시/제거</td></tr>
 <tr><td class="k">모든 다이얼로그</td><td>중앙 모달</td><td>scale .94→1 + 불투명도, <code>320ms</code></td><td>역방향 <code>200ms</code></td><td>즉시 표시/제거</td></tr>
 <tr><td class="k">scrim (공통)</td><td>배경 딤</td><td>불투명도 0→.6, 시트/모달과 동기</td><td>.6→0</td><td>즉시</td></tr>
@@ -155,11 +153,10 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 <div class="tw"><table>
 <thead><tr><th>화면</th><th>진입 경로</th><th>이탈 경로</th></tr></thead>
 <tbody>
-<tr><td class="k">05b 결정</td><td>05 결과 확정 · 07 재분류 시트 · 05b 저장 대기 해소</td><td>06 / 04 / 05 (계속 촬영)</td></tr>
-<tr><td class="k">06 트리밍</td><td>05b <code>TRIM_NOW</code> · 07 이어서 자르기 · 07 다시 자르기 · 07 자르기</td><td>07 / 08 / 04 / 이전 화면</td></tr>
+<tr><td class="k">05b 저장 대기</td><td>05 저장 실패 · 04 종료 시도 · 보드 오류 배너</td><td>04 보드 (해소 후)</td></tr>
+<tr><td class="k">06 트리밍</td><td class="k" style="color:#f0a878">07 아카이브 <b>단독</b></td><td>07 / 08 / 이전 화면</td></tr>
 <tr><td class="k">07 아카이브</td><td>02 전체 보기 · 02 영상 탭 · 06 완료 후 이동</td><td>08 / 06 / 02</td></tr>
 <tr><td class="k">08 재생</td><td>07 카드 재생 · 06 다시 보기 · 02 최근 영상 카드</td><td>호출한 화면으로 복귀</td></tr>
-<tr><td class="k">저장 대기 해소</td><td>05 저장 실패 · 04 종료 시도 · 보드 오류 배너</td><td>05b 성공 시트 / 04</td></tr>
 </tbody></table></div>
 
 </div></body></html>

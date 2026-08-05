@@ -109,7 +109,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 <thead><tr><th>변형</th><th>용도</th><th>Compose</th><th>규격</th></tr></thead>
 <tbody>
 <tr><td class="k">브랜드</td><td>주 행동 (촬영 · 저장 · 재시도 · 종료)</td><td><code>Button</code> + brand container</td><td>높이 50–60dp, radius 14–18dp</td></tr>
-<tr><td class="k">성공</td><td>완등 분류 버튼만</td><td><code>Button</code> + success container</td><td>결과 오버레이 100dp 높이</td></tr>
+<tr><td class="k">성공</td><td>완등 분류 버튼</td><td><code>Button</code> + success container</td><td>결과 오버레이 100dp 높이</td></tr>
+<tr><td class="k">보조 와이드 <span class="new">신규</span></td><td>"실패지만 영상은 남기기" 전용</td><td><code>OutlinedButton</code> + 아이콘 슬롯</td><td>전체 폭 60dp, 큰 두 버튼 아래</td></tr>
 <tr><td class="k">파괴적</td><td>영상 지우기 · 영상만 폐기 확정</td><td><code>Button</code> + error container</td><td>확인 다이얼로그 안에서만 채움</td></tr>
 <tr><td class="k">토널</td><td>원본 유지 · 다시 보기</td><td><code>FilledTonalButton</code></td><td><code>#1E2634</code> 표면</td></tr>
 <tr><td class="k">아웃라인</td><td>취소 · 계속 · 목록으로</td><td><code>OutlinedButton</code></td><td>테두리 <code>rgba(255,255,255,.16)</code></td></tr>
@@ -136,13 +137,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 <div class="tw"><table>
 <thead><tr><th>변형</th><th>위치</th><th>구성</th><th>닫기 귀결</th></tr></thead>
 <tbody>
-<tr><td class="k">영상 처리 · 성공</td><td>05b</td><td>결과 배지 + 옵션 4개 (TRIM_NOW 강조)</td><td><code>TRIM_PENDING</code></td></tr>
-<tr><td class="k">영상 처리 · 실패 <span class="new">신규</span></td><td>05b</td><td>결과 배지 + 옵션 4개 (DISCARD 강조)</td><td><code>TRIM_PENDING</code></td></tr>
 <tr><td class="k">저장 대기 해소 <span class="new">신규</span></td><td>05b · 04</td><td>오류 배너 + 옵션 2–3개</td><td><code>SAVE_PENDING</code> 유지</td></tr>
-<tr><td class="k">미분류 재분류 <span class="new">신규</span></td><td>07</td><td>시도 식별 정보 + 성공/실패 큰 버튼</td><td><code>UNCLASSIFIED</code> 유지</td></tr>
+<tr><td class="k">미분류 재분류 <span class="new">신규</span></td><td>07</td><td>시도 식별 정보 + <b>3버튼 분류</b></td><td><code>UNCLASSIFIED</code> 유지</td></tr>
+<tr><td class="k">카운트 조정 <span class="new">신규</span></td><td>04</td><td>색 헤더 + 스테퍼(− 값 +) + 잠금 안내</td><td>= 완료 (변경 즉시 반영)</td></tr>
 <tr><td class="k">개인 암장 추가 · 관리</td><td>03</td><td>기존 유지</td><td>변경 없음</td></tr>
 </tbody></table></div>
-<div class="note">모든 시트: 상단 grab 핸들 40×4dp, radius 24dp 상단만, 표면 <code>#141A26</code>, scrim <code>rgba(0,0,0,.55~.6)</code>. <b>닫기 결과를 시트 하단에 미리 문장으로 명시</b>한다 — 닫은 뒤 알리지 않는다. Compose: <code>ModalBottomSheet</code>.</div>
+<div class="note"><b>v2에서 영상 처리 시트(성공/실패)가 삭제됐다.</b> 결과 버튼이 보관 여부까지 정하므로 두 번째 단계가 필요 없다. 모든 시트: 상단 grab 핸들 40×4dp, radius 24dp 상단만, 표면 <code>#141A26</code>, scrim <code>rgba(0,0,0,.55~.6)</code>. <b>닫기 결과를 시트 하단에 미리 문장으로 명시</b>한다 — 닫은 뒤 알리지 않는다. Compose: <code>ModalBottomSheet</code>.</div>
 
 <h2>4 · 다이얼로그</h2>
 <div class="tw"><table>
@@ -150,7 +150,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 <tbody>
 <tr><td class="k">세션 종료 확인</td><td>04</td><td>계속 클라이밍</td><td>요약 타일 3개 + 버튼 2개</td></tr>
 <tr><td class="k">종료 보류 <span class="new">신규</span></td><td>04</td><td>계속 클라이밍</td><td>경고 박스 + 요약 타일 + 버튼 3개</td></tr>
-<tr><td class="k">영상 지우기 확인 <span class="new">신규</span></td><td>05b · 07</td><td>취소</td><td><b>남는 것 / 사라지는 것</b> 박스 + 버튼 2개</td></tr>
+<tr><td class="k">영상 지우기 확인 <span class="new">신규</span></td><td>07</td><td>취소</td><td><b>남는 것 / 사라지는 것</b> 박스 + 버튼 2개</td></tr>
 <tr><td class="k">영상만 폐기 확인 <span class="new">신규</span></td><td>05b · 04</td><td>취소</td><td>동일 + <b>비파괴 대안</b> 버튼 추가</td></tr>
 <tr><td class="k">자르기 취소 확인 <span class="new">신규</span></td><td>06</td><td>계속 자르기</td><td>원본 보존 명시 + 버튼 2개</td></tr>
 <tr><td class="k">분류 전 이탈 확인</td><td>05</td><td>계속 분류하기</td><td>보라 아이콘(비파괴) + 버튼 2개</td></tr>
@@ -274,11 +274,13 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 <div class="tw"><table>
 <thead><tr><th>컴포넌트</th><th>왜 필요했나</th></tr></thead>
 <tbody>
-<tr><td class="k">결과 배지 (완등/실패/분류 필요)</td><td>결과와 영상 처리가 분리되면서 카드가 두 축을 각각 표시해야 함</td></tr>
-<tr><td class="k">실패 영상 처리 시트</td><td>실패 영상 보관·트리밍 지원 — v1에는 존재하지 않던 경로</td></tr>
+<tr><td class="k">3버튼 분류 (실패 · 완등 · 실패지만 영상은 남기기)</td><td>결과와 영상 보관을 한 번의 탭으로 정하기 위해. 무빙이 좋으면 실패해도 남긴다</td></tr>
+<tr><td class="k">되돌리기 칩 · 되돌리기 배너</td><td>보드 오탭과 실패 오탭을 확인 다이얼로그 없이 회수하기 위해</td></tr>
+<tr><td class="k">카운트 조정 시트 (스테퍼 + 잠금)</td><td>지난 오탭 정정. 영상 있는 시도는 잠가 삭제가 번지지 않게</td></tr>
+<tr><td class="k">결과 칩 (색 옆 작은 칩)</td><td>결과를 카드의 분류축에서 내리고 맥락 정보로만 남기기 위해</td></tr>
 <tr><td class="k">저장 대기 해소 시트</td><td><code>SAVE_PENDING</code> 재시도 / 영상만 폐기의 전용 표면</td></tr>
-<tr><td class="k">파괴적 확인 다이얼로그 (남는 것/사라지는 것)</td><td><code>DISCARD</code>가 명시적 선택이 되면서 되돌릴 수 없는 결과를 사전 고지해야 함</td></tr>
-<tr><td class="k">미분류 재분류 시트</td><td>아카이브에서 결과를 확정하고 05b로 이어지는 진입점</td></tr>
+<tr><td class="k">파괴적 확인 다이얼로그 (남는 것/사라지는 것)</td><td>아카이브 영상 삭제와 저장 대기 폐기의 사전 고지</td></tr>
+<tr><td class="k">미분류 재분류 시트</td><td>아카이브에서 결과를 확정하는 진입점. 05와 동일한 3버튼</td></tr>
 <tr><td class="k">진행 배너</td><td>중복 실행 차단 상태를 화면 전체를 덮지 않고 알리기 위해</td></tr>
 <tr><td class="k">리스트 로딩/빈/오류 3종</td><td>모든 동적 값에 로딩·빈·오류 상태를 명시하는 v2 규칙</td></tr>
 <tr><td class="k">미리보기 블록 래퍼</td><td>실제 값과 Phase 3 예시를 시각적으로 분리</td></tr>

@@ -42,10 +42,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 <tr><td><code>FAILURE</code></td><td>실패. <code>totalCount</code>에만 포함</td></tr>
 <tr><td><code>UNCLASSIFIED</code></td><td>분류 전 이탈로 보류. 아카이브 "분류 필요"</td></tr>
 <tr><td><code>SAVE_PENDING</code></td><td>결과는 정해졌으나 MediaStore 저장 실패. 세션 종료를 막는다</td></tr>
-<tr><td class="k" rowspan="4">영상 결정<br><code>VideoAction</code><br><span class="mu" style="font-weight:400">(신규 · 결정 시점 값)</span></td><td><code>TRIM_NOW</code></td><td rowspan="4">UI 결정 → <code>AttemptMediaService</code></td><td>즉시 자르기 → <code>TRIM_PROCESSING</code></td></tr>
-<tr><td><code>TRIM_LATER</code></td><td>대기함 보관 → <code>TRIM_PENDING</code></td></tr>
-<tr><td><code>KEEP_ORIGINAL</code></td><td>원본 유지 → <code>ORIGINAL_KEPT</code></td></tr>
-<tr><td><code>DISCARD</code></td><td>영상만 삭제 → <code>NONE</code>. Attempt는 유지</td></tr>
+<tr><td class="k" rowspan="3">영상 보관<br><span style="font-weight:400;color:#64748B">결과 버튼에 내장</span></td><td>실패</td><td rowspan="3">05 분류 3버튼 · 07 재분류 시트</td><td>영상 보관 안 함 → <code>media = NONE</code></td></tr>
+<tr><td>완등</td><td>영상 보관 → <code>TRIM_PENDING</code>, 완등 카운트 +1</td></tr>
+<tr><td>실패지만 영상은 남기기</td><td>영상 보관 → <code>TRIM_PENDING</code>, 카운트는 <b>오르지 않음</b></td></tr>
 <tr><td class="k" rowspan="6">미디어 상태<br><code>AttemptMediaState</code></td><td><code>NONE</code></td><td rowspan="6"><code>shared/media/AttemptMediaService.kt</code></td><td>영상 없음. 아카이브 목록 제외</td></tr>
 <tr><td><code>TRIM_PENDING</code></td><td>자르기 대기. 정리 필요에 집계</td></tr>
 <tr><td><code>ORIGINAL_KEPT</code></td><td>원본 보관 확정. 정리 필요 아님</td></tr>
@@ -53,7 +52,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 <tr><td><code>TRIMMED</code></td><td>자르기 완료. <code>trimmedVideoUri</code> 보유</td></tr>
 <tr><td><code>TRIM_FAILED</code></td><td>실패. 재시도 가능. 정리 필요에 집계</td></tr>
 </tbody></table></div>
-<div class="note"><b>두 축은 독립이다.</b> <code>FAILURE</code> + <code>ORIGINAL_KEPT</code>, <code>FAILURE</code> + <code>TRIMMED</code> 모두 유효한 조합이다. v1처럼 결과가 영상 처리를 강제하지 않는다.</div>
+<div class="note"><b>영상 보관은 결과 버튼에 내장된다.</b> 별도의 영상 처리 시트가 없다 — 결과와 보관 여부를 한 번의 탭으로 정한다. <code>FAILURE</code> + <code>TRIM_PENDING</code>(무빙이 좋아 남긴 실패 영상)은 정상 조합이며, 아카이브에서 완등 영상과 <b>동일한 행동</b>을 갖는다. 보관되는 영상은 예외 없이 <code>TRIM_PENDING</code>이고, 자르기·원본 유지·공유·지우기는 전부 <code>07</code> 아카이브에서 한다.</div>
 
 <h2>2 · 화면 × 상태 × 행동</h2>
 <div class="tw"><table>
@@ -64,26 +63,26 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 <tr><td>로딩</td><td>Flow 첫 방출 전</td><td>시작만 활성</td><td>스켈레톤. CTA는 데이터 비의존</td></tr>
 <tr><td>조회 실패</td><td>Room 예외</td><td>다시 불러오기 · 시작</td><td>해당 섹션만 오류. 촬영 경로 유지</td></tr>
 
-<tr><td class="k" rowspan="4">04 보드</td><td>시도 0건</td><td><code>attempts.isEmpty()</code></td><td>촬영 · 종료</td><td>05 촬영 / 종료 확인</td></tr>
+<tr><td class="k" rowspan="6">04 보드</td><td>시도 0건</td><td><code>attempts.isEmpty()</code></td><td>촬영 · 종료</td><td>05 촬영 / 종료 확인</td></tr>
 <tr><td>진행 중</td><td>시도 ≥1</td><td>색 탭 · 촬영 · 종료</td><td>카운트 +1 / 05 / 종료 확인</td></tr>
+<tr><td>오탭 되돌리기</td><td>색 탭 직후 5초</td><td>되돌리기</td><td>Attempt 삭제 · 완등 −1 · 막대 역방향</td></tr>
+<tr><td>롱프레스 조정</td><td>색 행 롱프레스 500ms</td><td>− / + / 아카이브로</td><td>영상 없는 시도만 증감. 영상 있으면 − 잠금</td></tr>
 <tr><td>종료 확인</td><td>대기 없음</td><td>종료 · 계속</td><td><code>finish()</code> → 홈 / 다이얼로그 닫힘</td></tr>
 <tr><td>종료 보류</td><td><code>hasPendingSave</code></td><td>재저장 · 영상만 폐기 · 계속</td><td><code>SUCCESS</code>+<code>TRIM_PENDING</code> / <code>SUCCESS</code>+<code>NONE</code> / 유지</td></tr>
 
-<tr><td class="k" rowspan="7">05 촬영</td><td>PREPARING</td><td><code>cameraReady == false</code></td><td class="mu">없음</td><td>READY 또는 ERROR</td></tr>
+<tr><td class="k" rowspan="9">05 촬영</td><td>PREPARING</td><td><code>cameraReady == false</code></td><td class="mu">없음</td><td>READY 또는 ERROR</td></tr>
 <tr><td>READY</td><td>바인딩 완료</td><td>녹화 시작 · 색 변경 · 뒤로</td><td>RECORDING / 색 갱신 / 04</td></tr>
 <tr><td>RECORDING</td><td><code>recording == true</code></td><td>정지</td><td>RECORDED. <b>뒤로가기 차단</b></td></tr>
 <tr><td>RECORDED</td><td>정지 직후</td><td class="mu">없음 (파일 확정 대기)</td><td>CLASSIFYING</td></tr>
-<tr><td>CLASSIFYING</td><td>파일 확정</td><td>성공 · 실패 · 뒤로</td><td>분류 처리 중 / <code>UNCLASSIFIED</code> 확인</td></tr>
-<tr><td>분류 처리 중</td><td><code>classificationInProgress</code></td><td class="mu">차단 (중복 방지)</td><td>05b 시트 또는 <code>SAVE_PENDING</code></td></tr>
+<tr><td>CLASSIFYING</td><td>파일 확정</td><td>실패 · 완등 · 영상 남기기 · 뒤로</td><td>분류 처리 중 / <code>UNCLASSIFIED</code> 확인</td></tr>
+<tr><td>분류 처리 중</td><td><code>classificationInProgress</code></td><td class="mu">차단 (중복 방지)</td><td>저장 완료 / 되돌리기 / <code>SAVE_PENDING</code></td></tr>
+<tr><td>실패 되돌리기</td><td>실패 확정 직후 5초</td><td>되돌리기 · 대기</td><td>CLASSIFYING 복귀 / 캐시 삭제 확정</td></tr>
+<tr><td>저장 완료</td><td>보관 확정</td><td>자동 · 촬영 · 뒤로</td><td>4초 뒤 보드 / 즉시 재촬영 / 보드</td></tr>
 <tr><td>ERROR</td><td><code>RecordingError</code></td><td>다시 시도 · 설정 · 뒤로</td><td>PREPARING / 설정 Intent / 04</td></tr>
 
-<tr><td class="k" rowspan="6">05b 결정</td><td>성공 시트</td><td><code>SUCCESS</code> 확정</td><td>지금 · 나중에 · 원본 · 지우기</td><td><code>TRIM_PROCESSING</code> / <code>TRIM_PENDING</code> / <code>ORIGINAL_KEPT</code> / 확인</td></tr>
-<tr><td>실패 시트</td><td><code>FAILURE</code> 확정</td><td>지우기 · 원본 · 지금 · 나중에</td><td>확인 / <code>ORIGINAL_KEPT</code> / <code>TRIM_PROCESSING</code> / <code>TRIM_PENDING</code></td></tr>
-<tr><td>폐기 확인</td><td><code>DISCARD</code> 선택</td><td>지우기 · 취소</td><td><code>NONE</code> / 시트 복귀 (변화 없음)</td></tr>
-<tr><td>결정 완료</td><td>Room 반영</td><td>계속 촬영 · 보드로</td><td>05 / 04</td></tr>
-<tr><td>저장 대기</td><td><code>SAVE_PENDING</code></td><td>재저장 · 영상만 폐기</td><td><code>SUCCESS</code>+<code>TRIM_PENDING</code> / 확인</td></tr>
-<tr><td>재저장 실패</td><td>재시도 2회+</td><td>공간 정리 · 재시도 · 폐기</td><td>설정 Intent / 재시도 / 확인</td></tr>
-
+<tr><td class="k" rowspan="3">05b 저장 대기</td><td>저장 대기</td><td><code>SAVE_PENDING</code></td><td>재저장 · 영상만 폐기</td><td><code>SUCCESS</code>+<code>TRIM_PENDING</code> / 확인</td></tr>
+<tr><td>폐기 확인</td><td>폐기 선택</td><td>폐기 · 재저장 · 취소</td><td><code>media = NONE</code> / 재시도 / 시트 복귀</td></tr>
+<tr><td>재저장 반복 실패</td><td>재시도 2회+</td><td>공간 정리 · 재시도 · 폐기</td><td>설정 Intent / 재시도 / 확인</td></tr>
 <tr><td class="k" rowspan="6">06 트리밍</td><td>편집 대기</td><td><code>TRIM_PENDING</code></td><td>범위 조정 · 저장 · 원본 · 나중에</td><td>범위 갱신 / <code>TRIM_PROCESSING</code> / <code>ORIGINAL_KEPT</code> / <code>TRIM_PENDING</code></td></tr>
 <tr><td>범위 무효</td><td>검증 실패</td><td>범위 재조정 · 원본 · 나중에</td><td>저장 <b>비활성</b>. 다른 출구는 유지</td></tr>
 <tr><td>처리 중</td><td><code>TRIM_PROCESSING</code></td><td>취소만</td><td>취소 확인. <b>뒤로가기 차단</b></td></tr>
@@ -95,7 +94,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 <tr><td>로딩</td><td>Flow 첫 방출 전</td><td class="mu">없음</td><td>스켈레톤 4장</td></tr>
 <tr><td>빈</td><td>0건</td><td>클라이밍 시작</td><td>03. 필터 칩 <b>미표시</b></td></tr>
 <tr><td>조회 실패</td><td>Room 예외</td><td>다시 불러오기 · 홈으로</td><td>로딩 / 02</td></tr>
-<tr><td>재분류 시트</td><td><code>UNCLASSIFIED</code> 카드 탭</td><td>성공 · 실패 · 닫기</td><td>05b 성공 시트 / 05b 실패 시트 / <code>UNCLASSIFIED</code> 유지</td></tr>
+<tr><td>재분류 시트</td><td><code>UNCLASSIFIED</code> 카드 탭</td><td>실패 · 완등 · 영상 남기기 · 닫기</td><td><code>NONE</code> / <code>TRIM_PENDING</code>+카운트 / <code>TRIM_PENDING</code> / <code>UNCLASSIFIED</code> 유지</td></tr>
 <tr><td>읽기 불가 카드</td><td>URI 접근 실패</td><td class="mu">행동 없음</td><td>기록 유지. 재생·공유·자르기 제거</td></tr>
 
 <tr><td class="k" rowspan="5">08 재생</td><td>재생 중</td><td><code>isPlaying</code></td><td>일시정지 · 스크럽 · 공유 · 닫기</td><td>일시정지 / 위치 이동 / chooser / 07</td></tr>
@@ -114,14 +113,16 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 <tr><td class="k">05 녹화 중</td><td class="no">차단</td><td class="mu">해당 없음</td><td>파일 확정 후 <code>UNCLASSIFIED</code></td><td class="ok">아니오</td></tr>
 <tr><td class="k">05 분류 대기</td><td>확인 후 <code>UNCLASSIFIED</code></td><td class="mu">해당 없음</td><td>즉시 <code>UNCLASSIFIED</code></td><td class="ok">아니오</td></tr>
 <tr><td class="k">05 분류 처리 중</td><td class="no">차단</td><td class="mu">해당 없음</td><td>완료 후 상태 반영</td><td class="ok">아니오</td></tr>
-<tr><td class="k">05b 영상 처리 시트</td><td><code>TRIM_PENDING</code></td><td><code>TRIM_PENDING</code></td><td><code>TRIM_PENDING</code></td><td class="ok">아니오</td></tr>
-<tr><td class="k">05b 폐기 확인</td><td>취소 (변화 없음)</td><td>취소</td><td>취소</td><td class="ok">아니오</td></tr>
+<tr><td class="k">05 실패 되돌리기</td><td>창 종료 → 캐시 삭제</td><td class="mu">해당 없음</td><td>창 종료 → 캐시 삭제</td><td class="wa">영상 미보관 확정</td></tr>
+<tr><td class="k">05 저장 완료</td><td>보드로 (상태 확정됨)</td><td class="mu">해당 없음</td><td>상태 유지</td><td class="ok">아니오</td></tr>
 <tr><td class="k">05b 저장 대기 시트</td><td><code>SAVE_PENDING</code> 유지</td><td>유지</td><td>유지</td><td class="ok">아니오</td></tr>
 <tr><td class="k">06 편집 대기</td><td><code>TRIM_PENDING</code> 유지</td><td class="mu">해당 없음</td><td>유지</td><td class="ok">아니오</td></tr>
 <tr><td class="k">06 처리 중</td><td class="no">차단 (취소 버튼만)</td><td class="mu">해당 없음</td><td><code>recoverInterrupted()</code> → <code>TRIM_FAILED</code></td><td class="wa">부분 출력 폐기</td></tr>
 <tr><td class="k">06 취소 확인</td><td>계속 자르기</td><td>계속 자르기</td><td><code>TRIM_FAILED</code></td><td class="ok">아니오</td></tr>
 <tr><td class="k">07 재분류 시트</td><td><code>UNCLASSIFIED</code> 유지</td><td>유지</td><td>유지</td><td class="ok">아니오</td></tr>
 <tr><td class="k">08 재생 오버레이</td><td>07로 닫힘</td><td>07로 닫힘</td><td>재생 정지, 위치 폐기</td><td class="ok">아니오</td></tr>
+<tr><td class="k">04 되돌리기 칩</td><td class="mu">해당 없음</td><td class="mu">해당 없음</td><td>창 종료 → 카운트 확정</td><td class="ok">아니오</td></tr>
+<tr><td class="k">04 롱프레스 조정</td><td>= 완료 (변경 이미 반영)</td><td>= 완료</td><td>= 완료</td><td class="ok">아니오 (영상은 잠김)</td></tr>
 <tr><td class="k">04 종료 확인</td><td>계속 클라이밍</td><td>계속 클라이밍</td><td>세션 유지</td><td class="ok">아니오</td></tr>
 <tr><td class="k">04 종료 보류</td><td>계속 클라이밍</td><td>계속 클라이밍</td><td><code>SAVE_PENDING</code> 유지</td><td class="ok">아니오</td></tr>
 </tbody></table></div>
@@ -131,13 +132,14 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 <div class="tw"><table>
 <thead><tr><th>행동</th><th>위치</th><th>사라지는 것</th><th>남는 것</th><th>확인</th></tr></thead>
 <tbody>
-<tr><td class="k">영상 지우기 (성공)</td><td>05b 시트 · 07 카드</td><td class="no">영상 파일</td><td class="ok">완등 기록 · 세션 통계</td><td class="ok">필수</td></tr>
-<tr><td class="k">영상 지우기 (실패)</td><td>05b 시트 · 07 카드</td><td class="no">영상 파일</td><td class="ok">시도 기록 · 전체 시도 수</td><td class="ok">필수</td></tr>
-<tr><td class="k">영상만 폐기</td><td>05b 저장 대기 · 04 종료 보류</td><td class="no">임시 공간 영상</td><td class="ok">완등 1개 · 요약 수치</td><td class="ok">필수</td></tr>
+<tr><td class="k">실패 선택 (영상 미보관)</td><td>05 분류 · 07 재분류</td><td class="no">촬영한 영상</td><td class="ok">시도 기록 · 전체 시도 수</td><td class="wa">5초 되돌리기 창</td></tr>
+<tr><td class="k">영상 지우기</td><td>07 카드</td><td class="no">영상 파일</td><td class="ok">완등/시도 기록 · 세션 통계</td><td class="ok">필수</td></tr>
+<tr><td class="k">영상만 폐기</td><td>05b · 04 종료 보류</td><td class="no">임시 공간 영상</td><td class="ok">완등 1개 · 요약 수치</td><td class="ok">필수</td></tr>
 <tr><td class="k">자르기 취소</td><td>06 처리 중</td><td class="wa">부분 출력 파일</td><td class="ok">원본 · Attempt · 선택 범위</td><td class="ok">필수</td></tr>
+<tr><td class="k">롱프레스 −</td><td>04 조정 시트</td><td class="no">영상 없는 시도 1건</td><td class="ok">영상 있는 시도 전부(잠김)</td><td class="mu">불필요 (즉시 되돌릴 수 있음)</td></tr>
 <tr><td class="k">세션 종료</td><td>04</td><td class="mu">없음 (세션 확정)</td><td class="ok">모든 Attempt와 영상</td><td class="ok">필수</td></tr>
 </tbody></table></div>
-<div class="note d"><b>확인 다이얼로그 형식 규칙</b> — "정말 삭제할까요?" 같은 모호한 문구를 쓰지 않는다. 항상 <b>남는 것 / 사라지는 것</b>을 분리해 나열하고, 기본 포커스는 취소에 둔다. 파괴 버튼이 기본 강조인 경우(실패 영상의 <code>DISCARD</code>)에도 확인 단계는 생략하지 않는다.</div>
+<div class="note d"><b>확인 다이얼로그 형식 규칙</b> — "정말 삭제할까요?" 같은 모호한 문구를 쓰지 않는다. 항상 <b>남는 것 / 사라지는 것</b>을 분리해 나열하고, 기본 포커스는 취소에 둔다. <b>예외는 05의 "실패" 버튼 하나</b>다. 여기서는 확인 다이얼로그 대신 <b>5초 되돌리기 창</b>을 쓴다 — 매 시도마다 확인을 띄우면 세션이 멈추고, 되돌리기가 확인보다 빠르고 덜 방해된다. 대신 <b>캐시 삭제를 창이 끝날 때까지 지연</b>해야 한다.</div>
 
 <h2>5 · 중복 실행 차단 지점</h2>
 <div class="tw"><table>
@@ -146,7 +148,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 <tr><td class="k">결과 분류</td><td><code>beginClassification()</code> — 최초 1회만 통과</td><td>두 버튼 비활성 + 선택한 쪽에 스피너</td></tr>
 <tr><td class="k">트리밍 제출</td><td><code>beginTrimSubmission()</code> — <code>trimInProgress</code></td><td>전체 오버레이 + 진행 링 + 취소만 활성</td></tr>
 <tr><td class="k">저장 재시도</td><td><code>statusRetryAttemptId</code> 단일 대상</td><td>배너 버튼 비활성 + 진행 배너로 교체</td></tr>
-<tr><td class="k">영상 처리 선택</td><td>선택 즉시 시트 옵션 전체 비활성</td><td>선택한 행만 강조 유지</td></tr>
+<tr><td class="k">결과 분류</td><td>세 버튼 모두 <code>beginClassification()</code> 통과 1회</td><td>선택한 버튼만 스피너, 나머지 회색</td></tr>
+<tr><td class="k">보드 카운트 탭</td><td>되돌리는 동안 그 색 행 탭 잠금</td><td>행 ripple 억제</td></tr>
+<tr><td class="k">롱프레스 −</td><td>04 조정 시트</td><td class="no">영상 없는 시도 1건</td><td class="ok">영상 있는 시도 전부(잠김)</td><td class="mu">불필요 (즉시 되돌릴 수 있음)</td></tr>
 <tr><td class="k">세션 종료</td><td><code>finish()</code> 진행 중 버튼 잠금</td><td>다이얼로그 버튼 3개 모두 비활성</td></tr>
 </tbody></table></div>
 

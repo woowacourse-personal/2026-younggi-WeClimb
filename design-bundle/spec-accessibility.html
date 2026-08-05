@@ -93,14 +93,16 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 <div class="tw"><table>
 <thead><tr><th>요소</th><th>contentDescription / 읽히는 내용</th><th>비고</th></tr></thead>
 <tbody>
-<tr><td class="k">색 카운트 행</td><td>"파랑 완등 7개, 두 번 탭하면 하나 추가"</td><td>탭 후 <code>liveRegion</code>으로 "파랑 완등 8개" 재공지</td></tr>
+<tr><td class="k">색 카운트 행</td><td>"파랑 완등 7개, 두 번 탭하면 하나 추가, 길게 누르면 수정"</td><td>탭 후 <code>liveRegion</code>으로 "파랑 완등 8개, 되돌리기 가능" 재공지</td></tr>
 <tr><td class="k">녹화 버튼</td><td>"녹화 시작" / "녹화 정지, 8초 경과"</td><td>타이머 값을 라벨에 포함</td></tr>
 <tr><td class="k">녹화 인디케이터</td><td>"녹화 중"</td><td>펄스 애니메이션과 무관하게 항상 읽힌다</td></tr>
-<tr><td class="k">결과 버튼</td><td>"성공, 완등으로 기록" / "실패, 시도로 기록"</td><td>처리 중에는 "저장 중, 사용할 수 없음"</td></tr>
+<tr><td class="k">결과 버튼 3개</td><td>"실패, 영상도 지웁니다" / "완등, 완등 1개 추가하고 영상 보관" / "실패지만 영상은 남기기"</td><td>영상 결과를 <b>반드시 읽는다</b>. 처리 중에는 "저장 중, 사용할 수 없음"</td></tr>
 <tr><td class="k">아카이브 카드</td><td>"완등, 닻 클라이밍, 파랑, 7월 22일 오후 8시 14분, 트리밍 완료"</td><td>카드 전체를 <code>mergeDescendants</code>로 한 노드</td></tr>
 <tr><td class="k">읽기 불가 카드</td><td>"…, 기기에서 삭제됨, 재생할 수 없음"</td><td>액션 노드 없음</td></tr>
 <tr><td class="k">타임라인 핸들</td><td>"시작 지점 5초" / "끝 지점 20초"</td><td><code>ProgressBarRangeInfo</code> + 좌우 스와이프 조정 액션</td></tr>
 <tr><td class="k">진행 링</td><td>"영상 자르는 중 45퍼센트"</td><td><code>liveRegion = Polite</code>, 10% 단위로만 공지</td></tr>
+<tr><td class="k">되돌리기 칩 · 배너</td><td>"되돌리기 가능, 5초" → 조작 후 "되돌렸어요"</td><td><b>TalkBack 활성 시 창 연장.</b> 5초는 읽고 조작하기에 짧다</td></tr>
+<tr><td class="k">조정 시트 잠금</td><td>"영상이 있는 시도 3개는 잠겨 있어요, 빼기 사용할 수 없음"</td><td>비활성 이유를 <b>반드시</b> 읽는다</td></tr>
 <tr><td class="k">오류 배너</td><td>"오류: 저장에 실패했어요. 원본은 그대로 있어요"</td><td><code>liveRegion = Assertive</code> — 즉시 공지</td></tr>
 <tr><td class="k">성공 배너</td><td>"영상을 저장했어요"</td><td><code>liveRegion = Polite</code></td></tr>
 <tr><td class="k">파괴적 확인</td><td>제목 → 남는 것 → 사라지는 것 → 버튼 순</td><td>다이얼로그 진입 시 <b>제목에 포커스</b></td></tr>
@@ -114,8 +116,9 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 <div class="tw"><table>
 <thead><tr><th>화면</th><th>포커스 순서</th><th>초기 포커스</th></tr></thead>
 <tbody>
-<tr><td class="k">05 분류 대기</td><td>뒤로 → 녹화 정보 → 실패 → 성공</td><td>질문 텍스트</td></tr>
-<tr><td class="k">05b 영상 처리 시트</td><td>결과 배지 → 제목 → 옵션 1..4 → 닫기 안내</td><td>제목 (시트 진입 시)</td></tr>
+<tr><td class="k">05 분류 대기</td><td>뒤로 → 녹화 정보 → 실패 → 완등 → 실패지만 영상은 남기기</td><td>질문 텍스트</td></tr>
+<tr><td class="k">05 되돌리기 배너</td><td>문구 → 되돌리기 버튼</td><td class="ok">문구 (<code>liveRegion = Assertive</code>)</td></tr>
+<tr><td class="k">04 조정 시트</td><td>색 헤더 → 값 → − → + → 잠금 안내 → 완료</td><td>값 (조정 대상)</td></tr>
 <tr><td class="k">05b 폐기 확인</td><td>제목 → 남는 것 → 사라지는 것 → 파괴 → 취소</td><td class="ok">제목. <b>파괴 버튼에 자동 포커스 금지</b></td></tr>
 <tr><td class="k">06 트리밍</td><td>닫기 → 정보 → 프리뷰 → 재생 → 시작 핸들 → 끝 핸들 → 범위 라벨 → 원본 유지 → 저장 → 나중에</td><td>제목</td></tr>
 <tr><td class="k">06 처리 중</td><td>진행 상태 → 취소</td><td class="ok">진행 상태 (<code>liveRegion</code>). 다른 노드는 <b>포커스 불가</b></td></tr>
@@ -160,7 +163,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 <tr><td class="k">사용자 탓 표현 금지</td><td>"잘못된 입력" → "끝 지점이 시작보다 뒤여야 해요"</td></tr>
 <tr><td class="k">기술 용어 노출 금지</td><td>예외 원문 · 코덱명 · 실패 횟수를 화면에 쓰지 않는다</td></tr>
 <tr><td class="k">막다른 길 금지</td><td>모든 오류 상태에 <b>최소 2개의 출구</b>(재시도 + 대안)</td></tr>
-<tr><td class="k">한 번에 한 결정</td><td>결과 확정과 영상 처리를 <b>두 단계로 분리</b>한 v2의 근거</td></tr>
+<tr><td class="k">세션 중 결정 최소화</td><td>결과와 영상 보관을 <b>한 번의 탭</b>으로 묶고, 자르기는 아카이브로 미룬 v2의 근거. 벽 앞에서 고민하게 만들지 않는다</td></tr>
 </tbody></table></div>
 
 <h2>9 · 인수 전 체크리스트</h2>
@@ -185,6 +188,9 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
   <li>모든 오류 상태에 <b>출구 2개 이상</b></li>
   <li>아이콘은 벡터, <b>이모지 금지</b></li>
   <li>기능 표면에 <b>가짜 값 없음</b> (레벨·길이·개수·타임스탬프)</li>
+  <li>되돌리기 창이 <b>TalkBack에서 연장</b>됨</li>
+  <li>결과 버튼 3개가 <b>영상 결과를 음성으로 전달</b>함</li>
+  <li>조정 시트의 <b>− 비활성 이유</b>가 읽힘</li>
 </ul>
 
 </div></body></html>

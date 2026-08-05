@@ -173,7 +173,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 </div>
 
 <div class="m">
-  <div class="mh"><span class="mn">7</span><span class="mt">불확정 진행 막대 (배너)</span><span class="ml">00 · 05b</span><span class="demo"><div class="indet"><i></i></div></span></div>
+  <div class="mh"><span class="mn">7</span><span class="mt">불확정 진행 막대 (배너)</span><span class="ml">00 · 05 · 05b</span><span class="demo"><div class="indet"><i></i></div></span></div>
   <dl>
     <dt>트리거</dt><dd><code>classificationInProgress</code> · 저장 재시도 · 진행률 없는 처리</dd>
     <dt>시작 상태</dt><dd>막대 left <b>−40%</b></dd>
@@ -187,7 +187,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 </div>
 
 <div class="m">
-  <div class="mh"><span class="mn">8</span><span class="mt">버튼 비활성 전환</span><span class="ml">05 · 05b · 06</span></div>
+  <div class="mh"><span class="mn">8</span><span class="mt">버튼 비활성 전환</span><span class="ml">05 · 06 · 07</span></div>
   <dl>
     <dt>트리거</dt><dd>중복 실행 가드 통과 (<code>beginClassification()</code> · <code>beginTrimSubmission()</code>)</dd>
     <dt>시작 상태</dt><dd>원래 컨테이너 색 (<code>#059669</code> / <code>#DC2626</code> / <code>#EA580C</code>), 불투명도 1</dd>
@@ -203,7 +203,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 <h2>4 · 성공 · 실패 피드백</h2>
 
 <div class="m">
-  <div class="mh"><span class="mn">9</span><span class="mt">성공 배너 진입</span><span class="ml">00 · 05b · 06</span></div>
+  <div class="mh"><span class="mn">9</span><span class="mt">성공 배너 진입</span><span class="ml">00 · 05 · 06</span></div>
   <dl>
     <dt>트리거</dt><dd>Room 반영 완료 (<code>message</code> 설정 + <code>statusIsError == false</code>)</dd>
     <dt>시작 상태</dt><dd>배너 Y <b>−12dp</b> · 불투명도 <b>0</b> / 체크 아이콘 scale <b>.7</b></dd>
@@ -217,7 +217,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 </div>
 
 <div class="m">
-  <div class="mh"><span class="mn">10</span><span class="mt">오류 배너 진입</span><span class="ml">00 · 05b · 06 · 08</span></div>
+  <div class="mh"><span class="mn">10</span><span class="mt">오류 배너 진입</span><span class="ml">00 · 05 · 06 · 08</span></div>
   <dl>
     <dt>트리거</dt><dd>처리 실패 (<code>statusIsError == true</code>)</dd>
     <dt>시작 상태</dt><dd>성공 배너와 <b>동일</b> — Y −12dp · 불투명도 0</dd>
@@ -248,7 +248,21 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 </div>
 
 <div class="m">
-  <div class="mh"><span class="mn">12</span><span class="mt">바퀴 넘김 (덧칠 승격)</span><span class="ml">04 세션 보드</span></div>
+  <div class="mh"><span class="mn">12</span><span class="mt">되돌리기 카운트다운</span><span class="ml">04 보드 · 05 촬영</span></div>
+  <dl>
+    <dt>트리거</dt><dd>보드 색 탭으로 완등 +1, 또는 촬영에서 "실패" 확정</dd>
+    <dt>시작 상태</dt><dd>칩/배너 Y +16dp · 불투명도 0 / 진행 막대 폭 <b>100%</b></dd>
+    <dt>종료 상태</dt><dd>Y 0 · 불투명도 1 / 진행 막대 폭 <b>0</b> → 창 종료 후 이탈</dd>
+    <dt>지속 시간</dt><dd>진입 <code>--dur-emphasized 320ms</code> / 막대 <b>5000ms 선형</b> / 이탈 <code>--dur-exit 200ms</code></dd>
+    <dt>이징</dt><dd>진입 <code>--ease-decelerate</code> · 막대 <code>linear</code> · 이탈 <code>--ease-accelerate</code></dd>
+    <dt>중단 동작</dt><dd>되돌리기 탭 시 막대 정지 후 즉시 이탈. 같은 색을 다시 탭하면 창을 <b>새로 시작</b>하지 않고 새 대상으로 교체한다</dd>
+    <dt>반복 정책</dt><dd>없음. 창은 한 번만 열린다</dd>
+    <div class="rm"><dt>축소 모션</dt><dd>즉시 표시, 막대 애니메이션 대신 <b>정적 표시</b>. 창 길이는 유지(정책이지 모션이 아님). <b>TalkBack 활성 시 창을 연장한다</b> — 읽고 조작할 시간이 필요하다</dd></div>
+  </dl>
+</div>
+
+<div class="m">
+  <div class="mh"><span class="mn">13</span><span class="mt">바퀴 넘김 (덧칠 승격)</span><span class="ml">04 세션 보드</span></div>
   <dl>
     <dt>트리거</dt><dd>완등 수가 5의 배수에 도달 — <code>rem</code>이 <b>4 → 0</b>으로 넘어갈 때</dd>
     <dt>시작 상태</dt><dd>바탕 100% shade <code>lap−1</code> / 덧칠 폭 <b>80%</b> shade <code>lap</code></dd>
@@ -257,12 +271,13 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
     <dt>이징</dt><dd>차오름 <code>--ease-standard</code> / 승격 <code>--ease-decelerate</code></dd>
     <dt>중단 동작</dt><dd>승격 도중 다시 탭하면 <b>승격을 먼저 즉시 확정</b>한 뒤 새 덧칠을 시작한다. 두 단계가 겹치면 막대 폭이 튄다</dd>
     <dt>반복 정책</dt><dd>바퀴당 <b>1회</b>. 축하 연출·반짝임·컨페티 금지 — 완등 확정 자체가 이미 피드백이다</dd>
+    <dt>되돌리기</dt><dd>바퀴 경계를 되넘으면 <b>정확한 역순</b>으로 되돌린다 — 바탕 shade <code>lap</code> → <code>lap−1</code>, 덧칠 폭 복원</dd>
     <div class="rm"><dt>축소 모션</dt><dd>차오름·승격 없이 새 상태를 <b>즉시</b> 적용. 바퀴 수는 숫자 카운트로 이미 읽히므로 정보 손실 없음</dd></div>
   </dl>
 </div>
 
 <div class="m">
-  <div class="mh"><span class="mn">13</span><span class="mt">세션 요약 수치</span><span class="ml">04 종료 다이얼로그</span></div>
+  <div class="mh"><span class="mn">14</span><span class="mt">세션 요약 수치</span><span class="ml">04 종료 다이얼로그</span></div>
   <dl>
     <dt>트리거</dt><dd>종료 다이얼로그 진입 시 <code>summarizeAttempts()</code> 결과 확정</dd>
     <dt>시작 상태</dt><dd>타일 3개 불투명도 <b>0</b> · Y <b>+8dp</b></dd>
@@ -279,7 +294,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 <h2>6 · 시트 · 오버레이 전환</h2>
 
 <div class="m">
-  <div class="mh"><span class="mn">14</span><span class="mt">바텀 시트 진입 · 이탈</span><span class="ml">05b · 07</span><span class="demo"><div class="slide"><i></i></div></span></div>
+  <div class="mh"><span class="mn">15</span><span class="mt">바텀 시트 진입 · 이탈</span><span class="ml">05b · 07 · 04</span><span class="demo"><div class="slide"><i></i></div></span></div>
   <dl>
     <dt>트리거</dt><dd>결과 확정 · 미분류 카드 탭 · 저장 실패</dd>
     <dt>시작 상태</dt><dd>시트 Y <b>+100%</b>(화면 밖) · scrim 불투명도 <b>0</b></dd>
@@ -293,7 +308,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 </div>
 
 <div class="m">
-  <div class="mh"><span class="mn">15</span><span class="mt">시트 스와이프 닫기</span><span class="ml">05b · 07</span></div>
+  <div class="mh"><span class="mn">16</span><span class="mt">시트 스와이프 닫기</span><span class="ml">05b · 07 · 04</span></div>
   <dl>
     <dt>트리거</dt><dd>grab 핸들 또는 시트 본문 아래로 드래그</dd>
     <dt>시작 상태</dt><dd>손가락 Y를 <b>1:1 추종</b>, scrim 불투명도는 드래그 진행률에 비례</dd>
@@ -308,7 +323,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 </div>
 
 <div class="m">
-  <div class="mh"><span class="mn">16</span><span class="mt">다이얼로그 진입 · 이탈</span><span class="ml">04 · 05 · 05b · 06</span></div>
+  <div class="mh"><span class="mn">17</span><span class="mt">다이얼로그 진입 · 이탈</span><span class="ml">04 · 05 · 05b · 06 · 07</span></div>
   <dl>
     <dt>트리거</dt><dd>종료 · 파괴적 확인 · 취소 확인 · 이탈 확인</dd>
     <dt>시작 상태</dt><dd>카드 scale <b>.94</b> · 불투명도 <b>0</b> / scrim 불투명도 <b>0</b></dd>
@@ -322,7 +337,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 </div>
 
 <div class="m">
-  <div class="mh"><span class="mn">17</span><span class="mt">전체 화면 오버레이 (재생 · 촬영)</span><span class="ml">05 · 08</span></div>
+  <div class="mh"><span class="mn">18</span><span class="mt">전체 화면 오버레이 (재생 · 촬영)</span><span class="ml">05 · 08</span></div>
   <dl>
     <dt>트리거</dt><dd>아카이브 카드 재생 · 보드에서 촬영 진입</dd>
     <dt>시작 상태</dt><dd>불투명도 <b>0</b> · scale <b>.96</b>, 뒤 화면 그대로</dd>
@@ -338,7 +353,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 <h2>7 · 플레이어 컨트롤 · 타임라인</h2>
 
 <div class="m">
-  <div class="mh"><span class="mn">18</span><span class="mt">컨트롤 표시 · 숨김</span><span class="ml">08 재생</span></div>
+  <div class="mh"><span class="mn">19</span><span class="mt">컨트롤 표시 · 숨김</span><span class="ml">08 재생</span></div>
   <dl>
     <dt>트리거</dt><dd>화면 탭(토글) 또는 재생 중 <b>3초 무입력</b></dd>
     <dt>시작 상태</dt><dd>상·하 바 불투명도 <b>1</b> · Y <b>0</b>, tint 그라데이션 진함</dd>
@@ -352,7 +367,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 </div>
 
 <div class="m">
-  <div class="mh"><span class="mn">19</span><span class="mt">재생 · 일시정지 토글</span><span class="ml">08 재생</span></div>
+  <div class="mh"><span class="mn">20</span><span class="mt">재생 · 일시정지 토글</span><span class="ml">08 재생</span></div>
   <dl>
     <dt>트리거</dt><dd>중앙 컨트롤 탭</dd>
     <dt>시작 상태</dt><dd>이전 아이콘 불투명도 1 · scale 1</dd>
@@ -366,7 +381,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 </div>
 
 <div class="m">
-  <div class="mh"><span class="mn">20</span><span class="mt">진행 바 · 재생헤드 이동</span><span class="ml">06 · 08</span><span class="demo"><div class="head"><i></i></div></span></div>
+  <div class="mh"><span class="mn">21</span><span class="mt">진행 바 · 재생헤드 이동</span><span class="ml">06 · 08</span><span class="demo"><div class="head"><i></i></div></span></div>
   <dl>
     <dt>트리거</dt><dd><code>Player.currentPosition</code> 폴링 (200ms 주기)</dd>
     <dt>시작 상태</dt><dd>이전 위치</dd>
@@ -380,7 +395,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 </div>
 
 <div class="m">
-  <div class="mh"><span class="mn">21</span><span class="mt">타임라인 핸들 드래그</span><span class="ml">06 트리밍</span></div>
+  <div class="mh"><span class="mn">22</span><span class="mt">타임라인 핸들 드래그</span><span class="ml">06 트리밍</span></div>
   <dl>
     <dt>트리거</dt><dd>좌·우 핸들 터치 드래그</dd>
     <dt>시작 상태</dt><dd>현재 핸들 위치</dd>
@@ -394,7 +409,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 </div>
 
 <div class="m">
-  <div class="mh"><span class="mn">22</span><span class="mt">범위 무효 전환</span><span class="ml">06 트리밍</span></div>
+  <div class="mh"><span class="mn">23</span><span class="mt">범위 무효 전환</span><span class="ml">06 트리밍</span></div>
   <dl>
     <dt>트리거</dt><dd>드래그 결과가 <code>isValidTrimRange()</code> 실패</dd>
     <dt>시작 상태</dt><dd>테두리 <code>#EA580C</code> · 배경 <code>rgba(234,88,12,.12)</code> · 오류 문구 높이 0</dd>
@@ -408,7 +423,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 </div>
 
 <div class="m">
-  <div class="mh"><span class="mn">23</span><span class="mt">프레임 썸네일 도착</span><span class="ml">06 트리밍</span></div>
+  <div class="mh"><span class="mn">24</span><span class="mt">프레임 썸네일 도착</span><span class="ml">06 트리밍</span></div>
   <dl>
     <dt>트리거</dt><dd>프레임 추출 완료 (순차 도착)</dd>
     <dt>시작 상태</dt><dd>회색 블록 불투명도 1</dd>
@@ -423,7 +438,7 @@ td.k{color:#fff;font-weight:700;white-space:nowrap}
 
 <h2>8 · 공통 · 눌림 피드백</h2>
 <div class="m">
-  <div class="mh"><span class="mn">24</span><span class="mt">Ripple</span><span class="ml">전 화면</span></div>
+  <div class="mh"><span class="mn">25</span><span class="mt">Ripple</span><span class="ml">전 화면</span></div>
   <dl>
     <dt>트리거</dt><dd>모든 탭 가능 요소 터치 다운</dd>
     <dt>시작 상태</dt><dd>터치 지점 반경 0 · 불투명도 .12</dd>
