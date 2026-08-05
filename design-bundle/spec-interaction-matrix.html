@@ -58,6 +58,19 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 <div class="tw"><table>
 <thead><tr><th>화면</th><th>상태</th><th>진입 조건</th><th>행동</th><th>결과 상태</th></tr></thead>
 <tbody>
+<tr><td class="k" rowspan="5">01 온보딩</td><td>권한 요청 전</td><td>온보딩 진입</td><td>허용하기</td><td>권한 요청 중</td></tr>
+<tr><td>권한 요청 중</td><td><code>permissionRequested</code></td><td class="mu">차단 (중복 요청 방지)</td><td>완료 / 거부 / 부분 허용</td></tr>
+<tr><td>일부만 허용</td><td>카메라만 <code>true</code></td><td>설정 열기</td><td>설정 Intent → onResume 재확인</td></tr>
+<tr><td>권한 거부</td><td>둘 다 <code>false</code></td><td>설정 · 다시 요청</td><td>설정 Intent / 재요청</td></tr>
+<tr><td>허용 완료</td><td><code>Completed</code></td><td>다음</td><td>02 홈</td></tr>
+
+<tr><td class="k" rowspan="6">03 암장 선택</td><td>검색 결과</td><td><code>search()</code> ≥1건</td><td>선택 · 직접 추가</td><td>선택됨 / 추가 시트</td></tr>
+<tr><td>결과 없음</td><td><code>search()</code> 0건 + query</td><td>입력값으로 추가</td><td>추가 시트(이름 프리필)</td></tr>
+<tr><td>목록 로딩</td><td>Room 첫 방출 전</td><td class="mu">검색창 비활성</td><td>스켈레톤</td></tr>
+<tr><td>목록 실패</td><td>Room 예외</td><td>다시 불러오기 · 직접 추가</td><td>로딩 / 추가 시트</td></tr>
+<tr><td>추가 시트</td><td>추가 탭</td><td>이름 입력 · 저장</td><td><code>USER_ADDED</code> 생성 후 즉시 선택 / <code>InvalidName</code></td></tr>
+<tr><td>관리 메뉴</td><td>kebab (<code>USER_ADDED</code>만)</td><td>이름 수정 · 숨기기</td><td><code>rename()</code> / <code>hide()</code>. <b>삭제 없음</b></td></tr>
+
 <tr><td class="k" rowspan="4">02 홈</td><td>데이터 있음</td><td><code>archive.isNotEmpty()</code></td><td>시작 · 전체 보기 · 카드 탭</td><td>03 암장 선택 / 07 아카이브 / 08 재생</td></tr>
 <tr><td>빈</td><td>조회 성공 + 0건</td><td>시작</td><td>03 암장 선택. 레벨 스냅샷 <b>미표시</b></td></tr>
 <tr><td>로딩</td><td>Flow 첫 방출 전</td><td>시작만 활성</td><td>스켈레톤. CTA는 데이터 비의존</td></tr>
@@ -90,11 +103,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;colo
 <tr><td>실패</td><td><code>TRIM_FAILED</code></td><td>재시도 · 원본 유지 · 나중에</td><td><code>TRIM_PROCESSING</code> / <code>ORIGINAL_KEPT</code> / <code>TRIM_PENDING</code></td></tr>
 <tr><td>완료</td><td><code>TRIMMED</code></td><td>다시 보기 · 공유 · 아카이브</td><td>08 / <code>ACTION_SEND</code> / 07</td></tr>
 
-<tr><td class="k" rowspan="6">07 아카이브</td><td>목록</td><td>조회 성공 + ≥1건</td><td>재생 · 자르기 · 공유 · 재분류 · 지우기</td><td>08 / 06 / chooser / 재분류 시트 / 확인</td></tr>
+<tr><td class="k" rowspan="7">07 아카이브</td><td>목록</td><td>조회 성공 + ≥1건</td><td>재생 · 자르기 · <b>원본 유지</b> · 공유 · 재분류 · 지우기</td><td>08 / 06 / chooser / 재분류 시트 / 확인</td></tr>
 <tr><td>로딩</td><td>Flow 첫 방출 전</td><td class="mu">없음</td><td>스켈레톤 4장</td></tr>
 <tr><td>빈</td><td>0건</td><td>클라이밍 시작</td><td>03. 필터 칩 <b>미표시</b></td></tr>
 <tr><td>조회 실패</td><td>Room 예외</td><td>다시 불러오기 · 홈으로</td><td>로딩 / 02</td></tr>
 <tr><td>재분류 시트</td><td><code>UNCLASSIFIED</code> 카드 탭</td><td>실패 · 완등 · 영상 남기기 · 닫기</td><td><code>NONE</code> / <code>TRIM_PENDING</code>+카운트 / <code>TRIM_PENDING</code> / <code>UNCLASSIFIED</code> 유지</td></tr>
+<tr><td>영상 지우기 확인</td><td>카드 지우기 탭</td><td>지우기 · 취소</td><td><code>media = NONE</code> + 파일 삭제 / 변화 없음</td></tr>
 <tr><td>읽기 불가 카드</td><td>URI 접근 실패</td><td class="mu">행동 없음</td><td>기록 유지. 재생·공유·자르기 제거</td></tr>
 
 <tr><td class="k" rowspan="5">08 재생</td><td>재생 중</td><td><code>isPlaying</code></td><td>일시정지 · 스크럽 · 공유 · 닫기</td><td>일시정지 / 위치 이동 / chooser / 07</td></tr>

@@ -52,7 +52,7 @@ Figma MCP(`use_figma`, `generate_figma_design` 등)도 연결돼 있으나, 이 
 
 ## 2. 생성된 화면 · 상태 인벤토리
 
-총 **20개 파일 / 66개 상태 프레임**.
+총 **20개 파일 / 79개 상태 프레임**.
 
 ### 기반 (`group="Foundations"`)
 
@@ -66,14 +66,14 @@ Figma MCP(`use_figma`, `generate_figma_design` 등)도 연결돼 있으나, 이 
 
 | 파일 | 프레임 | 상태 |
 |---|---|---|
-| `01-onboarding.html` | 기존 유지 | 변경 없음 |
+| `01-onboarding.html` | A–E (5) | 권한 요청 전 · 거부 · 허용 완료 · **권한 요청 중(신규)** · **일부만 허용(신규)** |
 | `02-home.html` | A–D (4) | 데이터 있음 · 첫 진입 빈 · **불러오는 중(신규)** · **조회 실패(신규)** |
-| `03-gym-select.html` | 기존 유지 | 변경 없음 |
+| `03-gym-select.html` | A–H (8) | 검색 결과 · **결과 없음(신규)** · **목록 로딩(신규)** · **목록 실패(신규)** · 추가 시트 · **이름 오류(신규)** · 선택됨 · 관리 메뉴 |
 | `04-session-board.html` | A–F (6) | **시도 0건(신규)** · 진행 중(런타임 카운트 · **바퀴 덧칠**) · **오탭 되돌리기(신규)** · **롱프레스 조정(신규)** · 종료 확인(완등·시도·**저장한 영상**) · **저장 대기 종료 보류(신규)** |
 | `05-capture.html` | A–J (10) | PREPARING · **READY(신규)** · RECORDING(타이머+펄스) · **RECORDED(신규)** · CLASSIFYING(**3버튼**) · **분류 처리 중(신규)** · **실패 되돌리기(신규)** · **저장 완료(신규)** · 분류 전 뒤로가기 · ERROR |
 | `05b-save-pending.html` | A–C (3) | **전량 신규.** 저장 대기 해소 · 영상만 폐기 확인 · 재저장 반복 실패 |
 | `06-trim.html` | A–F (6) | 편집 대기 · **범위 무효(신규)** · 처리 중 · **취소 확인(신규)** · 재시도 가능 실패 · 완료 |
-| `07-archive.html` | A–G (7) | 완등×{완료·대기·원본} · **실패×{원본·대기}(신규)** · **분류 필요(신규)** · **트리밍 실패(신규)** · 읽기 불가 · **로딩(신규)** · 빈 · **조회 실패(신규)** · **재분류 시트(3버튼, 신규)** |
+| `07-archive.html` | A–H (8) | 완등×{완료·대기·원본} · **실패×{원본·대기}(신규)** · **분류 필요(신규)** · **트리밍 실패(신규)** · 읽기 불가 · **로딩(신규)** · 빈 · **조회 실패(신규)** · **재분류 시트(3버튼, 신규)** · **영상 지우기 확인(신규)** |
 | `08-playback.html` | A–E (5) | 재생 중 · **일시정지(신규)** · **버퍼링(신규)** · 컨트롤 숨김 · **재생 오류(신규)** |
 | `09-session-end.html` | 미리보기 전용 | **변경 없음** |
 | `10-report.html` | 미리보기 전용 | **변경 없음** |
@@ -85,7 +85,7 @@ Figma MCP(`use_figma`, `generate_figma_design` 등)도 연결돼 있으나, 이 
 |---|---|
 | `spec-interaction-matrix.html` | 도메인 상태 어휘 · 화면×상태×행동 · **뒤로가기/닫기 귀결표** · 파괴적 행동 목록 · 중복 실행 차단 지점 · 미리보기 표면 |
 | `spec-flow-map.html` | 세션 주 경로 · 아카이브 경로 · 미리보기 경로 · 화면 전환 모션 · 진입점 요약 |
-| `spec-components.html` | 12개 카테고리 컴포넌트·변형 전량 (라이브 표본 포함) + v2 신규 10종 요약 |
+| `spec-components.html` | 12개 카테고리 컴포넌트·변형 전량 (라이브 표본 포함) + v2 신규 13종 요약 |
 | `spec-motion.html` | **25개 모션 × 8항목** (트리거·시작·종료·지속·이징·중단·반복·축소 모션) + 금지 목록 |
 | `spec-accessibility.html` | 대비 측정값 · 비색 신호 · 터치 타깃 · TalkBack 문구 · 포커스 순서 · 축소 모션/큰 글자 · 세이프 에어리어 · 인지 부하 · 20항목 체크리스트 |
 
@@ -134,6 +134,11 @@ Figma MCP(`use_figma`, `generate_figma_design` 등)도 연결돼 있으나, 이 
 | `26 완등` 고정 문구 | 04 하단 | `summarizeAttempts()`로 대체 |
 | 카드 길이 배지 `0:12`·`0:24`·`0:31` | 02 · 07 | `ArchiveAttempt`에 duration 컬럼 없음 |
 | 가짜 썸네일 | 02 · 07 | 썸네일 생성 미구현 → 색 파생 플레이스홀더로 대체 |
+| 암장 주소 `서울 서초구` | 03 | `Gym`에 주소 필드 없음 |
+| 암장 거리 `6.1km` 등 | 03 | 위치 권한·좌표 모두 없음 |
+| 암장 `메모` 입력 필드 | 03 추가 시트 | `Gym`에 저장할 곳 없음 |
+| 암장 `삭제` 메뉴 | 03 관리 | `GymCatalog`에 삭제 없음(`hide`만). 종속 기록이 고아가 된다 |
+| `기록으로 보면, 여기선` 블록 | 03 선택됨 | 암장별 집계 미구현 → 미리보기 전용으로 격리 |
 | `기영 님` 인사말 | 02 | 사용자 프로필 소스 없음 (`guest_profiles`는 id만) |
 | "백그라운드에서 이어져요" | 06 처리 중 | **사실이 아님.** WorkManager 미구현, 중단 시 `TRIM_FAILED` |
 
@@ -201,16 +206,20 @@ MASTER.md에 표로 고정했다. 초록·파랑 lap1~2는 v1 승인값을 그�
 | 8 | 스크린샷 비교 허용 오차·도구 | 기존 미해결 유지 |
 | 9 | 임시 텍스트 아이콘 → SVG/Compose 벡터 교체 | 기존 미해결 유지 |
 | 10 | 세션 시작 시각 필드명 (`startedAtEpochMillis` 가정) | 타이머 주석의 소스명 확인 필요 |
+| 11 | 숨긴 암장 복구 UI | 미구현. `hide()`는 있으나 되돌리는 화면이 없다 |
+| 12 | 암장 삭제 지원 여부 | 시안에서 제거함. 넣으려면 종속 세션·Attempt·영상 처리 정책부터 결정 |
 
 ---
 
 ## 5. 변경된 파일 (정확 목록)
 
-### 수정 (10)
+### 수정 (12)
 
 ```
 design-bundle/_base.css
 design-bundle/00-foundations.html
+design-bundle/01-onboarding.html
+design-bundle/03-gym-select.html
 design-bundle/00-common.html
 design-bundle/02-home.html
 design-bundle/04-session-board.html
@@ -243,8 +252,6 @@ docs/design/phase-2-flow-v2-design-handoff.md
 ### 의도적으로 변경하지 않음
 
 ```
-design-bundle/01-onboarding.html      새 플로우가 온보딩을 바꾸지 않음
-design-bundle/03-gym-select.html      동일
 design-bundle/09-session-end.html     미리보기 전용 유지
 design-bundle/10-report.html          미리보기 전용 유지
 design-bundle/11-records.html         미리보기 전용 유지

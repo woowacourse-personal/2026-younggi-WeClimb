@@ -49,7 +49,6 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
 .vcard .th .pc{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:3}
 .vcard .th .pc svg{width:16px;height:16px}
 .vcard .meta{flex:1;min-width:0;display:flex;flex-direction:column}
-.vcard .toprow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .obadge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:7px;display:inline-flex;align-items:center;gap:4px}
 .obadge svg{width:11px;height:11px}
 .ob-ok{background:rgba(5,150,105,.16);color:#6ee7b7}
@@ -107,6 +106,20 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
 .keepbtn .ks{display:block;font-size:12px;color:#94A3B8;margin-top:1px}
 .closehint{display:flex;align-items:center;gap:8px;justify-content:center;font-size:11.5px;color:#64748B;font-weight:600;margin-top:13px;line-height:1.5}
 .closehint svg{width:14px;height:14px;flex:none}
+.dialog{position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);z-index:7;background:#141A26;border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:24px 22px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.dialog .dic{width:54px;height:54px;border-radius:16px;background:rgba(220,38,38,.16);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.dialog .dic svg{width:27px;height:27px}
+.dialog h2{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:700;margin-bottom:8px;text-align:center}
+.dialog p{font-size:13px;color:#94A3B8;line-height:1.55;text-align:center;margin-bottom:16px}
+.keepbox{background:#0d111a;border:1px solid rgba(255,255,255,.08);border-radius:13px;padding:12px 14px;margin-bottom:18px;text-align:left}
+.keepbox .kk{font-size:11px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.keepbox .kr{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#cbd5e1;margin-bottom:4px}
+.keepbox .kr:last-child{margin-bottom:0}
+.keepbox .kr svg{width:14px;height:14px;flex:none}
+.dbtns{display:flex;flex-direction:column;gap:10px}
+.dbtn{height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;border:none}
+.dbtn.danger{background:#DC2626;color:#fff}
+.dbtn.gh{background:transparent;border:1px solid rgba(255,255,255,.16);color:#cbd5e1}
 
 .tab{height:66px;flex:none;display:flex;border-top:1px solid rgba(255,255,255,.1);background:rgba(20,26,38,.95);padding-bottom:8px}
 .tab a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:#64748B;font-weight:700}
@@ -148,7 +161,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
             <div class="dt">7월 22일 · 오후 7:55</div>
             <div class="color"><span class="sw" style="background:#46AE72"></span>초록<span class="ochip ob-ok">완등</span></div>
             <span class="stpill st-wait"><svg viewBox="0 0 24 24" fill="none" stroke="#f0a878" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>트리밍 대기</span>
-            <div class="actions"><span class="ab pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg>이어서 자르기</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4l13 8-13 8z"/></svg>재생</span></div>
+            <div class="actions"><span class="ab pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg>이어서 자르기</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4l13 8-13 8z"/></svg>재생</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg>원본 유지</span><span class="ab dan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></span></div>
           </div>
         </div>
 
@@ -159,7 +172,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
             <div class="dt">7월 19일 · 오후 9:02</div>
             <div class="color"><span class="sw" style="background:#DDBB44"></span>노랑<span class="ochip ob-ok">완등</span></div>
             <span class="stpill st-orig"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg>원본 유지</span>
-            <div class="actions"><span class="ab pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4l13 8-13 8z"/></svg>재생</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg>자르기</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 13.3l7.2 4.4M15.6 6.3l-7.2 4.4"/></svg></span></div>
+            <div class="actions"><span class="ab pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4l13 8-13 8z"/></svg>재생</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg>자르기</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 13.3l7.2 4.4M15.6 6.3l-7.2 4.4"/></svg></span><span class="ab dan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></span></div>
           </div>
         </div>
 
@@ -192,6 +205,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <dt>근거</dt><dd>영상을 남긴 이유는 결과가 아니라 <b>영상의 가치</b>다. 무빙이 좋아 남긴 영상이 "실패 영상"으로 분류되면 안 된다</dd>
         <dt>필터</dt><dd>칩도 완등/실패 대신 <b>정리 상태·암장</b> 기준. 결과로 거르지 않는다</dd>
         <dt>유지</dt><dd>결과 자체는 지우지 않는다 — 복기할 때 유용한 <b>맥락 정보</b>로 남긴다</dd></dl></div>
+      <div class="grp"><div class="vn">대기 카드 액션 (v2 보강)</div><dl>
+        <dt>배경</dt><dd>촬영 직후 <code>원본 그대로</code>·<code>지우기</code>가 사라져 <b>모든 영상이 대기함에 쌓인다</b></dd>
+        <dt>필수</dt><dd>대기 카드에 <code>이어서 자르기</code> · <code>재생</code> · <b><code>원본 유지</code></b> · <b><code>지우기</code></b>를 모두 둔다</dd>
+        <dt>이유</dt><dd>"그냥 원본으로 둘게"가 가장 흔한 정리 행동이 됐다. 트리밍 화면에 들어갔다 나오게 하면 2단계가 된다</dd>
+        <dt>원본 유지</dt><dd><code>keepOriginal()</code> → <code>ORIGINAL_KEPT</code>. 대기함에서 빠진다</dd></dl></div>
       <div class="grp"><div class="vn">미디어 상태 pill</div><dl>
         <dt>소스</dt><dd><code>attempt.media.state</code></dd>
         <dt>매핑</dt><dd><code>TRIMMED</code>=트리밍 완료 · <code>ORIGINAL_KEPT</code>=원본 유지 · <code>TRIM_PENDING</code>=트리밍 대기 · <code>TRIM_FAILED</code>=트리밍 실패 · <code>NONE</code>=목록 제외</dd>
@@ -226,7 +244,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
             <div class="dt">7월 22일 · 오후 8:26</div>
             <div class="color"><span class="sw" style="background:#7C7FDB"></span>남색<span class="ochip ob-no">실패</span></div>
             <span class="stpill st-wait"><svg viewBox="0 0 24 24" fill="none" stroke="#f0a878" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>트리밍 대기</span>
-            <div class="actions"><span class="ab pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg>이어서 자르기</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4l13 8-13 8z"/></svg>재생</span></div>
+            <div class="actions"><span class="ab pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12a3 3 0 003 3M18 6a3 3 0 00-3 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg>이어서 자르기</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4l13 8-13 8z"/></svg>재생</span><span class="ab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 4v16"/></svg>원본 유지</span><span class="ab dan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></span></div>
           </div>
         </div>
 
@@ -456,6 +474,46 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;co
         <dt>이후</dt><dd>시트를 닫고 <b>같은 목록</b>으로 돌아온다. 영상 처리 시트를 이어 띄우지 않는다</dd></dl></div>
       <div class="grp"><div class="vn">경로</div><dl>
         <dt>뒤로/바깥/스와이프</dt><dd>모두 <code>UNCLASSIFIED</code> 유지. 삭제되지 않는다</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- H 영상 지우기 확인 -->
+  <div class="frame">
+    <div class="cap"><span class="n">H</span><span class="t">영상 지우기 확인</span><span class="d">신규 · 유일한 삭제 경로</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hd" style="opacity:.35"><h1>영상 아카이브</h1><div class="sub">영상 12개</div></div>
+      <div class="body" style="opacity:.3"><div class="sk" style="animation:none"></div><div class="sk" style="animation:none"></div></div>
+      <div class="dim" style="background:rgba(5,7,13,.74)"></div>
+      <div class="dialog">
+        <div class="dic"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></div>
+        <h2>영상을 지울까요?</h2>
+        <p>지운 영상은 되돌릴 수 없어요.</p>
+        <div class="keepbox">
+          <div class="kk">남는 것</div>
+          <div class="kr"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>시도 기록 (파랑 · 완등)</div>
+          <div class="kr"><svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>세션 요약의 완등·시도 수</div>
+          <div class="kk" style="margin-top:11px">사라지는 것</div>
+          <div class="kr"><svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>기기에 저장된 영상 파일</div>
+        </div>
+        <div class="dbtns">
+          <button class="dbtn danger">영상 지우기</button>
+          <button class="dbtn gh">취소</button>
+        </div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">유일한 삭제 경로 (v2)</div><dl>
+        <dt>배경</dt><dd>촬영 직후 <code>지우기</code>를 없앴으므로, <b>아카이브가 영상 삭제의 유일한 경로</b>다</dd>
+        <dt>대상</dt><dd>완등·실패 구분 없이 <code>media.state != NONE</code>인 모든 카드</dd>
+        <dt>결과</dt><dd><code>media = NONE</code> + MediaStore 파일 삭제. Attempt는 유지되어 통계에 남는다</dd></dl></div>
+      <div class="grp"><div class="vn">확인 규칙</div><dl>
+        <dt>형식</dt><dd><b>남는 것 / 사라지는 것</b> 분리 나열. 되돌리기 창이 아니라 <b>확인</b>을 쓴다 — 이미 저장된 파일이라 회수가 불가능하다</dd>
+        <dt>포커스</dt><dd>제목. 파괴 버튼에 자동 포커스하지 않는다</dd>
+        <dt>로딩</dt><dd>삭제 중 두 버튼 비활성</dd>
+        <dt>오류</dt><dd>삭제 실패 시 <b>Attempt와 카드를 그대로 두고</b> 오류 배너 + 재시도</dd></dl></div>
+      <div class="grp"><div class="vn">경로</div><dl>
+        <dt>뒤로/바깥</dt><dd>= 취소. 아무 상태도 변하지 않는다</dd></dl></div>
     </div>
   </div>
 

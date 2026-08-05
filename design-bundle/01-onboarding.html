@@ -48,6 +48,19 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:27px;font-weight:700;line
 .btn{height:54px;border-radius:16px;background:#EA580C;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:16px;border:none;width:100%}
 .btn svg{width:19px;height:19px}
 .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.16);color:#cbd5e1;height:48px;margin-top:10px;font-size:14px}
+
+.ann{width:390px;margin-top:12px;background:#0a0e18;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px 14px;font-size:11.5px;line-height:1.55}
+.ann h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:#EA580C;letter-spacing:.6px;margin-bottom:8px;text-transform:uppercase}
+.ann .grp{border-top:1px dashed rgba(255,255,255,.09);margin-top:9px;padding-top:9px}
+.ann .grp:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.ann .vn{font-weight:700;color:#fff;font-size:12px;margin-bottom:4px}
+.ann dl{display:grid;grid-template-columns:52px 1fr;gap:3px 9px}
+.ann dt{color:#64748B;font-weight:700}
+.ann dd{color:#cbd5e1}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;color:#f0a878;background:rgba(234,88,12,.1);padding:1px 5px;border-radius:5px}
+.spin{width:40px;height:40px;border-radius:50%;border:4px solid rgba(255,255,255,.14);border-top-color:#EA580C;animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.sysnote{font-size:12px;color:#64748B;font-weight:600;text-align:center;line-height:1.6}
 </style></head>
 <body>
 <div class="pageh">
@@ -65,7 +78,7 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:27px;font-weight:700;line
         <div class="logo">✦ WE-<b>CLIMB</b></div>
         <div class="art"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="1.6"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.6"/></svg></div>
         <h1>붙는 순간을<br>바로 남겨요</h1>
-        <div class="desc">촬영부터 성공/실패 정리, 자르기, 공유까지 한 흐름으로. 시작하려면 카메라와 마이크 권한이 필요해요.</div>
+        <div class="desc">찍고, 완등인지 고르면 끝. 정리는 나중에 아카이브에서 해요. 시작하려면 카메라와 마이크 권한이 필요해요.</div>
         <div class="perms">
           <div class="prow">
             <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="3"/><circle cx="12" cy="12.5" r="3.4"/></svg></div>
@@ -86,6 +99,18 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:27px;font-weight:700;line
           카메라·마이크 허용하기
         </button>
       </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">권한 상태 행</div><dl>
+        <dt>소스</dt><dd><code>PermissionState(cameraGranted, microphoneGranted)</code></dd>
+        <dt>형식</dt><dd>권한별 행 + 상태 배지(<code>필요</code> / <code>허용됨</code> / <code>거부됨</code>). <code>Permission</code> enum 순서대로</dd>
+        <dt>빈</dt><dd>해당 없음 (권한은 항상 둘)</dd>
+        <dt>로딩</dt><dd>시스템 다이얼로그 대기 중 → 프레임 D</dd>
+        <dt>오류</dt><dd>거부 → 프레임 B, 일부만 허용 → 프레임 E</dd></dl></div>
+      <div class="grp"><div class="vn">경로</div><dl>
+        <dt>CTA</dt><dd>Android 시스템 권한 다이얼로그 호출. <b>시스템 창 자체는 시안 밖</b></dd>
+        <dt>분기</dt><dd><code>OnboardingService.complete()</code>가 카메라 → 마이크 순으로 검사한다</dd>
+        <dt>완료</dt><dd><code>OnboardingResult.Completed(AppDestination.Home)</code> → <code>02</code> 홈</dd></dl></div>
     </div>
   </div>
 
@@ -121,6 +146,17 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:27px;font-weight:700;line
         <button class="btn ghost">다시 요청하기</button>
       </div>
     </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">거부 상태</div><dl>
+        <dt>소스</dt><dd><code>AppState.settingsRequired</code> — 영구 거부(다시 묻지 않음) 판정</dd>
+        <dt>형식</dt><dd>거부된 권한만 danger 테두리. 허용된 것은 초록으로 남긴다</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>"다시 요청하기"는 <b>영구 거부 전에만</b> 표시. 이후엔 설정만 남긴다</dd>
+        <dt>오류</dt><dd>설정 Intent 실행 실패 시 경로 텍스트를 그대로 두고 오류 배너</dd></dl></div>
+      <div class="grp"><div class="vn">복귀 처리</div><dl>
+        <dt>재개</dt><dd><code>onResume</code>에서 권한 재확인 → 전부 허용이면 프레임 C, 일부면 프레임 E</dd>
+        <dt>보존</dt><dd>온보딩을 벗어나도 진행 상태를 잃지 않는다</dd></dl></div>
+    </div>
   </div>
 
   <!-- 설정에서 허용 후 -->
@@ -153,6 +189,93 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:27px;font-weight:700;line
           시작하기
         </button>
       </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">완료 판정</div><dl>
+        <dt>소스</dt><dd><code>OnboardingResult.Completed</code> — 카메라·마이크 모두 <code>true</code></dd>
+        <dt>형식</dt><dd>두 행 모두 success 테두리 + <code>허용됨</code></dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>다음 화면 준비 중 CTA 비활성</dd>
+        <dt>오류</dt><dd>해당 없음</dd></dl></div>
+      <div class="grp"><div class="vn">경로</div><dl>
+        <dt>다음</dt><dd><code>AppDestination.Home</code> → <code>02</code> 홈. 온보딩은 다시 뜨지 않는다</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- D 권한 요청 중 -->
+  <div class="frame">
+    <div class="cap"><span class="n">D</span><span class="t">권한 요청 중</span><span class="d">신규 · 시스템 창 대기</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hero" style="opacity:.45">
+        <div class="logo">✦ WE-<b>CLIMB</b></div>
+        <div class="art"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="1.6"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 6l1.2-2h5.6L16 6"/><circle cx="12" cy="12.5" r="3.6"/></svg></div>
+        <h1>붙는 순간을<br>바로 남겨요</h1>
+      </div>
+      <div class="foot" style="align-items:center;display:flex;flex-direction:column;gap:14px">
+        <div class="spin"></div>
+        <div class="sysnote">시스템 권한 창에서<br>허용을 눌러 주세요</div>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">요청 중</div><dl>
+        <dt>소스</dt><dd><code>AppState.permissionRequested == true</code> + 결과 콜백 대기</dd>
+        <dt>형식</dt><dd>앱 화면은 <b>감쇠 + 비활성</b>. 시스템 창이 위에 뜬다</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>이 상태 자체. <b>CTA를 다시 누를 수 없다</b> — 중복 요청 방지</dd>
+        <dt>오류</dt><dd>콜백 없이 복귀하면 <code>onResume</code>에서 실제 권한을 재확인해 분기</dd></dl></div>
+      <div class="grp"><div class="vn">모션</div><dl>
+        <dt>트리거</dt><dd>허용 CTA 탭</dd>
+        <dt>시작</dt><dd>hero 불투명도 1</dd>
+        <dt>종료</dt><dd>hero 불투명도 .45 + 스피너 표시</dd>
+        <dt>지속</dt><dd><code>--dur-fast 150ms</code> / <code>--ease-standard</code></dd>
+        <dt>중단</dt><dd>결과 도착 즉시 역방향 후 다음 상태로</dd>
+        <dt>반복</dt><dd>스피너만 900ms 무한</dd>
+        <dt>축소</dt><dd>회전 정지 → 정적 아이콘 + "권한 창을 확인해 주세요"</dd></dl></div>
+    </div>
+  </div>
+
+  <!-- E 부분 허용 -->
+  <div class="frame">
+    <div class="cap"><span class="n">E</span><span class="t">일부만 허용</span><span class="d">신규 · 카메라 O / 마이크 X</span></div>
+    <div class="phone">
+      <div class="sb"><span class="cnd">9:41</span><span>▮▮▮ ᯤ 100</span></div>
+      <div class="hero">
+        <div class="logo">✦ WE-<b>CLIMB</b></div>
+        <div class="art" style="border-color:rgba(234,88,12,.4)"><svg viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="1.6"><path d="M12 3a3 3 0 013 3v6a3 3 0 01-6 0V6a3 3 0 013-3z"/><path d="M5 11a7 7 0 0014 0M12 18v3"/><path d="M4 4l16 16"/></svg></div>
+        <h1>마이크만 남았어요</h1>
+        <div class="desc">카메라는 허용됐어요. 현장 소리까지 담으려면 마이크 권한이 필요해요.</div>
+        <div class="perms">
+          <div class="prow" style="border-color:rgba(5,150,105,.35)">
+            <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="3"/><circle cx="12" cy="12.5" r="3.4"/></svg></div>
+            <div><div class="pt">카메라</div><div class="ps">허용됨</div></div>
+            <span class="st"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/></svg></span>
+          </div>
+          <div class="prow" style="border-color:rgba(220,38,38,.35)">
+            <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M12 3a3 3 0 013 3v6a3 3 0 01-6 0V6a3 3 0 013-3z"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></div>
+            <div><div class="pt">마이크</div><div class="ps">거부됨</div></div>
+            <span class="st"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></span>
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <div class="note warn">설정 › 권한 › 마이크 › 허용</div>
+        <button class="btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
+          설정 열기
+        </button>
+      </div>
+    </div>
+    <div class="ann"><h4>런타임 주석</h4>
+      <div class="grp"><div class="vn">부분 허용 (실제 도달 가능)</div><dl>
+        <dt>소스</dt><dd><code>OnboardingService.complete()</code>가 카메라를 먼저 검사하므로, 카메라만 허용되면 <code>PermissionRequired(MICROPHONE)</code>이 반환된다</dd>
+        <dt>형식</dt><dd>허용된 권한은 <b>초록으로 유지</b>하고 남은 것만 강조. 처음부터 다시 시키지 않는다</dd>
+        <dt>빈</dt><dd>해당 없음</dd>
+        <dt>로딩</dt><dd>설정 복귀 시 <code>onResume</code> 재확인</dd>
+        <dt>오류</dt><dd>둘 다 거부면 프레임 B</dd></dl></div>
+      <div class="grp"><div class="vn">문구 규칙</div><dl>
+        <dt>제목</dt><dd>남은 권한만 지목한다. 진행도를 느끼게 하는 것이 재요청 성공률을 높인다</dd>
+        <dt>경로</dt><dd>설정 경로도 <b>남은 권한만</b> 표기 (마이크만)</dd></dl></div>
     </div>
   </div>
 
