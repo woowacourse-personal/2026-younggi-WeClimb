@@ -21,10 +21,15 @@
   --ease-pulse:cubic-bezier(.4,0,.6,1);
 }
 
-/* 축소 모션: 모든 지속 시간 0, 반복 펄스는 정적 표시로 대체 */
+/* 축소 모션 — 토큰 이름을 재정의하지 않는다.
+   :root의 --dur-* 는 언제나 정본 값이어야 한다(문서·툴링이 이 값을 읽는다).
+   대신 실제 재생만 중단시킨다. 반복 펄스·스피너는 각 화면에서 정적 표시 +
+   텍스트 라벨로 대체한다(spec-motion.html 참조). */
 @media (prefers-reduced-motion: reduce){
-  :root{
-    --dur-press:0ms; --dur-fast:0ms; --dur-standard:0ms;
-    --dur-emphasized:0ms; --dur-exit:0ms; --dur-pulse:0ms;
+  *, *::before, *::after{
+    animation-duration:1ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:1ms !important;
+    scroll-behavior:auto !important;
   }
 }
